@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pathway Schema",
+  "type": "object",
+  "required": ["name", "post_groups", "execution_policy", "metadata"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the Pathway."
+    },
+    "description": {
+      "type": "string",
+      "description": "A brief description of what the Pathway does."
+    },
+    "creator": {
+      "type": "string",
+      "description": "The user or agent that created the Pathway."
+    },
+    "post_groups": {
+      "type": "array",
+      "description": "A list of groups containing related Posts.",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "parallelizable", "threaded_execution", "posts"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the Post Group."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the purpose of this group."
+          },
+          "parallelizable": {
+            "type": "boolean",
+            "description": "Whether Posts in this group can run in parallel."
+          },
+          "threaded_execution": {
+            "type": "boolean",
+            "description": "Whether this Post Group runs in a separate thread."
+          },
+          "max_concurrent_posts": {
+            "type": "integer",
+            "description": "Maximum number of Posts that can execute concurrently in this group.",
+            "minimum": 1
+          },
+          "execution_timeout": {
+            "type": "integer",
+            "description": "Maximum time (in seconds) before this group is forcefully stopped.",
+            "minimum": 1
+          },
+          "posts": {
+            "type": "array",
+            "description": "List of steps (Posts) in this group.",
+            "items": {
+              "type": "object",
+              "required": ["id", "description", "practice_required", "dependencies"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the Post."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the task performed in this Post."
+                },
+                "practice_required": {
+                  "type": "array",
+                  "description": "List of required Practices (skills) for this Post.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "agent_preferences": {
+                  "type": "array",
+                  "description": "Preferred agents for executing this Post.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "parallelizable": {
+                  "type": "boolean",
+                  "description": "Whether this Post can execute in parallel with others."
+                },
+                "dependencies": {
+                  "type": "array",
+                  "description": "List of Post IDs that must be completed before this Post can execute.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "execution_timeout": {
+                  "type": "integer",
+                  "description": "Max time (in seconds) before this Post is forcefully stopped.",
+                  "minimum": 1
+                },
+                "cpu_allocation": {
+                  "type": "integer",
+                  "description": "Number of CPU cores allocated for this task.",
+                  "minimum": 0
+                },
+                "gpu_allocation": {
+                  "type": "integer",
+                  "description": "Number of GPU units allocated for this task.",
+                  "minimum": 0
+                },
+                "priority_boost": {
+                  "type": "integer",
+                  "description": "Boosts execution priority within a group (higher values execute first).",
+                  "minimum": 0
+                },
+                "input": {
+                  "type": "object",
+                  "description": "Inputs needed for this Post (key-value pairs)."
+                },
+                "output_key": {
+                  "type": "string",
+                  "description": "Key name for this Post’s output, used by dependent Posts."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "execution_policy": {
+      "type": "object",
+      "required": ["retry_on_failure", "max_retries"],
+      "properties": {
+        "retry_on_failure": {
+          "type": "boolean",
+          "description": "Determines if failed Posts should be retried."
+        },
+        "max_retries": {
+          "type": "integer",
+          "description": "The maximum number of retries allowed for failed Posts.",
+          "minimum": 0
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["priority", "creation_timestamp", "pondo_reward"],
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "description": "Priority level of the Pathway.",
+          "minimum": 0
+        },
+        "creation_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the Pathway was created."
+        },
+        "pondo_reward": {
+          "type": "integer",
+          "description": "The amount of Pondo allocated for completing this Pathway.",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

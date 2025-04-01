@@ -1,0 +1,35 @@
+{
+  "agent_id": "MonitorAgent",
+  "agent_name": "Monitor Web Agent",
+  "description": "Agent for monitoring the web",
+  "components": {
+    "plugs": {      "grpc_server": {
+      "type": "gRPCPlug",
+      "name": "grpc_server",
+      "description": "GRPC server plug for communication",
+      "host": "localhost",
+      "port": 20001,
+      "is_server": true
+    }
+
+    },
+    "pools": {
+      "db_pool": {
+        "type": "SQLitePool",
+        "name": "db_pool",
+        "description": "SQLite database pool",
+        "database_path": "../test_lite.db"
+      }
+    },
+    "services": {
+    },
+    "plazas": {
+      "MainPlaza": {
+        "type": "AgentPlaza",
+        "name": "MainPlaza",
+        "description": "Main plaza for agent communication",
+        "pool": "db_pool"
+      }
+    }
+  }
+} 

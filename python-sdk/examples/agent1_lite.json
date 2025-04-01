@@ -1,0 +1,50 @@
+{
+  "agent_id": "d3c2c632-36c5-47e6-a07d-30e3167236dc",
+  "agent_name": "Agent1",
+  "description": "First agent",
+  "components": {
+    "plugs": {
+      "grpc_server": {
+        "type": "gRPCPlug",
+        "name": "grpc_server",
+        "description": "GRPC server plug for communication",
+        "host": "localhost",
+        "port": 10000,
+        "is_server": true
+      }
+    },
+    "services": {
+      "mcp_client": {
+        "type": "MCPClient",
+        "name": "mcp_client",
+        "description": "MCP client for communication",
+        "mcp_server_params": {
+          "filesystem": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "@modelcontextprotocol/server-filesystem",
+              "/Users/alvincho/Downloads/temp"
+            ]
+          }
+        }
+      }
+    },
+    "pools": {
+      "db_pool": {
+        "type": "SQLitePool",
+        "name": "db_pool",
+        "description": "SQLite database pool",
+        "database_path": "test_lite.db"
+      }
+    },
+    "plazas": {
+      "MainPlaza": {
+        "type": "AgentPlaza",
+        "name": "MainPlaza",
+        "description": "Main plaza for agent communication",
+        "pool": "db_pool"
+      }
+    }
+  }
+} 

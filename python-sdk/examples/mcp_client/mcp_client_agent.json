@@ -1,0 +1,50 @@
+{
+  "agent_id": "MCPClientAgent",
+  "agent_name": "MCP Client Agent",
+  "description": "MCP client agent",
+  "components": {
+    "plugs": {      "grpc_server": {
+      "type": "gRPCPlug",
+      "name": "grpc_server",
+      "description": "GRPC server plug for communication",
+      "host": "localhost",
+      "port": 10041,
+      "is_server": true
+    }
+
+    },
+    "pools": {
+      "db_pool": {
+        "type": "SQLitePool",
+        "name": "db_pool",
+        "description": "SQLite database pool",
+        "database_path": "../test_lite.db"
+      }
+    },
+    "services": {
+      "mcp_client": {
+        "type": "MCPClient",
+        "name": "mcp_client",
+        "description": "MCP client for communication",
+        "mcp_server_params": {
+          "filesystem": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "@modelcontextprotocol/server-filesystem",
+              "/Users/alvincho/Documents"
+            ]
+          }
+        }
+      }
+    },
+    "plazas": {
+      "MainPlaza": {
+        "type": "AgentPlaza",
+        "name": "MainPlaza",
+        "description": "Main plaza for agent communication",
+        "pool": "db_pool"
+      }
+    }
+  }
+} 

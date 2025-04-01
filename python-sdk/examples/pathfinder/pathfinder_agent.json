@@ -1,0 +1,35 @@
+{
+  "agent_id": "pathfinder_test",
+  "agent_name": "Pathfinder Test Agent",
+  "description": "Second agent with TCP server and Ollama service",
+  "components": {
+    "plugs": {      "grpc_server": {
+      "type": "gRPCPlug",
+      "name": "grpc_server",
+      "description": "GRPC server plug for communication",
+      "host": "localhost",
+      "port": 10041,
+      "is_server": true
+    }
+
+    },
+    "pools": {
+      "db_pool": {
+        "type": "SQLitePool",
+        "name": "db_pool",
+        "description": "SQLite database pool",
+        "database_path": "../test_lite.db"
+      }
+    },
+    "services": {
+    },
+    "plazas": {
+      "MainPlaza": {
+        "type": "AgentPlaza",
+        "name": "MainPlaza",
+        "description": "Main plaza for agent communication",
+        "pool": "db_pool"
+      }
+    }
+  }
+} 

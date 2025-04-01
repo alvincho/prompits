@@ -1,0 +1,62 @@
+{
+    "pathway_id": "llm_completion_demo_001",
+    "name": "Simple LLM Completion",
+    "description": "A simple pathway for LLM text completion with preprocessing and postprocessing",
+    "entrance_post": {
+        "post_id": "post_1",
+        "name": "Preprocess Input",
+        "practice": "Chat",
+        "parameters": {
+            "model": "qwen2.5:32b",
+            "prompt": "{prompt}"
+        },
+        "inputs": {
+            "prompt": {
+                "type": "string",
+                "description": "The prompt to be used for the LLM completion"
+            }
+        },
+        "outputs": {
+            "post_2": {
+                "field_mapping": {
+                    "complete_text": "original_text"
+                }
+            }
+        },
+        "post_group": "generation"
+    },
+    "exit_posts": ["post_2"],
+    "posts": [
+        {
+            "post_id": "post_2",
+            "name": "Translate to Chinese",
+            "practice": "Chat",
+            "parameters": {
+                "model": "qwen2.5:32b",
+                "prompt": "Translate the following text to Chinese: {original_text}"
+            },
+            "inputs": {
+                "original_text": {
+                    "type": "string",
+                    "description": "The prompt to be used for the LLM completion"
+                }
+            },
+            "outputs": {
+                "exit": {
+                    "field_mapping": {
+                        "complete_text": "result"
+                    }   
+                }
+            },
+            "post_group": "generation"
+        }
+    ],
+    "execution_plan": {
+        "concurrency_limit": 1,
+        "post_groups": {
+            "generation": {
+                "concurrency": 1
+            }
+        }
+    }
+}

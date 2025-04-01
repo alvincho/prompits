@@ -1,0 +1,42 @@
+{
+  "agent_id": "3cc40de2-442e-4667-86bc-4124e44de6fa",
+  "agent_name": "Agent2",
+  "description": "Second agent with TCP server and Ollama service",
+  "components": {
+    "plugs": {
+      "grpc_server": {
+        "type": "gRPCPlug",
+        "name": "grpc_server",
+        "description": "GRPC server plug for communication",
+        "host": "localhost",
+        "port": 10001,
+        "is_server": true
+      }
+    },
+    "pools": {
+      "db_pool": {
+        "type": "SQLitePool",
+        "name": "db_pool",
+        "description": "SQLite database pool",
+        "database_path": "test_lite.db"
+      }
+    },
+    "services": {
+      "ollama": {
+        "type": "Ollama",
+        "name": "ollama",
+        "description": "Ollama LLM service",
+        "default_model": "granite3.2:8b",
+        "base_url": "http://localhost:11434"
+      }
+    },
+    "plazas": {
+      "MainPlaza": {
+        "type": "AgentPlaza",
+        "name": "MainPlaza",
+        "description": "Main plaza for agent communication",
+        "pool": "db_pool"
+      }
+    }
+  }
+} 

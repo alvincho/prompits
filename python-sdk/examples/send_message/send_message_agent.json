@@ -1,0 +1,36 @@
+{
+  "agent_id": "send message test",
+  "agent_name": "Send Message Test Agent",
+  "description": "This is a simple agent that sends a message to another agent",
+  "components": {
+    "plugs": {      
+      "grpc_server": {
+      "type": "gRPCPlug",
+      "name": "grpc_server",
+      "description": "GRPC server plug for communication",
+      "host": "localhost",
+      "port": 0,
+      "is_server": true
+    }
+
+    },
+    "pools": {
+      "db_pool": {
+        "type": "SQLitePool",
+        "name": "db_pool",
+        "description": "SQLite database pool",
+        "database_path": "../test_lite.db"
+      }
+    },
+    "services": {
+    },
+    "plazas": {
+      "MainPlaza": {
+        "type": "AgentPlaza",
+        "name": "MainPlaza",
+        "description": "Main plaza for agent communication",
+        "pool": "db_pool"
+      }
+    }
+  }
+} 
