@@ -1,6 +1,7 @@
 .DS_Store
 scratch/
 *test_lite.db
+.cursor/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
