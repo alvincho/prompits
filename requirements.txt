@@ -1,0 +1,14 @@
+# Core dependencies
+grpcio>=1.70.0
+grpcio-tools>=1.70.0
+protobuf>=4.0.0
+psycopg2-binary>=2.9.5
+requests>=2.28.0
+# Note: sqlite3 is part of the standard library, no need to install
+typing-extensions>=4.0.0
+
+# Development dependencies
+pytest>=7.0.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0 
