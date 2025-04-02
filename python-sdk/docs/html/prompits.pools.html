@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.pools package &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="prompits.services package" href="prompits.services.html" />
+    <link rel="prev" title="prompits.plugs.protos package" href="prompits.plugs.protos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">prompits.pools package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.pools.DatabasePool">prompits.pools.DatabasePool module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool"><code class="docutils literal notranslate"><span class="pre">DatabasePool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.CreateTable"><code class="docutils literal notranslate"><span class="pre">DatabasePool.CreateTable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.Delete"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.Retrieve"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.Search"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.Store"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.TableExists"><code class="docutils literal notranslate"><span class="pre">DatabasePool.TableExists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.ToJson"><code class="docutils literal notranslate"><span class="pre">DatabasePool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.Update"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.connect"><code class="docutils literal notranslate"><span class="pre">DatabasePool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.delete_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.delete_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.disconnect"><code class="docutils literal notranslate"><span class="pre">DatabasePool.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.execute_query"><code class="docutils literal notranslate"><span class="pre">DatabasePool.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.get_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.insert_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.insert_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool.update_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.update_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.pools.PostgresPool">prompits.pools.PostgresPool module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.pools.PostgresPool.DateTimeEncoder"><code class="docutils literal notranslate"><span class="pre">DateTimeEncoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.DateTimeEncoder.default"><code class="docutils literal notranslate"><span class="pre">DateTimeEncoder.default()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool"><code class="docutils literal notranslate"><span class="pre">PostgresPool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.CreateTable"><code class="docutils literal notranslate"><span class="pre">PostgresPool.CreateTable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.Delete"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.FromJson"><code class="docutils literal notranslate"><span class="pre">PostgresPool.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.ListSchemas"><code class="docutils literal notranslate"><span class="pre">PostgresPool.ListSchemas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.MapTypeFromDataType"><code class="docutils literal notranslate"><span class="pre">PostgresPool.MapTypeFromDataType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.MapTypeToDataType"><code class="docutils literal notranslate"><span class="pre">PostgresPool.MapTypeToDataType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.Retrieve"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.Search"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.Store"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.TableExists"><code class="docutils literal notranslate"><span class="pre">PostgresPool.TableExists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.ToJson"><code class="docutils literal notranslate"><span class="pre">PostgresPool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.Update"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.connect"><code class="docutils literal notranslate"><span class="pre">PostgresPool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.PostgresPool.PostgresPool.disconnect"><code class="docutils literal notranslate"><span class="pre">PostgresPool.disconnect()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.pools.SQLitePool">prompits.pools.SQLitePool module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.pools.SQLitePool.DateTimeEncoder"><code class="docutils literal notranslate"><span class="pre">DateTimeEncoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.SQLitePool.DateTimeEncoder.default"><code class="docutils literal notranslate"><span class="pre">DateTimeEncoder.default()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.pools.SQLitePool.SQLitePool"><code class="docutils literal notranslate"><span class="pre">SQLitePool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.SQLitePool.SQLitePool.FromJson"><code class="docutils literal notranslate"><span class="pre">SQLitePool.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.SQLitePool.SQLitePool.ToJson"><code class="docutils literal notranslate"><span class="pre">SQLitePool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.SQLitePool.SQLitePool.connect"><code class="docutils literal notranslate"><span class="pre">SQLitePool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.pools.SQLitePool.SQLitePool.disconnect"><code class="docutils literal notranslate"><span class="pre">SQLitePool.disconnect()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="prompits.html">prompits package</a></li>
+      <li class="breadcrumb-item active">prompits.pools package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/prompits.pools.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prompits-pools-package">
+<h1>prompits.pools package<a class="headerlink" href="#prompits-pools-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+</section>
+<section id="module-prompits.pools.DatabasePool">
+<span id="prompits-pools-databasepool-module"></span><h2>prompits.pools.DatabasePool module<a class="headerlink" href="#module-prompits.pools.DatabasePool" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.pools.DatabasePool.</span></span><span class="sig-name descname"><span class="pre">DatabasePool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectionString</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Pool.Pool" title="prompits.Pool.Pool"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pool</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for database-specific pool implementations.</p>
+<p>DatabasePool provides a common interface for interacting with different
+database systems. It defines methods for executing queries, managing
+transactions, and performing CRUD operations.</p>
+<p>This class should be subclassed to implement specific database adapters.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.CreateTable">
+<span class="sig-name descname"><span class="pre">CreateTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Schema.TableSchema" title="prompits.Schema.TableSchema"><span class="pre">TableSchema</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.CreateTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.CreateTable" title="Link to this definition"></a></dt>
+<dd><p>Create a table with the given schema.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.Delete">
+<span class="sig-name descname"><span class="pre">Delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.Delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.Delete" title="Link to this definition"></a></dt>
+<dd><p>Delete data from the database by key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – Unique identifier for the data to delete</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If not implemented by a subclass</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.Retrieve">
+<span class="sig-name descname"><span class="pre">Retrieve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.Retrieve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.Retrieve" title="Link to this definition"></a></dt>
+<dd><p>Retrieve data from the database by key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – Unique identifier for the data to retrieve</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Retrieved data, or None if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Dict[str, Any]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If not implemented by a subclass</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.Search">
+<span class="sig-name descname"><span class="pre">Search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.Search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.Search" title="Link to this definition"></a></dt>
+<dd><p>Search for data in the database that matches criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>where</strong> – Dictionary of conditions to filter results</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of matching records</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Dict[str, Any]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If not implemented by a subclass</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.Store">
+<span class="sig-name descname"><span class="pre">Store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.Store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.Store" title="Link to this definition"></a></dt>
+<dd><p>Store data in the database with the specified key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Unique identifier for the data</p></li>
+<li><p><strong>data</strong> – Dictionary of field-value pairs to store</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if stored successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If not implemented by a subclass</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.TableExists">
+<span class="sig-name descname"><span class="pre">TableExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.TableExists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.TableExists" title="Link to this definition"></a></dt>
+<dd><p>Check if a table exists.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert DatabasePool to JSON representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.Update">
+<span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.Update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.Update" title="Link to this definition"></a></dt>
+<dd><p>Update data in the database by key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Unique identifier for the data to update</p></li>
+<li><p><strong>data</strong> – Dictionary of field-value pairs containing new values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if updated successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If not implemented by a subclass</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the database.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific connection logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if connected successfully, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.delete_data">
+<span class="sig-name descname"><span class="pre">delete_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.delete_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.delete_data" title="Link to this definition"></a></dt>
+<dd><p>Delete data from a specified table.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific data deletion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_name</strong> – Name of the table to delete from</p></li>
+<li><p><strong>data</strong> – Dictionary of conditions to determine what to delete</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.disconnect" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the database.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific disconnection logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if disconnected successfully, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.execute_query">
+<span class="sig-name descname"><span class="pre">execute_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.execute_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.execute_query" title="Link to this definition"></a></dt>
+<dd><p>Execute a SQL query against the database.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific query execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>query</strong> – SQL query to execute</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Query results, or None if an error occurred</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.get_data" title="Link to this definition"></a></dt>
+<dd><p>Retrieve data from a specified table.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific data retrieval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_name</strong> – Name of the table to query</p></li>
+<li><p><strong>data</strong> – Dictionary of conditions to filter the results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of retrieved records, or empty list if an error occurred</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.insert_data">
+<span class="sig-name descname"><span class="pre">insert_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.insert_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.insert_data" title="Link to this definition"></a></dt>
+<dd><p>Insert data into a specified table.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific data insertion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_name</strong> – Name of the table to insert into</p></li>
+<li><p><strong>data</strong> – Dictionary of column-value pairs to insert</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if inserted successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.DatabasePool.DatabasePool.update_data">
+<span class="sig-name descname"><span class="pre">update_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/DatabasePool.html#DatabasePool.update_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.DatabasePool.DatabasePool.update_data" title="Link to this definition"></a></dt>
+<dd><p>Update data in a specified table.</p>
+<p>This method should be overridden by subclasses to implement
+database-specific data updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_name</strong> – Name of the table to update</p></li>
+<li><p><strong>data</strong> – Dictionary containing update criteria and new values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if updated successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.pools.PostgresPool">
+<span id="prompits-pools-postgrespool-module"></span><h2>prompits.pools.PostgresPool module<a class="headerlink" href="#module-prompits.pools.PostgresPool" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.DateTimeEncoder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.pools.PostgresPool.</span></span><span class="sig-name descname"><span class="pre">DateTimeEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#DateTimeEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.DateTimeEncoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONEncoder</span></code></p>
+<p>Custom JSON encoder that handles datetime objects and other non-serializable types.</p>
+<p>This encoder extends the standard JSONEncoder to properly serialize:
+- datetime objects (converted to ISO format strings)
+- methods and functions (converted to string representations)
+- custom objects (converted to dictionaries of their public attributes)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.DateTimeEncoder.default">
+<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#DateTimeEncoder.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.DateTimeEncoder.default" title="Link to this definition"></a></dt>
+<dd><p>Convert Python objects to JSON-serializable types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object to convert</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A JSON-serializable representation of the object</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If the object cannot be serialized</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.pools.PostgresPool.</span></span><span class="sig-name descname"><span class="pre">PostgresPool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool" title="prompits.pools.DatabasePool.DatabasePool"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatabasePool</span></code></a></p>
+<p>Pool implementation for PostgreSQL databases.</p>
+<p>This class provides methods to interact with PostgreSQL databases, including
+connections, transactions, and CRUD operations. It implements the abstract
+methods defined in DatabasePool.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.CreateTable">
+<span class="sig-name descname"><span class="pre">CreateTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Schema.TableSchema" title="prompits.Schema.TableSchema"><span class="pre">TableSchema</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.CreateTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.CreateTable" title="Link to this definition"></a></dt>
+<dd><p>Create a table with the given schema.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.Delete">
+<span class="sig-name descname"><span class="pre">Delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.Delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.Delete" title="Link to this definition"></a></dt>
+<dd><p>Delete data from the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.FromJson">
+<span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize the pool from a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> – JSON object containing pool configuration</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized pool</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="prompits.html#prompits.Pool" title="prompits.Pool">Pool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.ListSchemas">
+<span class="sig-name descname"><span class="pre">ListSchemas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.ListSchemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.ListSchemas" title="Link to this definition"></a></dt>
+<dd><p>List all schemas in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of schema names</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.MapTypeFromDataType">
+<span class="sig-name descname"><span class="pre">MapTypeFromDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Schema.DataType" title="prompits.Schema.DataType"><span class="pre">DataType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.MapTypeFromDataType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.MapTypeFromDataType" title="Link to this definition"></a></dt>
+<dd><p>Map a DataType to a PostgreSQL data type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_type</strong> – DataType to map</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PostgreSQL data type</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.MapTypeToDataType">
+<span class="sig-name descname"><span class="pre">MapTypeToDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="prompits.html#prompits.Schema.DataType" title="prompits.Schema.DataType"><span class="pre">DataType</span></a></span></span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.MapTypeToDataType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.MapTypeToDataType" title="Link to this definition"></a></dt>
+<dd><p>Map a PostgreSQL data type to a DataType.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_type</strong> – PostgreSQL data type to map</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mapped DataType</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="prompits.html#prompits.Schema.DataType" title="prompits.Schema.DataType">DataType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.Retrieve">
+<span class="sig-name descname"><span class="pre">Retrieve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.Retrieve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.Retrieve" title="Link to this definition"></a></dt>
+<dd><p>Retrieve data from the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.Search">
+<span class="sig-name descname"><span class="pre">Search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.Search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.Search" title="Link to this definition"></a></dt>
+<dd><p>Search data in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.Store">
+<span class="sig-name descname"><span class="pre">Store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.Store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.Store" title="Link to this definition"></a></dt>
+<dd><p>Store data in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.TableExists">
+<span class="sig-name descname"><span class="pre">TableExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.TableExists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.TableExists" title="Link to this definition"></a></dt>
+<dd><p>Check if a table exists.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the pool to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the pool</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.Update">
+<span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.Update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.Update" title="Link to this definition"></a></dt>
+<dd><p>Update data in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.connect" title="Link to this definition"></a></dt>
+<dd><p>Connect to the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.PostgresPool.PostgresPool.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/PostgresPool.html#PostgresPool.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.PostgresPool.PostgresPool.disconnect" title="Link to this definition"></a></dt>
+<dd><p>Disconnect from the database.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.pools.SQLitePool">
+<span id="prompits-pools-sqlitepool-module"></span><h2>prompits.pools.SQLitePool module<a class="headerlink" href="#module-prompits.pools.SQLitePool" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.DateTimeEncoder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.pools.SQLitePool.</span></span><span class="sig-name descname"><span class="pre">DateTimeEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#DateTimeEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.DateTimeEncoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONEncoder</span></code></p>
+<p>Custom JSON encoder that handles datetime objects and other non-serializable types.</p>
+<p>This encoder extends the standard JSONEncoder to properly serialize:
+- datetime objects (converted to ISO format strings)
+- methods and functions (converted to string representations)
+- custom objects (converted to dictionaries of their public attributes)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.DateTimeEncoder.default">
+<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#DateTimeEncoder.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.DateTimeEncoder.default" title="Link to this definition"></a></dt>
+<dd><p>Convert Python objects to JSON-serializable types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> – The object to convert</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A JSON-serializable representation of the object</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If the object cannot be serialized</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.SQLitePool">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.pools.SQLitePool.</span></span><span class="sig-name descname"><span class="pre">SQLitePool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#SQLitePool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.SQLitePool" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.pools.DatabasePool.DatabasePool" title="prompits.pools.DatabasePool.DatabasePool"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatabasePool</span></code></a></p>
+<p>Pool implementation for SQLite databases.</p>
+<p>This class provides methods to interact with SQLite databases, including
+connections, transactions, and CRUD operations. It implements the abstract
+methods defined in DatabasePool.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.SQLitePool.FromJson">
+<span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#SQLitePool.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.SQLitePool.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize pool from a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> – JSON data to initialize from</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized pool</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="prompits.html#prompits.Pool" title="prompits.Pool">Pool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.SQLitePool.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#SQLitePool.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.SQLitePool.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert pool to JSON representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.SQLitePool.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#SQLitePool.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.SQLitePool.connect" title="Link to this definition"></a></dt>
+<dd><p>Connect to the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.pools.SQLitePool.SQLitePool.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/pools/SQLitePool.html#SQLitePool.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.pools.SQLitePool.SQLitePool.disconnect" title="Link to this definition"></a></dt>
+<dd><p>Disconnect from the database.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="prompits.plugs.protos.html" class="btn btn-neutral float-left" title="prompits.plugs.protos package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="prompits.services.html" class="btn btn-neutral float-right" title="prompits.services package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

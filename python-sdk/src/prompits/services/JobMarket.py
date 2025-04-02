@@ -12,6 +12,9 @@ from prompits.Practice import Practice
 from .Service import Service
 
 class Job:
+    """
+    !!! This is a work in progress !!!
+    """
     def __init__(self, name: str, description: str, owner_id: str, price: float = 0.0, practices: List[str] = None):
         self.job_id = str(uuid.uuid4())
         self.name = name

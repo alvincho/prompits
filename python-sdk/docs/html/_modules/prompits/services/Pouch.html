@@ -1,0 +1,480 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.services.Pouch &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.services.Pouch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.services.Pouch</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Pouch is a service that store pathway and parameters</span>
+<span class="c1"># It also store the results of posts and the state of the pathway</span>
+<span class="c1"># It connects to multiple databases and can sync data between them</span>
+<span class="c1"># It supports JSON and graph databases</span>
+<span class="c1"># When traversing a graph, it can use a graph traversal algorithm</span>
+<span class="c1"># PathRun is a running pathway</span>
+<span class="c1"># PostStep is a running Post in a PathRun</span>
+<span class="c1"># Pathfinder use Pouch to store and retrieve pathway and parameters</span>
+<span class="c1"># Pathfinder use Pouch to store the state of a pathway run  </span>
+<span class="c1"># Pouch is passively updated by Pathfinder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentAddress</span><span class="p">,</span> <span class="n">Pathway</span><span class="p">,</span> <span class="n">Pit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Pathway</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pathway</span><span class="p">,</span> <span class="n">Post</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataType</span>
+
+<div class="viewcode-block" id="StepState">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.StepState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StepState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Pending</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Running</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Completed</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Failed</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<div class="viewcode-block" id="StepVariables">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.StepVariables">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StepVariables</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="PostStep">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.PostStep">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PostStep</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">post</span><span class="p">:</span> <span class="n">Post</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">StepState</span><span class="p">,</span>
+                 <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">variables</span><span class="p">:</span> <span class="n">StepVariables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">previous_poststep</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poststep_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathrunid</span> <span class="o">=</span> <span class="n">pathrunid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">post</span> <span class="o">=</span> <span class="n">post</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">end_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_poststep</span> <span class="o">=</span> <span class="n">previous_poststep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next_poststep</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poststep_id</span> <span class="o">=</span> <span class="n">poststep_id</span></div>
+
+
+<div class="viewcode-block" id="PathRun">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.PathRun">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathRun</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pathway</span><span class="p">:</span> <span class="n">Pathway</span><span class="p">,</span> <span class="n">create_agent</span><span class="p">:</span> <span class="n">AgentAddress</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathrunid</span> <span class="o">=</span> <span class="n">pathrunid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathway</span> <span class="o">=</span> <span class="n">pathway</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_agent</span> <span class="o">=</span> <span class="n">create_agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poststeps</span> <span class="o">=</span> <span class="p">{}</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">running_poststeps</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_poststep_id</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="PathRun.AddPostStep">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.PathRun.AddPostStep">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">AddPostStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post</span><span class="p">:</span> <span class="n">Post</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">StepState</span><span class="p">,</span>
+                    <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">variables</span><span class="p">:</span> <span class="n">StepVariables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">previous_poststep</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poststep_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">new_poststep_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_poststep_id</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poststeps</span><span class="p">[</span><span class="n">new_poststep_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">PostStep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pathrunid</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span>
+                                                  <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span>
+                                                  <span class="n">previous_poststep</span><span class="p">,</span> <span class="n">poststep_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_poststep_id</span> <span class="o">=</span> <span class="n">new_poststep_id</span>
+        <span class="k">return</span> <span class="n">new_poststep_id</span></div>
+</div>
+
+        
+
+<div class="viewcode-block" id="Pouch">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pouch</span><span class="p">(</span><span class="n">Pit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    !!! This is a work in progress !!!</span>
+<span class="sd">    </span>
+<span class="sd">    Pouch is a service that store pathway and parameters</span>
+<span class="sd">    It also store the results of posts and the state of the pathway</span>
+<span class="sd">    It connects to multiple databases and can sync data between them</span>
+<span class="sd">    It supports JSON and graph databases</span>
+<span class="sd">    When traversing a graph, it can use a graph traversal algorithm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">json_table_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;pouch_&quot;</span><span class="p">,</span> <span class="n">graph_table_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;pouch_&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;CreatePathRun&quot;</span><span class="p">,</span> <span class="n">CreatePathRun</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;GetPathRun&quot;</span><span class="p">,</span> <span class="n">GetPathRun</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;ListPathRuns&quot;</span><span class="p">,</span> <span class="n">ListPathRuns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;AddPostStep&quot;</span><span class="p">,</span> <span class="n">AddPostStep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;UpdatePostStep&quot;</span><span class="p">,</span> <span class="n">UpdatePostStep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;StopPathRun&quot;</span><span class="p">,</span> <span class="n">StopPathRun</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;CreatePathway&quot;</span><span class="p">,</span> <span class="n">CreatePathway</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;GetPathway&quot;</span><span class="p">,</span> <span class="n">GetPathway</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;ListPathways&quot;</span><span class="p">,</span> <span class="n">ListPathways</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;UpdatePathway&quot;</span><span class="p">,</span> <span class="n">UpdatePathway</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="s2">&quot;DeletePathway&quot;</span><span class="p">,</span> <span class="n">DeletePathway</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_table_prefix</span> <span class="o">=</span> <span class="n">json_table_prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph_table_prefix</span> <span class="o">=</span> <span class="n">graph_table_prefix</span>
+        <span class="c1"># Create a new table in the JSON pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_table_prefix</span> <span class="o">+</span> <span class="s2">&quot;pathrun&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;PathRun&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;primary_key&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;rowSchema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+                    <span class="s2">&quot;owner_agent_address&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                    <span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                    <span class="s2">&quot;stop_time&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span> <span class="s2">&quot;nullable&quot;</span><span class="p">:</span> <span class="kc">True</span> <span class="p">},</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;can_take_over&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">,</span>
+                    <span class="s2">&quot;pathway&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">JSON</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_table_prefix</span> <span class="o">+</span> <span class="s2">&quot;poststep&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;PostStep&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;primary_key&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">,</span> <span class="s2">&quot;poststep_id&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;rowSchema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+                    <span class="s2">&quot;poststep_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">,</span>
+                    <span class="s2">&quot;owner_agent_address&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;pathway_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+                    <span class="s2">&quot;post_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">JSON</span><span class="p">,</span>
+                    <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                    <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span> <span class="s2">&quot;nullable&quot;</span><span class="p">:</span> <span class="kc">True</span> <span class="p">},</span>
+                    <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">JSON</span><span class="p">,</span>
+                    <span class="s2">&quot;previous_poststep&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">,</span> <span class="s2">&quot;nullable&quot;</span><span class="p">:</span> <span class="kc">True</span> <span class="p">},</span>
+                    <span class="s2">&quot;next_poststep&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">,</span> <span class="s2">&quot;nullable&quot;</span><span class="p">:</span> <span class="kc">True</span> <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathway_table_schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_table_prefix</span> <span class="o">+</span> <span class="s2">&quot;pathway&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pathway&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;primary_key&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pathway_id&quot;</span><span class="p">,</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;rowSchema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;pathway_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+                    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">REAL</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;owner_agent_address&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                    <span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                    <span class="s2">&quot;pathway_json&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">JSON</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1"># if tables already exist, don&#39;t create them</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;TableExists&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;CreateTable&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;TableExists&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;CreateTable&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;TableExists&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;CreateTable&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathway_table_schema</span><span class="p">)</span>
+            
+
+    
+<div class="viewcode-block" id="Pouch.set_json_pool">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.set_json_pool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_json_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_pool</span><span class="p">:</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">table_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span> <span class="o">=</span> <span class="n">json_pool</span>
+        <span class="k">if</span> <span class="n">table_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json_table_prefix</span> <span class="o">=</span> <span class="n">table_prefix</span></div>
+
+
+<div class="viewcode-block" id="Pouch.set_graph_pool">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.set_graph_pool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_graph_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_pool</span><span class="p">:</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">table_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph_pool</span> <span class="o">=</span> <span class="n">graph_pool</span>
+        <span class="k">if</span> <span class="n">table_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">graph_table_prefix</span> <span class="o">=</span> <span class="n">table_prefix</span></div>
+
+
+    <span class="c1"># Create a new pathway run</span>
+    <span class="c1"># PathRun is created by an agent, and can be taken over by another agent</span>
+    <span class="c1"># returns the PathRunID</span>
+<div class="viewcode-block" id="Pouch.CreatePathRun">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.CreatePathRun">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CreatePathRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">AgentAddress</span><span class="p">,</span> <span class="n">pathway</span><span class="p">:</span> <span class="n">Pathway</span><span class="p">,</span> <span class="n">can_take_over</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># insert into json_pathrun table</span>
+        <span class="n">pathrunid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">pathway</span><span class="o">.</span><span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Insert&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;owner_agent_address&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="p">,</span> 
+                                    <span class="s2">&quot;pathway&quot;</span><span class="p">:</span> <span class="n">pathway</span><span class="p">,</span> <span class="s2">&quot;can_take_over&quot;</span><span class="p">:</span> <span class="n">can_take_over</span><span class="p">,</span>
+                                    <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+                                    <span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+                                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">pathrunid</span></div>
+
+
+    <span class="c1"># Get a pathway run</span>
+    <span class="c1"># returns the PathRunID</span>
+<div class="viewcode-block" id="Pouch.GetPathRun">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.GetPathRun">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetPathRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># select from json_pathrun table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">})</span></div>
+
+
+    <span class="c1"># List all pathway runs</span>
+    <span class="c1"># returns a list of PathRun objects</span>
+<div class="viewcode-block" id="Pouch.ListPathRuns">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.ListPathRuns">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ListPathRuns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># select from json_pathrun table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="p">{})</span></div>
+
+
+    <span class="c1"># Update a pathway run</span>
+    <span class="c1"># returns the PathRunID</span>
+<div class="viewcode-block" id="Pouch.UpdatePathRun">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.UpdatePathRun">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">UpdatePathRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># update json_pathrun table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Update&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">})</span></div>
+
+
+    <span class="c1"># Stop a pathway run</span>
+    <span class="c1"># returns the PathRunID</span>
+<div class="viewcode-block" id="Pouch.StopPathRun">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.StopPathRun">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">StopPathRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># update json_pathrun table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Update&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathrun_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;stopped&quot;</span><span class="p">})</span></div>
+
+
+    <span class="c1"># Create a new pathway</span>
+    <span class="c1"># returns the PathwayID</span>
+<div class="viewcode-block" id="Pouch.CreatePathway">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.CreatePathway">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CreatePathway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathway</span><span class="p">:</span> <span class="n">Pathway</span><span class="p">):</span>
+        <span class="c1"># insert into json_pathway table</span>
+        <span class="n">pathwayid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Insert&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathway_id&quot;</span><span class="p">:</span> <span class="n">pathwayid</span><span class="p">,</span> <span class="s2">&quot;pathway&quot;</span><span class="p">:</span> <span class="n">pathway</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">pathwayid</span></div>
+
+
+    <span class="c1"># Get a pathway</span>
+    <span class="c1"># returns the PathwayID</span>
+<div class="viewcode-block" id="Pouch.GetPathway">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.GetPathway">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetPathway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathwayid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># select from json_pathway table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathway_id&quot;</span><span class="p">:</span> <span class="n">pathwayid</span><span class="p">})</span></div>
+
+
+    <span class="c1"># List all pathways</span>
+    <span class="c1"># returns a list of Pathway objects</span>
+<div class="viewcode-block" id="Pouch.ListPathways">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.ListPathways">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ListPathways</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># select from json_pathway table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="p">{})</span></div>
+
+
+    <span class="c1"># Update a pathway</span>
+    <span class="c1"># returns the PathwayID</span>
+<div class="viewcode-block" id="Pouch.UpdatePathway">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.UpdatePathway">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">UpdatePathway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathwayid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pathway</span><span class="p">:</span> <span class="n">Pathway</span><span class="p">):</span>
+        <span class="c1"># update json_pathway table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Update&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathway_id&quot;</span><span class="p">:</span> <span class="n">pathwayid</span><span class="p">,</span> <span class="s2">&quot;pathway&quot;</span><span class="p">:</span> <span class="n">pathway</span><span class="p">})</span></div>
+
+
+    <span class="c1"># Delete a pathway</span>
+    <span class="c1"># returns the PathwayID     </span>
+<div class="viewcode-block" id="Pouch.DeletePathway">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.DeletePathway">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">DeletePathway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathwayid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># delete from json_pathway table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_pathway_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathway_id&quot;</span><span class="p">:</span> <span class="n">pathwayid</span><span class="p">})</span></div>
+
+
+    <span class="c1"># Add a post step to a pathway run</span>
+    <span class="c1"># returns the PostStepID</span>
+<div class="viewcode-block" id="Pouch.AddPostStep">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.AddPostStep">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">AddPostStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">post</span><span class="p">:</span> <span class="n">Post</span><span class="p">):</span>
+        <span class="c1"># insert into json_poststep table</span>
+        <span class="n">poststepid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Insert&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;poststep_id&quot;</span><span class="p">:</span> <span class="n">poststepid</span><span class="p">,</span> 
+                                    <span class="s2">&quot;post_id&quot;</span><span class="p">:</span> <span class="n">post</span><span class="o">.</span><span class="n">post_id</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">post</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+                                    <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+                                    <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                    <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="n">post</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span>
+                                    <span class="s2">&quot;previous_poststep&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                    <span class="s2">&quot;next_poststep&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span> 
+        <span class="k">return</span> <span class="n">poststepid</span></div>
+
+
+    <span class="c1"># Update a post step</span>
+    <span class="c1"># returns the PostStepID</span>
+<div class="viewcode-block" id="Pouch.UpdatePostStep">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.UpdatePostStep">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">UpdatePostStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">poststepid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">post</span><span class="p">:</span> <span class="n">Post</span><span class="p">):</span>
+        <span class="c1"># update json_poststep table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Update&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;poststep_id&quot;</span><span class="p">:</span> <span class="n">poststepid</span><span class="p">,</span> 
+                                    <span class="s2">&quot;post_id&quot;</span><span class="p">:</span> <span class="n">post</span><span class="o">.</span><span class="n">post_id</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">post</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+                                    <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+                                    <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                    <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="n">post</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span>
+                                    <span class="s2">&quot;previous_poststep&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                    <span class="s2">&quot;next_poststep&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">poststepid</span></div>
+
+
+    <span class="c1"># Delete a post step</span>
+    <span class="c1"># returns the PostStepID    </span>
+<div class="viewcode-block" id="Pouch.DeletePostStep">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.DeletePostStep">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">DeletePostStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">poststepid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># delete from json_poststep table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;poststep_id&quot;</span><span class="p">:</span> <span class="n">poststepid</span><span class="p">})</span></div>
+
+
+    <span class="c1"># List all post steps</span>
+    <span class="c1"># returns a list of PostStep objects</span>
+<div class="viewcode-block" id="Pouch.ListPostSteps">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.ListPostSteps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ListPostSteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># select from json_poststep table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="Pouch.GetPostStep">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.Pouch.Pouch.GetPostStep">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetPostStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathrunid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">poststepid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># select from json_poststep table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_poststep_table_schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> 
+                                   <span class="p">{</span><span class="s2">&quot;pathrun_id&quot;</span><span class="p">:</span> <span class="n">pathrunid</span><span class="p">,</span> <span class="s2">&quot;poststep_id&quot;</span><span class="p">:</span> <span class="n">poststepid</span><span class="p">})</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

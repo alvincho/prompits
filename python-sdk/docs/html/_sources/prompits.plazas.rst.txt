@@ -1,0 +1,29 @@
+prompits.plazas package
+=======================
+
+Submodules
+----------
+
+prompits.plazas.AgentPlaza module
+---------------------------------
+
+.. automodule:: prompits.plazas.AgentPlaza
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.plazas.MessagePlaza module
+-----------------------------------
+
+.. automodule:: prompits.plazas.MessagePlaza
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: prompits.plazas
+   :members:
+   :show-inheritance:
+   :undoc-members:

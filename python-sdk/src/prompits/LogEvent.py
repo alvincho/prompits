@@ -10,6 +10,11 @@ class LogEvent:
     timestamp: datetime = None
 
     def __post_init__(self):
+        """
+        Post-initialization hook that sets the timestamp to the current time if not provided.
+        
+        This method is automatically called after the dataclass __init__ method.
+        """
         if self.timestamp is None:
             self.timestamp = datetime.now()
 

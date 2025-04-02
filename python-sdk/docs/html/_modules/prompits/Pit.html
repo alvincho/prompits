@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.Pit &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pits.html">prompits.pits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.Pit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.Pit</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Pit is the basic element of a multi-agent system.</span>
+<span class="c1"># It provides a way to store and retrieve information.</span>
+<span class="c1"># An agent can contain multiple pits.</span>
+<span class="c1"># A pit has a list of practices.</span>
+<span class="c1"># practices are the actions that a pit can perform.</span>
+<span class="c1"># practice associated with a function.</span>
+<span class="c1"># Other pits can use the practices though a function UsePractice()</span>
+<span class="c1"># Pit is an abstract class.</span>
+<span class="c1"># Pit can be described as a JSON object ToJson()</span>
+<span class="c1"># Pit can be initialized from a JSON object __init__(json)</span>
+<span class="c1"># Sample JSON:</span>
+<span class="c1"># {</span>
+<span class="c1">#     &quot;name&quot;: &quot;Pit1&quot;,</span>
+<span class="c1">#     &quot;description&quot;: &quot;Pit1 description&quot;</span>
+<span class="c1"># }</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>  
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LogEvent</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogEvent</span>
+
+<span class="c1"># Setup logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;prompits&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="c1"># Create console handler if it doesn&#39;t exist</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+    <span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">console_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">console_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Pit">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pit</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for all Pit components in the Prompits framework.</span>
+<span class="sd">    </span>
+<span class="sd">    A Pit is the basic element of a multi-agent system. It provides a way to </span>
+<span class="sd">    store and retrieve information. An agent can contain multiple pits, and </span>
+<span class="sd">    each pit has a list of practices (actions) that it can perform.</span>
+<span class="sd">    </span>
+<span class="sd">    Other pits can use these practices through the UsePractice() method.</span>
+<span class="sd">    Pits can be serialized to and from JSON format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Pit with a name and description.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the pit</span>
+<span class="sd">            description: A description of the pit&#39;s purpose and functionality</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">practices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;prompits.Pit.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Add standard practices</span>
+        <span class="n">practice</span> <span class="o">=</span> <span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;ListPractices&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ListPractices</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding practice: </span><span class="si">{</span><span class="n">practice</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">practice</span><span class="p">)</span>
+        <span class="n">practice</span> <span class="o">=</span> <span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;PracticeInfo&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PracticeInfo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">practice</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Pit.subscribe_to_logs">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.subscribe_to_logs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe_to_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">LogEvent</span><span class="p">],</span> <span class="kc">None</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subscribe to log events.</span>
+<span class="sd">        </span>
+<span class="sd">        This method adds a callback function that will be called whenever</span>
+<span class="sd">        a log event occurs in this Pit.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            callback: The callback function to be called with a LogEvent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">callback</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+            <span class="c1"># Test the subscription with a test event</span>
+            <span class="c1"># test_event = LogEvent(self.name, &#39;DEBUG&#39;, f&quot;Subscription test for {callback}&quot;)</span>
+            <span class="c1"># try:</span>
+            <span class="c1">#     callback(test_event)</span>
+            <span class="c1"># except Exception as e:</span>
+            <span class="c1">#     pass</span>
+        
+<div class="viewcode-block" id="Pit.emit_log_event">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.emit_log_event">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit_log_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;INFO&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create and emit a log event directly to all subscribers.</span>
+<span class="sd">        </span>
+<span class="sd">        This method ensures that a log event is created and all subscribers</span>
+<span class="sd">        are notified, without relying on the normal logging mechanism.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            message: The message to log</span>
+<span class="sd">            level: Log level (DEBUG, INFO, WARNING, ERROR)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the event</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">LogEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+        
+        <span class="c1"># Send to all subscribers</span>
+        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">subscriber</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+                
+<div class="viewcode-block" id="Pit.log">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.log">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;INFO&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log a message with the pit&#39;s prefix and trigger log event.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            message: The message to log</span>
+<span class="sd">            level: Log level (DEBUG, INFO, WARNING, ERROR)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Regular logging</span>
+            <span class="n">log_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">level</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">log_func</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Also use the direct event emission method to ensure subscribers are notified</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">emit_log_event</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Fallback if logging fails</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2"> (Logging error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="c1"># Try to emit event anyway</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">emit_log_event</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Pit.unsubscribe_from_logs">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.unsubscribe_from_logs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe_from_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">LogEvent</span><span class="p">],</span> <span class="kc">None</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unsubscribe from log events.</span>
+<span class="sd">        </span>
+<span class="sd">        This method removes a callback function from the list of subscribers.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            callback: The callback function to remove</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Pit.UsePractice">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.UsePractice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">UsePractice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">practice_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call the practice function with the arguments.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            practice_name: Name of the practice to use</span>
+<span class="sd">            *args: Positional arguments</span>
+<span class="sd">            **kwargs: Keyword arguments</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: Result of the practice</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Direct print statements that will show up regardless of logging config</span>
+        <span class="c1">#print(f&quot;**** DIRECT PRINT: {self.name}.UsePractice({practice_name}) STARTED ****&quot;)</span>
+        
+        <span class="c1"># Log the practice start using our direct event emission</span>
+        <span class="c1">#self.log(f&quot;Using practice {practice_name} with args {args} and kwargs {kwargs}&quot;, &#39;DEBUG&#39;)</span>
+        
+        <span class="k">if</span> <span class="n">practice_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Get the practice</span>
+                <span class="n">practice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">[</span><span class="n">practice_name</span><span class="p">]</span>
+                
+                <span class="c1"># Add our subscribers to the practice</span>
+                <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_subscribers</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">practice</span><span class="p">,</span> <span class="s1">&#39;subscribe_to_logs&#39;</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">sub</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">practice</span><span class="o">.</span><span class="n">log_subscribers</span><span class="p">:</span>
+                            <span class="n">practice</span><span class="o">.</span><span class="n">subscribe_to_logs</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+                
+                <span class="c1"># Call the practice</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">practice</span><span class="o">.</span><span class="n">Use</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                
+                <span class="c1"># Log the completion using direct event emission</span>
+                <span class="c1">#self.log(f&quot;Practice {practice_name} completed successfully, result: {result}&quot;, &#39;DEBUG&#39;)</span>
+                
+                <span class="c1"># Direct print for completion</span>
+                <span class="c1">#print(f&quot;**** DIRECT PRINT: {self.name}.UsePractice({practice_name}) COMPLETED ****&quot;)</span>
+                <span class="c1">#print(f&quot;**** Result: {result}&quot;)</span>
+                
+                <span class="k">return</span> <span class="n">result</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># Log the error using direct event emission</span>
+                <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error in practice </span><span class="si">{</span><span class="n">practice_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">emit_log_event</span><span class="p">(</span><span class="n">error_msg</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+                
+                <span class="c1"># Direct print for error</span>
+                <span class="c1">#print(f&quot;**** DIRECT PRINT: {self.name}.UsePractice({practice_name}) ERROR: {str(e)} ****&quot;)</span>
+                
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Log the not found error using direct event emission</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Practice </span><span class="si">{</span><span class="n">practice_name</span><span class="si">}</span><span class="s2"> not found&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">emit_log_event</span><span class="p">(</span><span class="n">error_msg</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># Direct print for not found</span>
+            <span class="c1">#print(f&quot;**** DIRECT PRINT: {self.name}.UsePractice({practice_name}) NOT FOUND ****&quot;)</span>
+            
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Pit.AddPractice">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.AddPractice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">AddPractice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">practice</span><span class="p">:</span> <span class="n">Practice</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a practice to the pit.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            practice: Practice object to add</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if added successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1">#print(f&quot;**** DIRECT PRINT: {self.name}.AddPractice({practice.name}) STARTED ****&quot;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">[</span><span class="n">practice</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">practice</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added practice </span><span class="si">{</span><span class="n">practice</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="c1">#print(f&quot;**** DIRECT PRINT: {self.name}.AddPractice({practice.name}) COMPLETED ****&quot;)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error adding practice </span><span class="si">{</span><span class="n">practice</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Pit.ListPractices">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.ListPractices">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ListPractices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all practices of the pit.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name_only: If True, return only practice names</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[List[str], Dict[str, Dict]]: List of practice names or dict of practice info</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name_only</span><span class="p">:</span>
+                <span class="n">practices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">practices</span> <span class="o">=</span> <span class="p">{</span><span class="n">practice</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">[</span><span class="n">practice</span><span class="p">]</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span> <span class="k">for</span> <span class="n">practice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Listed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">)</span><span class="si">}</span><span class="s2"> practices&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">practices</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error listing practices: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="Pit.PracticeInfo">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.PracticeInfo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">PracticeInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">practice</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about a specific practice.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            practice: Name of the practice</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Information about the practice</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">practice</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Practice </span><span class="si">{</span><span class="n">practice</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;practice </span><span class="si">{</span><span class="n">practice</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+            
+            <span class="n">practice_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">[</span><span class="n">practice</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">practice_func</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+                <span class="n">signature</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">practice_func</span><span class="p">))</span>
+                <span class="n">docstring</span> <span class="o">=</span> <span class="n">practice_func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="s2">&quot;No documentation available&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">signature</span> <span class="o">=</span> <span class="s2">&quot;No signature available&quot;</span>
+                <span class="n">docstring</span> <span class="o">=</span> <span class="s2">&quot;No documentation available&quot;</span>
+            
+            <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">practice</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">[</span><span class="n">practice</span><span class="p">]</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;input_schema&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">[</span><span class="n">practice</span><span class="p">]</span><span class="o">.</span><span class="n">input_schema</span><span class="p">,</span>
+                <span class="s2">&quot;signature&quot;</span><span class="p">:</span> <span class="n">signature</span><span class="p">,</span>
+                <span class="s2">&quot;docstring&quot;</span><span class="p">:</span> <span class="n">docstring</span><span class="p">,</span>
+                <span class="s2">&quot;callable&quot;</span><span class="p">:</span> <span class="nb">callable</span><span class="p">(</span><span class="n">practice_func</span><span class="p">)</span>
+            <span class="p">}</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieved info for practice </span><span class="si">{</span><span class="n">practice</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">info</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting practice info for </span><span class="si">{</span><span class="n">practice</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="Pit.ToJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert pit to JSON representation.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: JSON object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># Add practices</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;practices&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="p">:</span>
+                <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">practice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">practice</span><span class="p">,</span> <span class="s2">&quot;ToJson&quot;</span><span class="p">):</span>
+                        <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">practice</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">practice</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">practice</span><span class="o">.</span><span class="n">description</span>
+                        <span class="p">}</span>
+            
+            <span class="c1"># Log success using logger&#39;s methods directly rather than through self.log</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;logger&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] Converted pit to JSON&quot;</span><span class="p">)</span>
+                
+            <span class="k">return</span> <span class="n">json_data</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Log error using logger&#39;s methods directly</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;logger&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] Error converting pit to JSON: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="Pit.FromJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Pit.Pit.FromJson">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize pit from JSON representation.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;FromJson is not implemented&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FromJson is not implemented&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

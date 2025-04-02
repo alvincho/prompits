@@ -1,0 +1,85 @@
+prompits.services package
+=========================
+
+Submodules
+----------
+
+prompits.services.APIService module
+-----------------------------------
+
+.. automodule:: prompits.services.APIService
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.Job module
+----------------------------
+
+.. automodule:: prompits.services.Job
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.JobMarket module
+----------------------------------
+
+.. automodule:: prompits.services.JobMarket
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.JobResult module
+----------------------------------
+
+.. automodule:: prompits.services.JobResult
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.LLM module
+----------------------------
+
+.. automodule:: prompits.services.LLM
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.MCPClient module
+----------------------------------
+
+.. automodule:: prompits.services.MCPClient
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.Ollama module
+-------------------------------
+
+.. automodule:: prompits.services.Ollama
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.Pouch module
+------------------------------
+
+.. automodule:: prompits.services.Pouch
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.services.Service module
+--------------------------------
+
+.. automodule:: prompits.services.Service
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: prompits.services
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,960 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.plugs.gRPCPlug &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.plugs.gRPCPlug</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.plugs.gRPCPlug</h1><div class="highlight"><pre>
+<span></span><span class="c1"># gRPCPlug is a plug that uses gRPC to communicate with other agents</span>
+<span class="c1"># gRPC is a high-performance, open-source and general RPC framework that puts mobile and HTTP/2 first</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">grpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent</span><span class="w"> </span><span class="kn">import</span> <span class="n">futures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Plug</span><span class="w"> </span><span class="kn">import</span> <span class="n">Plug</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Message</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Attachment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..AgentAddress</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentAddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..LogEvent</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogEvent</span>
+
+<span class="c1"># Setup logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Import the generated gRPC code</span>
+<span class="c1"># Note: You&#39;ll need to generate these files from your .proto definitions</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">prompits.plugs.protos</span><span class="w"> </span><span class="kn">import</span> <span class="n">agent_pb2</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">prompits.plugs.protos</span><span class="w"> </span><span class="kn">import</span> <span class="n">agent_pb2_grpc</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Placeholder for when protos aren&#39;t generated yet</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">agent_pb2</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generated Protocol Buffer classes for agent communication.</span>
+<span class="sd">        </span>
+<span class="sd">        This class contains the message types defined in the agent.proto file,</span>
+<span class="sd">        which are used for serializing and deserializing gRPC messages.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">class</span><span class="w"> </span><span class="nc">Message</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Protocol buffer message class for agent messages.</span>
+<span class="sd">            </span>
+<span class="sd">            This class represents a message sent between agents, containing</span>
+<span class="sd">            information about the sender, recipient, and message content.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Initialize a new Message instance with default values.</span>
+<span class="sd">                </span>
+<span class="sd">                Sets default empty values for id, type, content, and timestamp.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="mi">0</span>
+                
+        <span class="k">class</span><span class="w"> </span><span class="nc">AgentInfo</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Protocol buffer message class for agent information.</span>
+<span class="sd">            </span>
+<span class="sd">            This class represents details about an agent, including its</span>
+<span class="sd">            identifier, name, and other metadata.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Initialize a new AgentInfo instance with default values.</span>
+<span class="sd">                </span>
+<span class="sd">                Sets default empty values for agent_id and agent_name.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                
+    <span class="k">class</span><span class="w"> </span><span class="nc">agent_pb2_grpc</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generated gRPC service classes for agent communication.</span>
+<span class="sd">        </span>
+<span class="sd">        This class contains the service definitions from the agent.proto file,</span>
+<span class="sd">        providing interfaces for both client and server implementations of</span>
+<span class="sd">        the agent service.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">class</span><span class="w"> </span><span class="nc">AgentServicer</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Base class for implementing gRPC agent services.</span>
+<span class="sd">            </span>
+<span class="sd">            This is the abstract interface class that should be inherited</span>
+<span class="sd">            by service implementations to handle RPC calls from clients.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">pass</span>
+            
+        <span class="k">class</span><span class="w"> </span><span class="nc">AgentStub</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Client-side stub for interacting with the Agent gRPC service.</span>
+<span class="sd">            </span>
+<span class="sd">            This class provides methods for making RPC calls to an Agent server.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Initialize a new AgentStub connected to a gRPC channel.</span>
+<span class="sd">                </span>
+<span class="sd">                Args:</span>
+<span class="sd">                    channel: The gRPC channel to use for communication</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+            
+        <span class="k">def</span><span class="w"> </span><span class="nf">add_AgentServicer_to_server</span><span class="p">(</span><span class="n">servicer</span><span class="p">,</span> <span class="n">server</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Register an AgentServicer with a gRPC server.</span>
+<span class="sd">            </span>
+<span class="sd">            Args:</span>
+<span class="sd">                servicer: The AgentServicer implementation to register</span>
+<span class="sd">                server: The gRPC server to register with</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">pass</span>
+
+<span class="c1"># Define the gRPC service</span>
+<div class="viewcode-block" id="AgentServicer">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.AgentServicer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentServicer</span><span class="p">(</span><span class="n">agent_pb2_grpc</span><span class="o">.</span><span class="n">AgentServicer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gRPC service implementation that handles incoming requests from other agents.</span>
+<span class="sd">    </span>
+<span class="sd">    This class implements the AgentServicer interface defined in the agent.proto file,</span>
+<span class="sd">    providing methods to handle various types of requests such as receiving messages,</span>
+<span class="sd">    echoing messages for connectivity testing, retrieving agent information, listing</span>
+<span class="sd">    available practices, and executing practices remotely.</span>
+<span class="sd">    </span>
+<span class="sd">    The servicer acts as a bridge between the gRPC communication layer and the</span>
+<span class="sd">    agent&#39;s internal functionality, translating protocol buffer messages into</span>
+<span class="sd">    Python objects that the agent can process, and vice versa.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grpc_plug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the AgentServicer with a reference to the gRPCPlug.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            grpc_plug: The gRPCPlug instance that this servicer is associated with</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span> <span class="o">=</span> <span class="n">grpc_plug</span>
+        
+<div class="viewcode-block" id="AgentServicer.SendMessage">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.AgentServicer.SendMessage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SendMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle incoming message requests from other agents.</span>
+<span class="sd">        </span>
+<span class="sd">        This method receives a message from another agent, triggers any registered</span>
+<span class="sd">        message event handlers, and adds the message to the message queue for</span>
+<span class="sd">        later processing.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            request: The gRPC Message request object containing the message data</span>
+<span class="sd">            context: The gRPC context object</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            MessageResponse: A response indicating success or failure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Convert protobuf message to dict</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+            <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">timestamp</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Trigger message event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="o">.</span><span class="n">trigger_event</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+        
+        <span class="c1"># Add to message queue</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="o">.</span><span class="n">message_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="o">.</span><span class="n">message_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        
+        <span class="c1"># Return response</span>
+        <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">MessageResponse</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Message received&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AgentServicer.Echo">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.AgentServicer.Echo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Echo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Echo a message back to the sender.</span>
+<span class="sd">        </span>
+<span class="sd">        This method is used for testing connectivity between agents by</span>
+<span class="sd">        receiving a message and echoing it back to the sender with minimal</span>
+<span class="sd">        modifications.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            request: The gRPC Message request object to echo</span>
+<span class="sd">            context: The gRPC context object</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Message: The echoed message with updated metadata</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Echo the message back</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">Message</span><span class="p">()</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;echo_response&quot;</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">content</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+        
+<div class="viewcode-block" id="AgentServicer.GetAgentInfo">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.AgentServicer.GetAgentInfo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetAgentInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve information about this agent.</span>
+<span class="sd">        </span>
+<span class="sd">        This method provides metadata about the agent, including its ID, name,</span>
+<span class="sd">        description, and a list of its capabilities (available practices).</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            request: The gRPC GetAgentInfoRequest object</span>
+<span class="sd">            context: The gRPC context object</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            AgentInfo: Information about the agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get agent information from the plug&#39;s agent</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="o">.</span><span class="n">agent</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="p">,</span> <span class="s1">&#39;agent&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">agent</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Agent information not available&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">AgentInfo</span><span class="p">()</span>
+            
+        <span class="c1"># Get capabilities (practices)</span>
+        <span class="n">capabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;practices&#39;</span><span class="p">):</span>
+            <span class="n">capabilities</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">practices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            
+        <span class="c1"># Create and return agent info</span>
+        <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">AgentInfo</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;agent_id&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())),</span>
+            <span class="n">agent_name</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">),</span>
+            <span class="n">description</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+            <span class="n">capabilities</span><span class="o">=</span><span class="n">capabilities</span>
+        <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AgentServicer.ListPractices">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.AgentServicer.ListPractices">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ListPractices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all practices available from this agent.</span>
+<span class="sd">        </span>
+<span class="sd">        This method returns detailed information about all practices that this agent</span>
+<span class="sd">        can perform, including their names, descriptions, and parameter information.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            request: The gRPC ListPracticesRequest object</span>
+<span class="sd">            context: The gRPC context object</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            PracticeList: A list of available practices with their details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get agent</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="o">.</span><span class="n">agent</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="p">,</span> <span class="s1">&#39;agent&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">agent</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Agent not available&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">PracticeList</span><span class="p">()</span>
+            
+        <span class="c1"># Get practices</span>
+        <span class="n">practice_list</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Add agent practices</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;practices&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">practice</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">practices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># Get practice info</span>
+                <span class="n">practice_info</span> <span class="o">=</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">Practice</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="n">practice</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">practice</span><span class="p">,</span> <span class="s1">&#39;__doc__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">practice</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Add parameters if available</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">practice</span><span class="p">,</span> <span class="s1">&#39;__code__&#39;</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">practice</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[:</span><span class="n">practice</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]):</span>
+                        <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;self&#39;</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                            
+                        <span class="c1"># Create parameter</span>
+                        <span class="n">param</span> <span class="o">=</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">param_name</span><span class="p">,</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+                            <span class="n">required</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">practice</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">practice</span><span class="o">.</span><span class="vm">__defaults__</span> <span class="ow">or</span> <span class="p">[]))</span>
+                        <span class="p">)</span>
+                        
+                        <span class="c1"># Add default value if available</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">param</span><span class="o">.</span><span class="n">required</span> <span class="ow">and</span> <span class="n">practice</span><span class="o">.</span><span class="vm">__defaults__</span><span class="p">:</span>
+                            <span class="n">default_idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">practice</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">practice</span><span class="o">.</span><span class="vm">__defaults__</span><span class="p">))</span>
+                            <span class="k">if</span> <span class="n">default_idx</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">param</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">practice</span><span class="o">.</span><span class="vm">__defaults__</span><span class="p">[</span><span class="n">default_idx</span><span class="p">])</span>
+                                
+                        <span class="c1"># Add parameter to practice</span>
+                        <span class="n">practice_info</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                        
+                <span class="c1"># Add practice to list</span>
+                <span class="n">practice_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">practice_info</span><span class="p">)</span>
+                
+        <span class="c1"># Return practice list</span>
+        <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">PracticeList</span><span class="p">(</span><span class="n">practices</span><span class="o">=</span><span class="n">practice_list</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="AgentServicer.ExecutePractice">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.AgentServicer.ExecutePractice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ExecutePractice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute a practice that this agent can perform.</span>
+<span class="sd">        </span>
+<span class="sd">        This method allows remote agents to invoke a practice that this agent</span>
+<span class="sd">        has registered. It handles parameter conversion and error handling,</span>
+<span class="sd">        returning the result of the practice execution.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            request: The gRPC ExecutePracticeRequest containing the practice name and parameters</span>
+<span class="sd">            context: The gRPC context object</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            PracticeResponse: The result of executing the practice, or an error message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get agent</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="o">.</span><span class="n">agent</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grpc_plug</span><span class="p">,</span> <span class="s1">&#39;agent&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">agent</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s2">&quot;Agent not available&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">PracticeResponse</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s2">&quot;Agent not available&quot;</span><span class="p">)</span>
+            
+        <span class="c1"># Get practice name</span>
+        <span class="n">practice_name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">practice_name</span>
+        
+        <span class="c1"># Check if practice exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s1">&#39;UsePractice&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">PracticeResponse</span><span class="p">(</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="s2">&quot;Agent does not support UsePractice method&quot;</span>
+            <span class="p">)</span>
+            
+        <span class="c1"># Convert parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Try to convert to appropriate type</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try as JSON first</span>
+                <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                <span class="c1"># Use as string</span>
+                <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                
+        <span class="c1"># Execute practice</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="n">practice_name</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+            
+            <span class="c1"># Convert result to string if needed</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    
+            <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">PracticeResponse</span><span class="p">(</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">result</span><span class="o">=</span><span class="n">result</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">PracticeResponse</span><span class="p">(</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="gRPCPlug">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">gRPCPlug</span><span class="p">(</span><span class="n">Plug</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gRPC communication plug for connecting agents via gRPC.</span>
+<span class="sd">    </span>
+<span class="sd">    This class implements a bidirectional communication channel using gRPC,</span>
+<span class="sd">    allowing agents to send and receive messages, query agent information,</span>
+<span class="sd">    list available practices, and execute practices remotely.</span>
+<span class="sd">    </span>
+<span class="sd">    The plug can operate in either server mode (listening for incoming connections)</span>
+<span class="sd">    or client mode (connecting to remote servers). It handles serialization of</span>
+<span class="sd">    messages and manages the connection lifecycle.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        is_server: Whether this plug is operating as a server</span>
+<span class="sd">        server: The gRPC server instance (if in server mode)</span>
+<span class="sd">        channel: The gRPC channel (if in client mode)</span>
+<span class="sd">        stub: The gRPC stub for making calls (if in client mode)</span>
+<span class="sd">        message_queue: Queue of received messages</span>
+<span class="sd">        event_handlers: Dictionary of registered event handlers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9000</span><span class="p">,</span> <span class="n">is_server</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the gRPC plug</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the plug</span>
+<span class="sd">            description: Description of the plug</span>
+<span class="sd">            host: Host to connect to</span>
+<span class="sd">            port: Port to connect to</span>
+<span class="sd">            is_server: Whether this plug is a server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span> <span class="o">=</span> <span class="n">is_server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message_queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Listen</span><span class="p">({})</span>
+
+<div class="viewcode-block" id="gRPCPlug.SendMessage">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.SendMessage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SendMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span><span class="n">AgentAddress</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="n">plug_info</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span><span class="o">=</span> <span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send a message to an agent via gRPC</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent: AgentAddress</span>
+<span class="sd">            message: Message</span>
+<span class="sd">            plug_info: Dictionary with connection information</span>
+<span class="sd">                {</span>
+<span class="sd">                    &quot;host&quot;: str,</span>
+<span class="sd">                    &quot;port&quot;: int</span>
+<span class="sd">                }</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if sent successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Format address</span>
+            <span class="n">agent_id</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">agent_id</span>
+            <span class="n">server_address</span> <span class="o">=</span> <span class="kc">None</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending message to </span><span class="si">{</span><span class="n">agent</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">plug_info</span> <span class="ow">and</span> <span class="n">plug_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">plug_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">):</span>
+                <span class="n">server_address</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plug_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">plug_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to </span><span class="si">{</span><span class="n">server_address</span><span class="si">}</span><span class="s2"> via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+                
+                <span class="c1"># Create a channel</span>
+                <span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">server_address</span><span class="p">)</span>
+                
+                <span class="c1"># Create a stub</span>
+                <span class="n">stub</span> <span class="o">=</span> <span class="n">agent_pb2_grpc</span><span class="o">.</span><span class="n">AgentStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+                
+                <span class="c1"># Convert message to JSON string</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+                <span class="c1"># Handle special cases in the message</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">),</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">message</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+                    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;Message&#39;</span><span class="p">)</span>
+                    <span class="n">msg_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">ToJson</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="nb">vars</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">Message</span><span class="p">):</span>
+                    <span class="n">msg_json</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+                    <span class="n">msg_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">msg_json</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">vars</span><span class="p">)</span>
+                    <span class="n">msg_type</span> <span class="o">=</span> <span class="s1">&#39;Message&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">msg_str</span> <span class="o">=</span> <span class="n">message</span>
+                    <span class="n">msg_type</span> <span class="o">=</span> <span class="s1">&#39;Message&#39;</span>
+                
+                <span class="c1"># Create message</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">Message</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">msg_type</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">msg_str</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">LogEvent</span><span class="p">(</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">,</span> <span class="s1">&#39;GRPC_SEND_MESSAGE&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Message: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+                <span class="n">stub</span><span class="o">.</span><span class="n">SendMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">LogEvent</span><span class="p">(</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">,</span> <span class="s1">&#39;GRPC_SEND_MESSAGE&#39;</span><span class="p">,</span> <span class="s2">&quot;Message sent&quot;</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No connection info for agent </span><span class="si">{</span><span class="n">agent</span><span class="si">}</span><span class="s2">, skipping&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error sending message: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">LogEvent</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span><span class="p">,</span> <span class="s1">&#39;GRPC_SEND_MESSAGE&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error sending message: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_Listen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugs_info</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Listen for incoming connections</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            plugs_info: Dictionary with connection information</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if listening successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not a server&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create a server</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">server</span><span class="p">(</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+            
+            <span class="c1"># Add the servicer to the server</span>
+            <span class="n">agent_pb2_grpc</span><span class="o">.</span><span class="n">add_AgentServicer_to_server</span><span class="p">(</span><span class="n">AgentServicer</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+            
+            <span class="c1"># Add a secure port</span>
+            <span class="c1"># if self.port is 0, try to find an open port, starting at 9000</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9100</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">server_address</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">add_insecure_port</span><span class="p">(</span><span class="n">server_address</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">port</span>
+                        <span class="k">break</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error adding insecure port </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">server_address</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">add_insecure_port</span><span class="p">(</span><span class="n">server_address</span><span class="p">)</span>
+            
+            <span class="c1"># Start the server</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC server </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> listening on </span><span class="si">{</span><span class="n">server_address</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error starting gRPC server </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="c1"># connect to remote agent</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_Connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span><span class="n">AgentAddress</span><span class="p">,</span> <span class="n">plugs_info</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect to an agent via gRPC</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent: AgentAddress</span>
+<span class="sd">            plugs_info: Dictionary with connection information</span>
+<span class="sd">                {</span>
+<span class="sd">                    &quot;host&quot;: str,</span>
+<span class="sd">                    &quot;port&quot;: int</span>
+<span class="sd">                }</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if connected successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># if self.port is 0, try to find an open port, starting at 9000</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9100</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="n">agent_pb2_grpc</span><span class="o">.</span><span class="n">AgentStub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">port</span>
+                        <span class="k">break</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error connecting to port </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">plugs_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="p">)</span>
+                <span class="n">port</span> <span class="o">=</span> <span class="n">plugs_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="p">)</span>
+                <span class="n">server_address</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to </span><span class="si">{</span><span class="n">server_address</span><span class="si">}</span><span class="s2"> via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># Create a channel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="n">server_address</span><span class="p">)</span>
+            
+            <span class="c1"># Create a stub</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="n">agent_pb2_grpc</span><span class="o">.</span><span class="n">AgentStub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+            
+            <span class="c1"># Set connected flag</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to </span><span class="si">{</span><span class="n">server_address</span><span class="si">}</span><span class="s2"> via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error connecting to agent via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    
+<div class="viewcode-block" id="gRPCPlug.Connect">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.Connect">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect to the gRPC server or start a server&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Listen</span><span class="p">({})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Client mode - will connect when needed</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+            
+<div class="viewcode-block" id="gRPCPlug.Disconnect">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.Disconnect">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disconnect the gRPC plug&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="kc">None</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> disconnected&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error disconnecting gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_Send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a message via gRPC</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            message: Message dictionary</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if sent successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_IsConnected</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not connected&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is a server and cannot send messages directly&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+            
+        <span class="c1"># Send message</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">Echo</span><span class="p">(</span><span class="n">agent_pb2</span><span class="o">.</span><span class="n">Message</span><span class="p">(</span>
+                <span class="n">content</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sent message via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error sending message via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+            
+    <span class="k">def</span><span class="w"> </span><span class="nf">_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias for _Send&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_IsConnected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the gRPC plug is connected</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if connected, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_SendMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a message (can be a Message object or dict)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">Message</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">ToJson</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<div class="viewcode-block" id="gRPCPlug.ReceiveMessage">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.ReceiveMessage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ReceiveMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Receive a message via gRPC</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            msg_count: Number of messages to receive</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Message: Received message, or None if no message is available</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Receive message</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPCPlug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> ReceiveMessage&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1">#print(f&quot;Received message: {msg}&quot;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received message: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">msg</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error receiving message via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_Echo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Echo a message back</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            message: Message to echo</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Echoed message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> cannot echo messages&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Send an echo request</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">agent_pb2</span><span class="o">.</span><span class="n">Message</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;echo&quot;</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">message</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+            
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stub</span><span class="o">.</span><span class="n">Echo</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            
+            <span class="c1"># Return the response</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error echoing message via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    
+<div class="viewcode-block" id="gRPCPlug.register_event_handler">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.register_event_handler">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_event_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register an event handler</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            event_type: Type of event to register for</span>
+<span class="sd">            handler_func: Function to call when event occurs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handler_func</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registered event handler for </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> events in gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="gRPCPlug.unregister_event_handler">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.unregister_event_handler">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unregister_event_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unregister an event handler</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            event_type: Type of event to unregister for</span>
+<span class="sd">            handler_func: Function to unregister, or None to unregister all</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No handlers registered for </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> events in gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+            
+        <span class="k">if</span> <span class="n">handler_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unregistered all handlers for </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> events in gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">handler_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">handler_func</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unregistered handler for </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> events in gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Handler not found for </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> events in gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="gRPCPlug.trigger_event">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.trigger_event">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">event_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger an event</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            event_type: Type of event to trigger</span>
+<span class="sd">            **event_data: Data to pass to event handlers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Triggering event </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> with data: </span><span class="si">{</span><span class="n">event_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">handler</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="o">**</span><span class="n">event_data</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in event handler for </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2"> event: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="gRPCPlug.start">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start the gRPC plug&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Connect</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="gRPCPlug.stop">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop the server&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gRPC server </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> stopped&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="gRPCPlug.ToJson">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the gRPC plug to a JSON object&quot;&quot;&quot;</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+        <span class="n">json_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="p">,</span>
+            <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;gRPCPlug&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_server&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">json_data</span></div>
+
+
+<div class="viewcode-block" id="gRPCPlug.FromJson">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.FromJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the gRPC plug from a JSON object&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_host</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_host</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_port</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_server&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_server</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+        
+<div class="viewcode-block" id="gRPCPlug.set_agent">
+<a class="viewcode-back" href="../../../prompits.plugs.html#prompits.plugs.gRPCPlug.gRPCPlug.set_agent">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the agent reference for this plug&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_Disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span><span class="n">AgentAddress</span><span class="p">,</span> <span class="n">plugs_info</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disconnect from an agent</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent: AgentAddress</span>
+<span class="sd">            plugs_info: Dictionary with connection information</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if disconnected successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Close the channel</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stub</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disconnected from agent via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error disconnecting from agent via gRPC Plug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

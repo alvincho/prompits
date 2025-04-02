@@ -10,6 +10,13 @@ from datetime import datetime
 
 # an enum class for data types
 class DataType(Enum):
+    """
+    Enumeration of supported data types in the system.
+    
+    This enum defines the possible data types that can be used in schemas
+    and for storing data in pools. It provides methods for type conversion,
+    validation, and string representation.
+    """
     STRING = "string"
     INTEGER = "integer"
     FLOAT = "float"
@@ -84,7 +91,26 @@ class DataType(Enum):
         return False
 
 class Schema(ABC):
+    """
+    Abstract base class for data schemas.
+    
+    Schema is used to define the structure and validation rules for data
+    in the system. Different types of schemas (TableSchema, RowSchema, etc.)
+    inherit from this class to provide specific validation logic.
+    """
+    
     def __init__(self, name: str, description: str, schema: Dict[str, Any]):
+        """
+        Initialize a Schema instance.
+        
+        Args:
+            name: The name of the schema
+            description: A description of what the schema represents
+            schema: Dictionary containing the JSON schema definition
+            
+        Raises:
+            ValueError: If the provided schema is not valid JSON schema
+        """
         self.name = name
         self.description = description
         self.schema = schema
@@ -96,6 +122,21 @@ class Schema(ABC):
 
     @abstractmethod
     def validate(self, data: Any) -> bool:
+        """
+        Validate data against this schema.
+        
+        This abstract method must be implemented by subclasses to provide
+        specific validation logic for each schema type.
+        
+        Args:
+            data: The data to validate
+            
+        Returns:
+            bool: True if the data is valid according to the schema
+            
+        Raises:
+            ValueError: If validation fails with specific error details
+        """
         pass
     
     def get_field_type(self, field_name: str) -> DataType:
@@ -142,7 +183,25 @@ class Schema(ABC):
 # }
 
 class TableSchema(Schema):
+    """
+    Schema for database tables.
+    
+    TableSchema defines the structure of a database table, including its
+    name, description, primary key(s), and the schema for individual rows.
+    It is used for table creation and data validation.
+    """
+    
     def __init__(self, schema: Dict[str, Any]):
+        """
+        Initialize a TableSchema instance.
+        
+        Args:
+            schema: Dictionary containing the table schema definition,
+                   including name, description, primary key, and row schema
+                   
+        Raises:
+            ValueError: If the schema is not valid for a table
+        """
         super().__init__(schema["name"], schema["description"], schema)
         self.schema = schema
         self.rowSchema = RowSchema(schema["rowSchema"])
@@ -151,6 +210,22 @@ class TableSchema(Schema):
         self.description = schema["description"]
     
     def validate(self, data: Any) -> bool:
+        """
+        Validate data against the table schema.
+        
+        Verifies that the provided data follows the structure defined
+        for creating or modifying tables.
+        
+        Args:
+            data: The data to validate, expected to be a dictionary
+                 describing a table or set of tables
+                 
+        Returns:
+            bool: True if the data is valid according to the schema
+            
+        Raises:
+            ValueError: If validation fails with specific error details
+        """
         # validate data is a schema for create table
         if not isinstance(data, dict):
             raise ValueError("Data must be a dictionary")
@@ -174,10 +249,30 @@ class TableSchema(Schema):
         return True
     
     def ToJson(self):
+        """
+        Convert the table schema to a JSON-serializable dictionary.
+        
+        Returns:
+            Dict[str, Any]: Dictionary representation of the table schema
+        """
         return self.schema
 
 class RowSchema(Schema):
+    """
+    Schema for database table rows.
+    
+    RowSchema defines the structure and validation rules for individual rows
+    in a database table, including column names, types, and constraints.
+    """
+    
     def __init__(self, schema: Dict[str, Any]):
+        """
+        Initialize a RowSchema instance.
+        
+        Args:
+            schema: Dictionary containing the row schema definition,
+                   including column specifications
+        """
         super().__init__("row", "datarow", schema)
         self.schema = schema
         self.columns = {key:schema[key] for key in schema.keys()}
@@ -187,6 +282,22 @@ class RowSchema(Schema):
     # it is a list of data items with type and name
     # the type is a DataType enum
     def validate(self, data: Any) -> bool:
+        """
+        Validate row data against the schema.
+        
+        Checks that the provided data conforms to the row structure,
+        with the expected column names and data types.
+        
+        Args:
+            data: The row data to validate, expected to be a list of
+                 dictionaries representing column values
+                 
+        Returns:
+            bool: True if the data is valid according to the schema
+            
+        Raises:
+            ValueError: If validation fails with specific error details
+        """
         if not isinstance(data, list):
             raise ValueError("Data must be a list")
         for item in data:
@@ -198,36 +309,89 @@ class RowSchema(Schema):
             # Use DataType enum for validation
             data_type = DataType.from_string(item["type"])
             if not data_type.validate_value(item.get("data")):
-                raise ValueError(f"Item data must be a valid {data_type.value}")
+                raise ValueError(f"Invalid data for type {data_type.value}")
+        
         return True
 
 class TupleSchema(Schema):
+    """
+    Schema for tuple data structures.
+    
+    TupleSchema defines the structure and validation rules for tuple data,
+    which is an ordered collection of typed elements.
+    """
+    
     def __init__(self, schema: Dict[str, Any]):
-        super().__init__(schema["name"], schema["description"], schema["schema"])
-        self.schema = schema
+        """
+        Initialize a TupleSchema instance.
+        
+        Args:
+            schema: Dictionary containing the tuple schema definition
+        """
+        super().__init__("tuple", "tuple data", schema)
 
     def validate(self, data: Any) -> bool:
+        """
+        Validate tuple data against the schema.
+        
+        Checks that the provided data conforms to the tuple structure,
+        with the expected element types and order.
+        
+        Args:
+            data: The tuple data to validate
+                 
+        Returns:
+            bool: True if the data is valid according to the schema
+            
+        Raises:
+            ValueError: If validation fails with specific error details
+        """
         if not isinstance(data, tuple):
             raise ValueError("Data must be a tuple")
-        
-        # Validate each item in the tuple against the schema
         if "items" in self.schema:
             if len(data) != len(self.schema["items"]):
-                raise ValueError(f"Tuple length mismatch: expected {len(self.schema['items'])}, got {len(data)}")
-            
-            for i, (item, item_schema) in enumerate(zip(data, self.schema["items"])):
-                data_type = DataType.from_string(item_schema.get("type", "string"))
+                raise ValueError("Tuple length mismatch")
+            for i, item in enumerate(data):
+                item_schema = self.schema["items"][i]
+                data_type = DataType.from_string(item_schema["type"])
                 if not data_type.validate_value(item):
-                    raise ValueError(f"Item at position {i} must be a valid {data_type.value}")
-        
+                    raise ValueError(f"Invalid data for type {data_type.value} at index {i}")
+                
         return True
 
 class JsonSchema(Schema):
+    """
+    Schema for JSON data structures.
+    
+    JsonSchema defines the structure and validation rules for JSON data,
+    leveraging the JSON Schema standard for validation.
+    """
+    
     def __init__(self, schema: Dict[str, Any]):
-        super().__init__(schema["name"], schema["description"], schema["schema"])
-        self.schema = schema
+        """
+        Initialize a JsonSchema instance.
+        
+        Args:
+            schema: Dictionary containing the JSON schema definition
+        """
+        super().__init__("json", "json data", schema)
 
     def validate(self, data: Any) -> bool:
+        """
+        Validate JSON data against the schema.
+        
+        Uses the jsonschema library to validate that the provided data
+        conforms to the defined JSON Schema.
+        
+        Args:
+            data: The JSON data to validate
+                 
+        Returns:
+            bool: True if the data is valid according to the schema
+            
+        Raises:
+            ValueError: If validation fails with specific error details
+        """
         try:
             jsonschema.validate(data, self.schema)
             return True

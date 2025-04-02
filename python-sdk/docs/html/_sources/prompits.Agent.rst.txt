@@ -1,0 +1,26 @@
+prompits package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   prompits.messages
+   prompits.pits
+   prompits.plazas
+   prompits.plugs
+   prompits.pools
+   prompits.services
+
+Submodules
+----------
+
+prompits.Agent module
+---------------------
+
+.. automodule:: prompits.Agent
+   :members:
+   :show-inheritance:
+   :undoc-members:

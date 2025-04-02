@@ -1,0 +1,53 @@
+prompits.plugs package
+======================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   prompits.plugs.protos
+
+Submodules
+----------
+
+prompits.plugs.HTTPPlug module
+------------------------------
+
+.. automodule:: prompits.plugs.HTTPPlug
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.plugs.TCPPlug module
+-----------------------------
+
+.. automodule:: prompits.plugs.TCPPlug
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.plugs.gRPCPlug module
+------------------------------
+
+.. automodule:: prompits.plugs.gRPCPlug
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.plugs.gRPCPlug\-bak module
+-----------------------------------
+
+.. automodule:: prompits.plugs.gRPCPlug-bak
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: prompits.plugs
+   :members:
+   :show-inheritance:
+   :undoc-members:

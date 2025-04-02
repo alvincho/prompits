@@ -1,0 +1,37 @@
+src.prompits.pools package
+==========================
+
+Submodules
+----------
+
+src.prompits.pools.DatabasePool module
+--------------------------------------
+
+.. automodule:: src.prompits.pools.DatabasePool
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.pools.PostgresPool module
+--------------------------------------
+
+.. automodule:: src.prompits.pools.PostgresPool
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.pools.SQLitePool module
+------------------------------------
+
+.. automodule:: src.prompits.pools.SQLitePool
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: src.prompits.pools
+   :members:
+   :show-inheritance:
+   :undoc-members:

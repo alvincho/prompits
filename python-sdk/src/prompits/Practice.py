@@ -27,7 +27,7 @@ class Practice:
         self.description = description
         self.is_async = is_async
         self.parameters = parameters
-        print(f"Practice init parameters: {name}\ninput_schema: {input_schema}\nparameters: {parameters}\n")
+        #print(f"Practice init parameters: {name}\ninput_schema: {input_schema}\nparameters: {parameters}\n")
         if input_schema is None:
             # generate input schema from function signature
             sig = inspect.signature(function)   
@@ -37,7 +37,7 @@ class Practice:
                     self.input_schema[param.name] = str(param.annotation)
         else:
             self.input_schema = input_schema
-        print(f"Practice init: {self.name}\nself.input_schema: {self.input_schema}\nself.parameters: {self.parameters}\n")
+        #print(f"Practice init: {self.name}\nself.input_schema: {self.input_schema}\nself.parameters: {self.parameters}\n")
         self.logger = logging.getLogger(f"prompits.Practice.{name}")
         self.log_subscribers = []
 
@@ -108,7 +108,17 @@ class Practice:
         
     
     def FromJson(self, json):
-        self.name=json["name"]
-        self.description=json["description"]
-        self.function=json["function"]
-        self.args=json["args"]
+        """
+        Initialize this Practice instance from a JSON dictionary.
+        
+        Args:
+            json: Dictionary containing the serialized Practice data
+            
+        Returns:
+            Practice: Self reference for method chaining
+        """
+        self.name = json["name"]
+        self.description = json["description"] 
+        self.function = json["function"]
+        self.args = json["args"]
+        return self

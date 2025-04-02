@@ -15,7 +15,28 @@ from ..Practice import Practice
 
 
 class DateTimeEncoder(json.JSONEncoder):
+    """
+    Custom JSON encoder that handles datetime objects and other non-serializable types.
+    
+    This encoder extends the standard JSONEncoder to properly serialize:
+    - datetime objects (converted to ISO format strings)
+    - methods and functions (converted to string representations)
+    - custom objects (converted to dictionaries of their public attributes)
+    """
+    
     def default(self, obj):
+        """
+        Convert Python objects to JSON-serializable types.
+        
+        Args:
+            obj: The object to convert
+            
+        Returns:
+            A JSON-serializable representation of the object
+            
+        Raises:
+            TypeError: If the object cannot be serialized
+        """
         if isinstance(obj, datetime):
             return obj.isoformat()
         elif isinstance(obj, (types.MethodType, types.FunctionType)):
@@ -33,7 +54,23 @@ class DateTimeEncoder(json.JSONEncoder):
 
 
 class SQLitePool(DatabasePool):
+    """
+    Pool implementation for SQLite databases.
+    
+    This class provides methods to interact with SQLite databases, including
+    connections, transactions, and CRUD operations. It implements the abstract
+    methods defined in DatabasePool.
+    """
+    
     def __init__(self, name: str, description: str, db_path: str):
+        """
+        Initialize an SQLitePool.
+        
+        Args:
+            name: Name of the pool (also used as the main table name)
+            description: Description of the pool's purpose
+            db_path: Path to the SQLite database file
+        """
         super().__init__(name, description)
         self.db_path = db_path
         self.conn = None
@@ -895,6 +932,20 @@ class SQLitePool(DatabasePool):
             return None
     
     def _Insert(self, table_name: str, data: Dict[str, Any], table_schema: TableSchema):
+        """
+        Insert data into a specified table.
+        
+        This method validates and inserts data into the specified table,
+        converting values to appropriate SQLite types based on the table schema.
+        
+        Args:
+            table_name: Name of the table to insert into
+            data: Dictionary of column-value pairs to insert
+            table_schema: Schema definition for the table
+            
+        Returns:
+            bool: True if inserted successfully, False otherwise
+        """
         # check if the table exists
         if not self._TableExists(table_name):
             self.log(f"Table {table_name} does not exist", 'ERROR')

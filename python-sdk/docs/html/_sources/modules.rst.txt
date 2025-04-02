@@ -1,0 +1,7 @@
+prompits
+========
+
+.. toctree::
+   :maxdepth: 4
+
+   prompits

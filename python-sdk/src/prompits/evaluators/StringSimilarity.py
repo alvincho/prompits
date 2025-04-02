@@ -5,11 +5,17 @@
 # or we can use the Jaccard similarity coefficient
 # 
 
-from Profiler import Evaluator
+from prompits.Profiler import Evaluator
 from enum import Enum
 from fuzzywuzzy import fuzz
 
 class StringSimilarityMethod(Enum):
+    """
+    Enumeration of different methods to calculate string similarity.
+    
+    Each method provides a different approach to measuring the similarity
+    between two strings, varying in precision and performance characteristics.
+    """
     LEVENSHTEIN = "levenshtein"
     ABSOLUTE = "absolute"
     JACCARD = "jaccard"
@@ -17,11 +23,42 @@ class StringSimilarityMethod(Enum):
     FUZZY = "fuzzy"
 
 class StringSimilarity(Evaluator):
+    """
+    Evaluator that calculates the similarity between two strings.
+    
+    This class provides multiple methods for comparing string values,
+    including Levenshtein distance, Jaccard similarity, cosine similarity,
+    fuzzy matching, and absolute equality.
+    """
+    
     def __init__(self, method: StringSimilarityMethod=StringSimilarityMethod.LEVENSHTEIN, case_sensitive: bool=True) -> None:
+        """
+        Initialize a StringSimilarity evaluator.
+        
+        Args:
+            method: The method to use for calculating string similarity,
+                   defaulting to Levenshtein distance
+            case_sensitive: Whether comparisons should be case-sensitive
+        """
         super().__init__("StringSimilarity", "StringSimilarity", method)
         self.case_sensitive = case_sensitive
 
     def Evaluate(self, value1, value2, method: StringSimilarityMethod=None) -> float:
+        """
+        Evaluate the similarity between two strings.
+        
+        Args:
+            value1: First string to compare
+            value2: Second string to compare
+            method: Optional method override for this specific evaluation
+            
+        Returns:
+            float: Similarity score between 0.0 (completely different) and 
+                  1.0 (identical), as determined by the specified method
+                  
+        Raises:
+            ValueError: If an invalid method is specified
+        """
         if method is None:
             method = self.method
 
@@ -39,6 +76,15 @@ class StringSimilarity(Evaluator):
             raise ValueError(f"Invalid method: {method}")
 
     def absolute(self, value1, value2) -> float:
+        """
+        Calculate absolute equality between two strings.
+        
+        Returns 1.0 if the strings are identical, 0.0 otherwise.
+        Case sensitivity is determined by self.case_sensitive.
+        
+        Returns:
+            float: 1.0 if identical, 0.0 otherwise
+        """
         if not self.case_sensitive:
             value1 = value1.lower()
             value2 = value2.lower()
@@ -46,6 +92,16 @@ class StringSimilarity(Evaluator):
         return 1.0 if value1 == value2 else 0.0
 
     def levenshtein(self, value1, value2) -> float:
+        """
+        Calculate similarity using Levenshtein distance.
+        
+        Levenshtein distance measures the minimum number of single-character edits
+        (insertions, deletions, substitutions) required to change one string into another.
+        This method returns a normalized similarity score between 0.0 and 1.0.
+        
+        Returns:
+            float: Similarity score between 0.0 and 1.0
+        """
         # Calculate the Levenshtein distance between the value1 and the value2
         if not self.case_sensitive:
             value1 = value1.lower()
@@ -93,6 +149,15 @@ class StringSimilarity(Evaluator):
         return similarity
 
     def jaccard(self, value1, value2) -> float:
+        """
+        Calculate similarity using Jaccard similarity coefficient.
+        
+        The Jaccard similarity measures the size of the intersection divided by the size
+        of the union of two sets. For strings, the sets are the unique characters in each.
+        
+        Returns:
+            float: Similarity score between 0.0 and 1.0
+        """
         # Calculate the Jaccard similarity coefficient between the value1 and the value2
         if not self.case_sensitive:
             value1 = value1.lower()
@@ -116,6 +181,16 @@ class StringSimilarity(Evaluator):
         return len(intersection) / len(union)
 
     def cosine(self, value1, value2) -> float:
+        """
+        Calculate similarity using cosine similarity.
+        
+        Cosine similarity measures the cosine of the angle between two vectors. 
+        For strings treated as character sets, this implementation is equivalent
+        to the Jaccard coefficient.
+        
+        Returns:
+            float: Similarity score between 0.0 and 1.0
+        """
         # Calculate the cosine similarity between the value1 and the value2
         if not self.case_sensitive:
             value1 = value1.lower()
@@ -142,6 +217,16 @@ class StringSimilarity(Evaluator):
     # which is a library for fuzzy string matching
     # https://github.com/seatgeek/fuzzywuzzy    
     def fuzzy(self, value1, value2) -> float:
+        """
+        Calculate similarity using fuzzy string matching.
+        
+        Uses the fuzzywuzzy library's partial_ratio method which finds the best
+        matching substring and calculates the similarity. Results are normalized
+        to a value between 0.0 and 1.0.
+        
+        Returns:
+            float: Similarity score between 0.0 and 1.0
+        """
         # Calculate the fuzzy similarity between the value1 and the value2
         if value1 == value2:
             return 1.0

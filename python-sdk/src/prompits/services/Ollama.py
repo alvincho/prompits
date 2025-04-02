@@ -11,6 +11,13 @@ import traceback
 from prompits.Practice import Practice
 
 class Ollama(LLM):
+    """
+    Ollama is an LLM service that uses Ollama to complete prompts
+    Ollama has endpoints: /generate, /chat, /embeddings
+    has base url: http://localhost:11434 and can be initialized with a base url
+
+    !!! This class will be deprecated by APIService class !!!
+    """
     def __init__(self, name: str, description: str = None, 
                  default_model: str = None, base_url: str = "http://localhost:11434"):
         # if default_model is not provided, get the first model from the list of models

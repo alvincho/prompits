@@ -5,7 +5,23 @@
 from .APIService import APIService
 from prompits.Practice import Practice
 class LLM(APIService):
+    """
+    LLM service for prompt generation and execution.
+    
+    LLM has practices: Chat, ListModels, CurrentModelList.
+    LLM is an APIService and abstract class.
+
+    !!! This class will be deprecated by APIService class !!!
+    """
     def __init__(self, name: str, description: str = None, default_model: str = "gpt-4o-mini"):
+        """
+        Initialize a new LLM service.
+        
+        Args:
+            name: The name of the LLM service
+            description: Optional description of the service
+            default_model: The default model to use for chat requests
+        """
         super().__init__(name, description) 
         self.AddPractice(Practice("Chat", self.Chat))
         self.AddPractice(Practice("ListModels", self.ListModels))

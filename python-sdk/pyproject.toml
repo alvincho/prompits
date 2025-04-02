@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "prompits"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Alvin Cho", email="alvincho@jumbosoft.com" },
 ]
-description = "A multi-agent system"
+description = "A distributed multi-agent system framework to run AI system across multiple computers"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [

@@ -1,0 +1,29 @@
+src.prompits.plugs.protos package
+=================================
+
+Submodules
+----------
+
+src.prompits.plugs.protos.agent\_pb2 module
+-------------------------------------------
+
+.. automodule:: src.prompits.plugs.protos.agent_pb2
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.plugs.protos.agent\_pb2\_grpc module
+-------------------------------------------------
+
+.. automodule:: src.prompits.plugs.protos.agent_pb2_grpc
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: src.prompits.plugs.protos
+   :members:
+   :show-inheritance:
+   :undoc-members:

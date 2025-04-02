@@ -1,0 +1,141 @@
+prompits package
+================
+   :version: 0.0.2
+   :description: Prompits is a Python SDK for building and running Prompits.
+   :author: Alvin Cho
+   :copyright: 2025 Alvin Cho
+   :license: MIT
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   prompits.plazas
+   prompits.plugs
+   prompits.pools
+   prompits.services
+   prompits.messages
+
+Submodules
+----------
+
+prompits.Agent module
+---------------------
+
+.. automodule:: prompits.Agent
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.AgentAddress module
+----------------------------
+
+.. automodule:: prompits.AgentAddress
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.LogEvent module
+------------------------
+
+.. automodule:: prompits.LogEvent
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Message module
+-----------------------
+
+.. automodule:: prompits.Message
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Pathfinder module
+--------------------------
+
+.. automodule:: prompits.Pathfinder
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Pathway module
+-----------------------
+
+.. automodule:: prompits.Pathway
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Pioneer module
+-----------------------
+
+.. automodule:: prompits.Pioneer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Pit module
+-------------------
+
+.. automodule:: prompits.Pit
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Plaza module
+---------------------
+
+.. automodule:: prompits.Plaza
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Plug module
+--------------------
+
+.. automodule:: prompits.Plug
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Pool module
+--------------------
+
+.. automodule:: prompits.Pool
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Practice module
+------------------------
+
+.. automodule:: prompits.Practice
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Profiler module
+------------------------
+
+.. automodule:: prompits.Profiler
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+prompits.Schema module
+----------------------
+
+.. automodule:: prompits.Schema
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: prompits
+   :members:
+   :show-inheritance:
+   :undoc-members:

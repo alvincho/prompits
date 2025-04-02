@@ -1,6 +1,7 @@
 .DS_Store
 scratch/
 *test_lite.db
+Job*
 .cursor/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,6 +13,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+docs_work/
 build/
 develop-eggs/
 dist/

@@ -19,7 +19,24 @@ from .LogEvent import LogEvent
 
 # DataItem is an abstract class that defines the data item in Pool
 class DataItem(ABC):
+    """
+    Abstract base class for all data items stored in a Pool.
+    
+    DataItem represents a piece of data with identification, metadata,
+    and type information. This class is extended by specific data type
+    implementations like TextDataItem, IntegerDataItem, etc.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data_type: DataType):
+        """
+        Initialize a DataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data_type: The data type of this item (from DataType enum)
+        """
         self.id = id
         self.name = name
         self.description = description
@@ -27,29 +44,93 @@ class DataItem(ABC):
 
     @abstractmethod
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the data item to a dictionary representation.
+        
+        This method must be implemented by subclasses to provide
+        serialization specific to each data type.
+        
+        Returns:
+            Dict[str, Any]: Dictionary representation of the data item
+        """
         pass
 
     @abstractmethod
     def to_json(self) -> str:
+        """
+        Convert the data item to a JSON string.
+        
+        This method must be implemented by subclasses to provide
+        JSON serialization specific to each data type.
+        
+        Returns:
+            str: JSON string representation of the data item
+        """
         pass
 
     @classmethod
     @abstractmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DataItem':
+        """
+        Create a data item from a dictionary.
+        
+        This method must be implemented by subclasses to provide
+        deserialization specific to each data type.
+        
+        Args:
+            data: Dictionary containing data item properties
+            
+        Returns:
+            DataItem: New instance initialized with the data
+        """
         pass
 
     @classmethod
     @abstractmethod
     def from_json(cls, json_str: str) -> 'DataItem':
+        """
+        Create a data item from a JSON string.
+        
+        This method must be implemented by subclasses to provide
+        JSON deserialization specific to each data type.
+        
+        Args:
+            json_str: JSON string containing data item properties
+            
+        Returns:
+            DataItem: New instance initialized with the data
+        """
         pass
 
 # TextDataItem is a data item that contains text
 class TextDataItem(DataItem):
+    """
+    DataItem implementation for storing text data.
+    
+    TextDataItem represents a string value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data: str):
+        """
+        Initialize a TextDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The text string to store
+        """
         super().__init__(id, name, description, DataType.STRING)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the text data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the text data item
+        """
         return {
             "id": self.id,
             "name": self.name,
@@ -59,10 +140,25 @@ class TextDataItem(DataItem):
         }
 
     def to_json(self) -> str:
+        """
+        Convert the text data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the text data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TextDataItem':
+        """
+        Create a TextDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the text data item properties
+            
+        Returns:
+            TextDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
@@ -73,15 +169,46 @@ class TextDataItem(DataItem):
 
     @classmethod
     def from_json(cls, json_str: str) -> 'TextDataItem':
+        """
+        Create a TextDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing text data item properties
+            
+        Returns:
+            TextDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # IntegerDataItem is a data item that contains an integer
 class IntegerDataItem(DataItem):
+    """
+    DataItem implementation for storing integer data.
+    
+    IntegerDataItem represents an integer value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data: int):
+        """
+        Initialize an IntegerDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The integer value to store
+        """
         super().__init__(id, name, description, DataType.INTEGER)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the integer data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the integer data item
+        """
         return {
             "id": self.id,
             "name": self.name,
@@ -91,10 +218,25 @@ class IntegerDataItem(DataItem):
         }
 
     def to_json(self) -> str:
+        """
+        Convert the integer data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the integer data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'IntegerDataItem':
+        """
+        Create an IntegerDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the integer data item properties
+            
+        Returns:
+            IntegerDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
@@ -105,15 +247,46 @@ class IntegerDataItem(DataItem):
 
     @classmethod
     def from_json(cls, json_str: str) -> 'IntegerDataItem':
+        """
+        Create an IntegerDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing integer data item properties
+            
+        Returns:
+            IntegerDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # RealDataItem is a data item that contains a floating point number
 class RealDataItem(DataItem):
+    """
+    DataItem implementation for storing floating-point data.
+    
+    RealDataItem represents a floating-point value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data: float):
+        """
+        Initialize a RealDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The floating-point value to store
+        """
         super().__init__(id, name, description, DataType.REAL)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the real data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the real data item
+        """
         return {
             "id": self.id,
             "name": self.name,
@@ -123,10 +296,25 @@ class RealDataItem(DataItem):
         }
 
     def to_json(self) -> str:
+        """
+        Convert the real data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the real data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'RealDataItem':
+        """
+        Create a RealDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the real data item properties
+            
+        Returns:
+            RealDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
@@ -137,15 +325,46 @@ class RealDataItem(DataItem):
 
     @classmethod
     def from_json(cls, json_str: str) -> 'RealDataItem':
+        """
+        Create a RealDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing real data item properties
+            
+        Returns:
+            RealDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # ObjectDataItem is a data item that contains an object
 class ObjectDataItem(DataItem):
+    """
+    DataItem implementation for storing dictionary/object data.
+    
+    ObjectDataItem represents a dictionary/object value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data: Dict[str, Any]):
+        """
+        Initialize an ObjectDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The dictionary/object value to store
+        """
         super().__init__(id, name, description, DataType.OBJECT)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the object data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the object data item
+        """
         return {
             "id": self.id,
             "name": self.name,
@@ -155,10 +374,25 @@ class ObjectDataItem(DataItem):
         }
 
     def to_json(self) -> str:
+        """
+        Convert the object data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the object data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ObjectDataItem':
+        """
+        Create an ObjectDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the object data item properties
+            
+        Returns:
+            ObjectDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
@@ -169,15 +403,46 @@ class ObjectDataItem(DataItem):
 
     @classmethod
     def from_json(cls, json_str: str) -> 'ObjectDataItem':
+        """
+        Create an ObjectDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing object data item properties
+            
+        Returns:
+            ObjectDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # BooleanDataItem is a data item that contains a boolean
 class BooleanDataItem(DataItem):
+    """
+    DataItem implementation for storing boolean data.
+    
+    BooleanDataItem represents a boolean value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data: bool):
+        """
+        Initialize a BooleanDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The boolean value to store
+        """
         super().__init__(id, name, description, DataType.BOOLEAN)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the boolean data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the boolean data item
+        """
         return {
             "id": self.id,
             "name": self.name,
@@ -187,10 +452,25 @@ class BooleanDataItem(DataItem):
         }
 
     def to_json(self) -> str:
+        """
+        Convert the boolean data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the boolean data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'BooleanDataItem':
+        """
+        Create a BooleanDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the boolean data item properties
+            
+        Returns:
+            BooleanDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
@@ -201,79 +481,209 @@ class BooleanDataItem(DataItem):
 
     @classmethod
     def from_json(cls, json_str: str) -> 'BooleanDataItem':
+        """
+        Create a BooleanDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing boolean data item properties
+            
+        Returns:
+            BooleanDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # DateTimeDataItem is a data item that contains a datetime
 class DateTimeDataItem(DataItem):
-    def __init__(self, id: str, name: str, description: str, data: float):
+    """
+    DataItem implementation for storing datetime data.
+    
+    DateTimeDataItem represents a datetime value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
+    def __init__(self, id: str, name: str, description: str, data: datetime):
+        """
+        Initialize a DateTimeDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The datetime value to store
+        """
         super().__init__(id, name, description, DataType.DATETIME)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the datetime data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the datetime data item
+        """
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
             "type": self.data_type.value,
-            "data": self.data
+            "data": self.data.isoformat()
         }
 
     def to_json(self) -> str:
+        """
+        Convert the datetime data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the datetime data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DateTimeDataItem':
+        """
+        Create a DateTimeDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the datetime data item properties
+            
+        Returns:
+            DateTimeDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
             description=data.get("description", ""),
-            data=data.get("data", time.time())
+            data=datetime.fromisoformat(data.get("data", datetime.now().isoformat()))
         )
         return item
 
     @classmethod
     def from_json(cls, json_str: str) -> 'DateTimeDataItem':
+        """
+        Create a DateTimeDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing datetime data item properties
+            
+        Returns:
+            DateTimeDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # TupleDataItem is a data item that contains a tuple
 class TupleDataItem(DataItem):
+    """
+    DataItem implementation for storing tuple data.
+    
+    TupleDataItem represents a tuple value stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
     def __init__(self, id: str, name: str, description: str, data: Tuple):
-        super().__init__(id, name, description, DataType.ARRAY)
+        """
+        Initialize a TupleDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The tuple value to store
+        """
+        super().__init__(id, name, description, DataType.TUPLE)
         self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the tuple data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the tuple data item
+        """
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
             "type": self.data_type.value,
-            "data": list(self.data)
+            "data": list(self.data)  # Convert tuple to list for JSON serialization
         }
 
     def to_json(self) -> str:
+        """
+        Convert the tuple data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the tuple data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TupleDataItem':
+        """
+        Create a TupleDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the tuple data item properties
+            
+        Returns:
+            TupleDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
             description=data.get("description", ""),
-            data=tuple(data.get("data", ()))
+            data=tuple(data.get("data", []))  # Convert list back to tuple
         )
         return item
 
     @classmethod
     def from_json(cls, json_str: str) -> 'TupleDataItem':
+        """
+        Create a TupleDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing tuple data item properties
+            
+        Returns:
+            TupleDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
-# JsonDataItem is a data item that contains a json object
+# JsonDataItem is a data item that contains JSON data
 class JsonDataItem(DataItem):
-    def __init__(self, id: str, name: str, description: str, data: Union[Dict[str, Any], List[Any]]):
+    """
+    DataItem implementation for storing JSON data.
+    
+    JsonDataItem represents JSON data stored in a Pool, with
+    associated metadata and serialization/deserialization capabilities.
+    """
+    
+    def __init__(self, id: str, name: str, description: str, data: Union[Dict[str, Any], List, str]):
+        """
+        Initialize a JsonDataItem.
+        
+        Args:
+            id: Unique identifier for the data item
+            name: Name or label for the data item
+            description: Description of the data item's purpose or content
+            data: The JSON data to store (dictionary, list, or JSON string)
+        """
         super().__init__(id, name, description, DataType.JSON)
-        self.data = data
+        # If data is a string, parse it as JSON
+        if isinstance(data, str):
+            try:
+                self.data = json.loads(data)
+            except json.JSONDecodeError:
+                self.data = data  # Keep as string if not valid JSON
+        else:
+            self.data = data
 
     def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert the JSON data item to a dictionary representation.
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing all properties of the JSON data item
+        """
         return {
             "id": self.id,
             "name": self.name,
@@ -283,10 +693,25 @@ class JsonDataItem(DataItem):
         }
 
     def to_json(self) -> str:
+        """
+        Convert the JSON data item to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the JSON data item
+        """
         return json.dumps(self.to_dict())
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'JsonDataItem':
+        """
+        Create a JsonDataItem from a dictionary.
+        
+        Args:
+            data: Dictionary containing the JSON data item properties
+            
+        Returns:
+            JsonDataItem: New instance initialized with the data
+        """
         item = cls(
             id=data.get("id", str(uuid.uuid4())),
             name=data.get("name", ""),
@@ -297,6 +722,15 @@ class JsonDataItem(DataItem):
 
     @classmethod
     def from_json(cls, json_str: str) -> 'JsonDataItem':
+        """
+        Create a JsonDataItem from a JSON string.
+        
+        Args:
+            json_str: JSON string containing JSON data item properties
+            
+        Returns:
+            JsonDataItem: New instance initialized with the data
+        """
         return cls.from_dict(json.loads(json_str))
 
 # Pool is a class that stores data items
@@ -556,6 +990,12 @@ class Pool(Pit):
 class MemoryPool(Pool):
     """A pool that stores data in memory."""
     def __init__(self, name: str):
+        """
+        Initialize a MemoryPool.
+        
+        Args:
+            name: Name of the memory pool
+        """
         super().__init__(name)
         self.data = {}
 

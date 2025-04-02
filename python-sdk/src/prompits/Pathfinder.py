@@ -33,11 +33,36 @@ if not os.path.exists(metrics_dir):
 
 # Set up file-based OTLP exporter
 class FileMetricExporter(OTLPMetricExporter):
+    """
+    Custom metrics exporter that writes OpenTelemetry metrics to a local file.
+    
+    This exporter extends the OTLPMetricExporter and redirects metric data
+    to a JSON Lines file instead of sending it to an OTLP endpoint.
+    """
+    
     def __init__(self, file_path):
+        """
+        Initialize the FileMetricExporter.
+        
+        Args:
+            file_path: Path to the file where metrics will be written
+        """
         super().__init__()
         self.file_path = file_path
 
     def _export(self, metrics):
+        """
+        Export metrics data to a file in JSON Lines format.
+        
+        This method overrides the base exporter's _export method to write
+        metrics to a local file instead of sending them to an OTLP endpoint.
+        
+        Args:
+            metrics: MetricsData object containing the metrics to export
+            
+        Returns:
+            None: This method always returns None
+        """
         # Convert metrics to JSON-serializable format
         metrics_json = []
         # check if metrics_data is the right type
@@ -117,7 +142,31 @@ error_counter = meter.create_counter(
 )
 
 class Pathfinder(Pit):
+    """
+    !!! This is a work in progress !!!
+    
+    Pathfinder is a service that executes pathways with provided parameters.
+    
+    A Pathfinder takes a pathway and parameters,
+    runs the posts in the pathway with the given parameters, and returns results.
+    It can be used to run a pathway in a single agent or in a multi-agent environment.
+
+    TODO:
+        - Support concurrent execution of pathways
+        - Support store memory and state of a pathway run
+        - Support async execution of pathways
+        - Support OpenTelemetry metrics
+    """
+    
     def __init__(self, agent: Agent, name="Pathfinder", description="Pathfinder is a service that takes a pathway and parameters and runs the posts in the pathway with the given parameters"):
+        """
+        Initialize a Pathfinder instance.
+        
+        Args:
+            agent: The agent that owns this Pathfinder
+            name: Name of the Pathfinder
+            description: Description of the Pathfinder's purpose
+        """
         super().__init__(name, description)
         self.agent = agent
 
@@ -192,6 +241,12 @@ class Pathfinder(Pit):
         return None
     
     def Status(self):
+        """
+        Get the current status of the Pathfinder.
+        
+        Returns:
+            Dict: A dictionary containing the status and a message
+        """
         return {
             "status": "running",
             "message": "Pathfinder is running"
@@ -350,6 +405,18 @@ class Pathfinder(Pit):
             self.log(f"Pathway execution took {duration:.4f} seconds", 'INFO')
 
     def FromJson(self, json_data: dict):
+        """
+        Initialize a Pathfinder from a JSON representation.
+        
+        This method deserializes a Pathfinder instance from a dictionary
+        containing the pathway, parameters, and agent information.
+        
+        Args:
+            json_data: Dictionary with serialized Pathfinder data
+            
+        Returns:
+            Pathfinder: Self reference for method chaining
+        """
         self.pathway = Pathway.FromJson(json_data)
         self.parameters = json_data["parameters"]
         self.agent = json_data["agent"]
@@ -357,6 +424,15 @@ class Pathfinder(Pit):
         return self
 
     def ToJson(self):
+        """
+        Convert Pathfinder to a JSON-serializable dictionary.
+        
+        This method serializes the Pathfinder's state to a dictionary
+        that can be saved or transmitted.
+        
+        Returns:
+            Dict: JSON-serializable dictionary representation
+        """
         return {
             "pathway": self.pathway.ToJson(),
             "parameters": self.parameters,

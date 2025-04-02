@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.services.APIService &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pits.html">prompits.pits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.services.APIService</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.services.APIService</h1><div class="highlight"><pre>
+<span></span><span class="c1"># APIService is a Pit</span>
+<span class="c1"># APIService can be initialized with a list of endpoints or OpenAPI spec</span>
+<span class="c1"># APIService is an abstract class</span>
+<span class="c1"># Has practices: GetEndpoints, GetOpenAPISpec</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Pit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Service</span><span class="w"> </span><span class="kn">import</span> <span class="n">Service</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Message</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..AgentAddress</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentAddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..LogEvent</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogEvent</span>
+
+<div class="viewcode-block" id="Endpoint">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.Endpoint">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an API endpoint with its path, HTTP method, and handler function.</span>
+<span class="sd">    </span>
+<span class="sd">    Endpoints are the core components of an APIService, defining the routes</span>
+<span class="sd">    that the service exposes and the functions that handle requests to those routes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an Endpoint instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            path: The URL path of the endpoint (e.g., &quot;/users&quot;)</span>
+<span class="sd">            method: The HTTP method (e.g., &quot;GET&quot;, &quot;POST&quot;)</span>
+<span class="sd">            handler: The callable function that handles requests to this endpoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span></div>
+
+
+<div class="viewcode-block" id="OpenAPI">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.OpenAPI">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenAPI</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an OpenAPI specification that describes an API.</span>
+<span class="sd">    </span>
+<span class="sd">    The OpenAPI specification provides a standardized format for API documentation,</span>
+<span class="sd">    including information about available endpoints, request/response formats,</span>
+<span class="sd">    authentication methods, and more.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">paths</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">components</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an OpenAPI specification.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            info: Dictionary containing API information (title, version, etc.)</span>
+<span class="sd">            paths: Dictionary mapping endpoint paths to their operations</span>
+<span class="sd">            components: Dictionary of reusable components (schemas, parameters, etc.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="n">paths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="n">components</span> <span class="ow">or</span> <span class="p">{}</span>
+    
+<div class="viewcode-block" id="OpenAPI.to_dict">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.OpenAPI.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert OpenAPI to dictionary&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
+            <span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">,</span>
+            <span class="s2">&quot;components&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span>
+        <span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="OpenAPI.from_dict">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.OpenAPI.from_dict">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create OpenAPI from dictionary&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">info</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="n">paths</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="n">components</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;components&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="APIService">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">APIService</span><span class="p">(</span><span class="n">Service</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Service that provides API functionality through defined endpoints.</span>
+<span class="sd">    </span>
+<span class="sd">    APIService allows agents to expose and consume APIs by defining endpoints</span>
+<span class="sd">    or importing an OpenAPI specification. It provides methods for registering</span>
+<span class="sd">    handlers, generating API documentation, and making requests to endpoints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an APIService instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the API service</span>
+<span class="sd">            description: Optional description of the API service&#39;s purpose</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;APIService </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;GetEndpoints&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetEndpoints</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;GetOpenAPISpec&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetOpenAPISpec</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span> <span class="o">=</span> <span class="kc">None</span>
+        
+<div class="viewcode-block" id="APIService.Request">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.Request">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">Endpoint</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Request an endpoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># implement using requests</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Server is not set&quot;</span><span class="p">)</span>
+            
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="si">}{</span><span class="n">endpoint</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">request_body</span> <span class="o">=</span> <span class="n">body</span> <span class="k">if</span> <span class="n">body</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">body</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">request_body</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="APIService.ToJson">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the service to a JSON object.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: JSON representation of the service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">endpoints_json</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">endpoints_json</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        
+        <span class="n">openapi_json</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span><span class="p">:</span>
+            <span class="n">openapi_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            
+        <span class="c1"># Get base JSON data from parent which includes practices</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;APIService ToJson start: </span><span class="si">{</span><span class="n">json_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
+        <span class="c1"># Ensure practices are included</span>
+        <span class="k">if</span> <span class="s2">&quot;practices&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json_data</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;practices&quot;</span><span class="p">):</span>
+            <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">practice</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">practice</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span> <span class="k">for</span> <span class="n">practice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">practices</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="p">}</span>
+            
+        <span class="c1"># Add APIService specific fields</span>
+        <span class="n">json_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;server&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">,</span>
+            <span class="s2">&quot;endpoints&quot;</span><span class="p">:</span> <span class="n">endpoints_json</span><span class="p">,</span>
+            <span class="s2">&quot;openapi_spec&quot;</span><span class="p">:</span> <span class="n">openapi_json</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;APIService ToJson end: </span><span class="si">{</span><span class="n">json_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json_data</span></div>
+
+    
+<div class="viewcode-block" id="APIService.FromJson">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.FromJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the service from a JSON object.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            json_data: JSON object containing service configuration</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            APIService: The initialized service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;server&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+        
+        <span class="c1"># Load endpoints</span>
+        <span class="k">if</span> <span class="s2">&quot;endpoints&quot;</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">endpoint_data</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;endpoints&quot;</span><span class="p">]:</span>
+                <span class="n">endpoint</span> <span class="o">=</span> <span class="n">Endpoint</span><span class="p">(</span><span class="n">endpoint_data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="n">endpoint_data</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">],</span> <span class="n">endpoint_data</span><span class="p">[</span><span class="s2">&quot;handler&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="n">endpoint</span><span class="o">.</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">endpoint</span>
+        
+        <span class="c1"># Load OpenAPI spec</span>
+        <span class="k">if</span> <span class="s2">&quot;openapi_spec&quot;</span> <span class="ow">in</span> <span class="n">json_data</span> <span class="ow">and</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;openapi_spec&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span> <span class="o">=</span> <span class="n">OpenAPI</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;openapi_spec&quot;</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    
+<div class="viewcode-block" id="APIService.GetEndpoints">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.GetEndpoints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetEndpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of endpoints for this API service.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Endpoint]: List of endpoints</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIService.GetOpenAPISpec">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.GetOpenAPISpec">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetOpenAPISpec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the OpenAPI specification for this API service.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            OpenAPI: OpenAPI specification</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span></div>
+
+    
+<div class="viewcode-block" id="APIService.AddEndpoint">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.AddEndpoint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">AddEndpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">Endpoint</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an endpoint to this API service.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            endpoint (Endpoint): The endpoint to add</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if added successfully</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="n">endpoint</span><span class="o">.</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">endpoint</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    
+<div class="viewcode-block" id="APIService.RemoveEndpoint">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.RemoveEndpoint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">RemoveEndpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove an endpoint from this API service.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): The path of the endpoint</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if removed successfully, False if not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="APIService.SetOpenAPISpec">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.SetOpenAPISpec">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SetOpenAPISpec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">openapi_spec</span><span class="p">:</span> <span class="n">OpenAPI</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the OpenAPI specification for this API service.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            openapi_spec (OpenAPI): The OpenAPI specification</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if set successfully</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span> <span class="o">=</span> <span class="n">openapi_spec</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    
+<div class="viewcode-block" id="APIService.GenerateOpenAPISpec">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.APIService.APIService.GenerateOpenAPISpec">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GenerateOpenAPISpec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate an OpenAPI specification from the endpoints.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            OpenAPI: Generated OpenAPI specification</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                <span class="n">paths</span><span class="p">[</span><span class="n">endpoint</span><span class="o">.</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            
+            <span class="n">paths</span><span class="p">[</span><span class="n">endpoint</span><span class="o">.</span><span class="n">path</span><span class="p">][</span><span class="n">endpoint</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
+                <span class="s2">&quot;responses&quot;</span><span class="p">:</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">responses</span>
+            <span class="p">}</span>
+        
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;API Service: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+        <span class="p">}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span> <span class="o">=</span> <span class="n">OpenAPI</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">,</span> <span class="n">paths</span><span class="o">=</span><span class="n">paths</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">openapi_spec</span></div>
+</div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

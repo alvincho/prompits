@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.Message &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pits.html">prompits.pits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.Message</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.Message</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Message is a class for information interchange between agents</span>
+<span class="c1"># MEssage is an abstract class</span>
+<span class="c1"># Message contains type, sent_time, body, attachments, sender, recipients</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.AgentAddress</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentAddress</span>
+
+<div class="viewcode-block" id="Attachment">
+<a class="viewcode-back" href="../../prompits.html#prompits.Message.Attachment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Attachment</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a file or data attachment that can be included with a message.</span>
+<span class="sd">    </span>
+<span class="sd">    Attachments can contain various types of data like documents, images, or</span>
+<span class="sd">    any serializable content that needs to be transmitted along with a message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an Attachment instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name or identifier for the attachment</span>
+<span class="sd">            content_type: MIME type or format identifier for the content</span>
+<span class="sd">            data: The actual attachment data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="n">content_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+<div class="viewcode-block" id="Attachment.ToJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Message.Attachment.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the attachment to a JSON-serializable dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: Dictionary representation of the attachment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;content_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_type</span><span class="p">,</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Attachment.FromJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Message.Attachment.FromJson">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Attachment&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an Attachment from JSON data.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            json_data: Dictionary containing serialized attachment data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Attachment: New instance initialized with the data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Attachment</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;content_type&quot;</span><span class="p">],</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Message">
+<a class="viewcode-back" href="../../prompits.html#prompits.Message.Message">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Message</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a communication between agents in the system.</span>
+<span class="sd">    </span>
+<span class="sd">    Message is the core communication unit that contains information sent between</span>
+<span class="sd">    agents including the message type, content body, sender, recipients, and</span>
+<span class="sd">    optional attachments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">sender</span><span class="p">:</span> <span class="n">AgentAddress</span><span class="p">,</span> <span class="n">recipients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AgentAddress</span><span class="p">],</span> <span class="n">msg_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attachments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Attachment</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Message instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            type: Type identifier for the message</span>
+<span class="sd">            body: Dictionary containing the message content</span>
+<span class="sd">            sender: Address of the agent sending the message</span>
+<span class="sd">            recipients: List of agent addresses to receive the message</span>
+<span class="sd">            msg_id: Optional unique message identifier</span>
+<span class="sd">            attachments: Optional list of attachments to include</span>
+<span class="sd">            timestamp: Optional timestamp for the message (defaults to current time)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">sender</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span> <span class="o">=</span> <span class="n">recipients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_id</span> <span class="o">=</span> <span class="n">msg_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span> <span class="o">=</span> <span class="n">attachments</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span> <span class="ow">or</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Message.ToJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Message.Message.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the message to a JSON-serializable dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: Dictionary representation of the message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sender_json</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+            <span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="n">sender_json</span><span class="p">,</span>
+            <span class="s2">&quot;recipients&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span><span class="p">],</span>
+            <span class="s2">&quot;msg_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_id</span><span class="p">,</span>
+            <span class="s2">&quot;attachments&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="p">],</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Message.FromJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Message.Message.FromJson">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Message&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a Message from JSON data.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            json_data: Dictionary containing serialized message data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Message: New instance initialized with the data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Message</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">],</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">AgentAddress</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]),</span>
+            <span class="n">recipients</span><span class="o">=</span><span class="p">[</span><span class="n">AgentAddress</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;recipients&quot;</span><span class="p">]],</span>
+            <span class="n">msg_id</span><span class="o">=</span><span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;msg_id&quot;</span><span class="p">),</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="p">[</span><span class="n">Attachment</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attachments&quot;</span><span class="p">,</span> <span class="p">[])],</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">])</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># declare variables</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">msg_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">attachments</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="n">sender</span><span class="p">:</span> <span class="n">AgentAddress</span>
+    <span class="n">recipients</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentAddress</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a string representation of the message.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: String representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Message(type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">, sent_time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">, body=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="si">}</span><span class="s2">, attachments=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="si">}</span><span class="s2">)&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a string representation for debugging.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: String representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

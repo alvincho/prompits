@@ -11,6 +11,12 @@ from prompits.Practice import Practice
 
 
 class MCPClient(Pit):
+    """
+    MCPClient is a Pit that gets tools information from the Anthropic Model Content Protocol service
+    and creates practices for the agent
+
+    The CallTool practice is not implemented correctly yet and can't be used in a pathway.
+    """
     def __init__(self, name, description, mcp_server_params: dict):
         super().__init__(name, description)
         self.json_data = mcp_server_params
@@ -49,7 +55,17 @@ class MCPClient(Pit):
         self.log(f"handle_sampling_message: {result}", 'DEBUG')
         return result
     
-    async def _CallTool(self, tool_name, arguments):
+    async def _CallTool(self, tool_name:str, arguments:dict):
+        """
+        Call a tool using the MCP client
+
+        Args:
+            tool_name (str): The name of the tool to call
+            arguments (dict): The arguments to pass to the tool
+
+        Returns:
+            dict: The result of the tool call
+        """
         async with stdio_client(self.mcp_server_params) as (read, write):
             async with ClientSession(
                 read, write, sampling_callback=self.handle_sampling_message
@@ -60,6 +76,12 @@ class MCPClient(Pit):
                 return await session.call_tool(tool_name, arguments)
     
     async def _GetTools(self):
+        """
+        Get tools from the MCP server
+
+        Returns:
+            list: The tools from the MCP server
+        """
         async with stdio_client(self.mcp_server_params) as (read, write):
             async with ClientSession(
                 read, write, sampling_callback=self.handle_sampling_message
@@ -92,9 +114,21 @@ class MCPClient(Pit):
                 # result = await session.call_tool("tool-name", arguments={"arg1": "value"})
 
     def FromJson(self, json_data):
+        """
+        Initialize the MCP client from a JSON object
+
+        Args:
+            json_data (dict): The JSON object to initialize the MCP client from
+        """
         self.mcp_server_params = StdioServerParameters(**json_data)
         self.json_data = json_data
         self.mcp_client = ClientSession(self.mcp_server_params)
 
     def ToJson(self):
+        """
+        Convert the MCP client to a JSON object
+
+        Returns:
+            dict: The JSON object to convert the MCP client to
+        """
         return self.json_data

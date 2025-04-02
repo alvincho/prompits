@@ -8,7 +8,21 @@ from ..AgentAddress import AgentAddress
 from ..Message import Message, Attachment
 
 class UsePracticeRequest(Message):
+    """
+    A message that requests the use of a practice.
+    """
     def __init__(self, practice_name: str, sender: AgentAddress, recipients: List[AgentAddress], arguments: Dict[str, Any] = None, msg_id: str = None, attachments: List[Attachment] = None):
+        """
+        Initialize a UsePracticeRequest message.
+        
+        Args:
+            practice_name (str): The name of the practice to use
+            sender (AgentAddress): The sender of the message
+            recipients (List[AgentAddress]): The recipients of the message
+            arguments (Dict[str, Any]): The arguments to pass to the practice
+            msg_id (str): The message ID
+            attachments (List[Attachment]): The attachments to pass to the practice
+        """
         super().__init__(
             type="UsePracticeRequest",
             body={"practice_name": practice_name, "arguments": arguments or {}},
@@ -54,7 +68,22 @@ class UsePracticeRequest(Message):
         self.body['arguments'] = json_data['body']['arguments']
     
 class UsePracticeResponse(Message):
+    """
+    A message that responds to a UsePracticeRequest.
+    """
     def __init__(self, practice_name: str, result: Any, sender: AgentAddress, recipients: List[AgentAddress], error: Optional[str] = None, msg_id: Optional[str] = None, attachments: Optional[List[Attachment]] = None):
+        """
+        Initialize a UsePracticeResponse message.
+        
+        Args:
+            practice_name (str): The name of the practice to use
+            result (Any): The result of the practice
+            sender (AgentAddress): The sender of the message
+            recipients (List[AgentAddress]): The recipients of the message
+            error (Optional[str]): The error of the practice
+            msg_id (Optional[str]): The message ID
+            attachments (Optional[List[Attachment]]): The attachments of the message
+        """
         super().__init__(
             type="UsePracticeResponse",
             body={"practice_name": practice_name, "result": result, "error": error},
@@ -81,6 +110,12 @@ class UsePracticeResponse(Message):
         )
 
     def ToJson(self):
+        """
+        Convert the UsePracticeResponse message to a JSON dictionary.
+        
+        Returns:
+            dict: A dictionary containing the message information
+        """
         # if sender and recipients are AgentAddress objects, convert them to json   
         if isinstance(self.sender, AgentAddress):
             sender = self.sender.ToJson()

@@ -30,10 +30,22 @@ class AgentAddress:
         self.plaza_name = plaza_name
     
     def to_string(self):
+        """
+        Convert the AgentAddress to a string representation.
+        
+        Returns:
+            str: String representation in the format "{agent_id}@{plaza_name}"
+        """
         return f"{self.agent_id}@{self.plaza_name}"
     
     # to json
     def ToJson(self):
+        """
+        Convert the AgentAddress to a JSON-serializable dictionary.
+        
+        Returns:
+            dict: Dictionary containing the agent_id and plaza_name
+        """
         return {
             "agent_id": self.agent_id,
             "plaza_name": self.plaza_name
@@ -79,18 +91,6 @@ class AgentAddress:
             int: Hash of the AgentAddress
         """
         return hash((self.agent_id, self.plaza_name))
-    
-    def ToJson(self):
-        """
-        Convert the AgentAddress to a JSON object.
-        
-        Returns:
-            dict: JSON representation of the AgentAddress
-        """
-        return {
-            "agent_id": self.agent_id,
-            "plaza_name": self.plaza_name
-        }
     
     @classmethod
     def FromJson(cls, json_data):

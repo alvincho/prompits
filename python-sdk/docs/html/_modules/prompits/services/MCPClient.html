@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.services.MCPClient &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.services.MCPClient</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.services.MCPClient</h1><div class="highlight"><pre>
+<span></span><span class="c1"># MCPClient is a Pit</span>
+<span class="c1"># MCPClient is a service that gets tools information from the Anthropic Model Content Protocol service</span>
+<span class="c1"># and creates practices for the agent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Pit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">StdioServerParameters</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.client.stdio</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdio_client</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+
+
+<div class="viewcode-block" id="MCPClient">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.MCPClient.MCPClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MCPClient</span><span class="p">(</span><span class="n">Pit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MCPClient is a Pit that gets tools information from the Anthropic Model Content Protocol service</span>
+<span class="sd">    and creates practices for the agent</span>
+
+<span class="sd">    The CallTool practice is not implemented correctly yet and can&#39;t be used in a pathway.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">mcp_server_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span> <span class="o">=</span> <span class="n">mcp_server_params</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mcp_server_params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span><span class="o">**</span><span class="n">mcp_server_params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span> <span class="o">=</span> <span class="n">mcp_server_params</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MCPClient init: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_GetTools</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;GetTools&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_GetTools</span><span class="p">,</span> 
+                                  <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Get tools from the MCP server&quot;</span><span class="p">,</span> 
+                                  <span class="n">is_async</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tool: </span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tool.inputSchema: </span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">inputSchema</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> 
+                                      <span class="n">function</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CallTool</span><span class="p">,</span> <span class="n">input_schema</span><span class="o">=</span><span class="n">tool</span><span class="o">.</span><span class="n">inputSchema</span><span class="p">,</span> 
+                                      <span class="n">description</span><span class="o">=</span><span class="n">tool</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tool_name&quot;</span><span class="p">:</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">},</span>
+                                      <span class="n">is_async</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="c1">#print(self.practices)</span>
+        <span class="c1">#self.mcp_client = ClientSession(mcp_server_params)</span>
+
+    <span class="c1"># Optional: create a sampling callback</span>
+<div class="viewcode-block" id="MCPClient.handle_sampling_message">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.MCPClient.MCPClient.handle_sampling_message">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_sampling_message</span><span class="p">(</span>
+        <span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">CreateMessageRequestParams</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">CreateMessageResult</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">CreateMessageResult</span><span class="p">(</span>
+            <span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">TextContent</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello, world! from model&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
+            <span class="n">stopReason</span><span class="o">=</span><span class="s2">&quot;endTurn&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;handle_sampling_message: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_CallTool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span><span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call a tool using the MCP client</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tool_name (str): The name of the tool to call</span>
+<span class="sd">            arguments (dict): The arguments to pass to the tool</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The result of the tool call</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span>
+                <span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">sampling_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_sampling_message</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                <span class="c1"># Initialize the connection</span>
+                <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+    
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_GetTools</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get tools from the MCP server</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: The tools from the MCP server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span>
+                <span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">sampling_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_sampling_message</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                <span class="c1"># Initialize the connection</span>
+                <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+                <span class="c1"># # List available prompts</span>
+                <span class="c1"># prompts = await session.list_prompts()</span>
+
+                <span class="c1"># # Get a prompt</span>
+                <span class="c1"># prompt = await session.get_prompt(</span>
+                <span class="c1">#     &quot;example-prompt&quot;, arguments={&quot;arg1&quot;: &quot;value&quot;}</span>
+                <span class="c1"># )</span>
+
+                <span class="c1"># List available resources</span>
+                <span class="c1"># resources = await session.list_resources()</span>
+
+                <span class="c1"># List available tools</span>
+                <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;tools&quot;</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">value</span>
+                <span class="k">return</span> <span class="p">[]</span>
+            
+                <span class="c1"># # Read a resource</span>
+                <span class="c1"># content, mime_type = await session.read_resource(&quot;file://some/path&quot;)</span>
+
+                <span class="c1"># # Call a tool</span>
+                <span class="c1"># result = await session.call_tool(&quot;tool-name&quot;, arguments={&quot;arg1&quot;: &quot;value&quot;})</span>
+
+<div class="viewcode-block" id="MCPClient.FromJson">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.MCPClient.MCPClient.FromJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the MCP client from a JSON object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            json_data (dict): The JSON object to initialize the MCP client from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span><span class="o">**</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span> <span class="o">=</span> <span class="n">json_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcp_client</span> <span class="o">=</span> <span class="n">ClientSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcp_server_params</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MCPClient.ToJson">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.MCPClient.MCPClient.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the MCP client to a JSON object</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The JSON object to convert the MCP client to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_data</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

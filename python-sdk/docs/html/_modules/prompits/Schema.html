@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.Schema &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pits.html">prompits.pits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.Schema</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.Schema</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Schema is an abstract class that defines the schema of data in Pool</span>
+<span class="c1"># it defines data structure of TupleDataItem and JsonDataItem</span>
+<span class="c1"># it can be used to validate data in Pool</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jsonschema</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="c1"># an enum class for data types</span>
+<div class="viewcode-block" id="DataType">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.DataType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration of supported data types in the system.</span>
+<span class="sd">    </span>
+<span class="sd">    This enum defines the possible data types that can be used in schemas</span>
+<span class="sd">    and for storing data in pools. It provides methods for type conversion,</span>
+<span class="sd">    validation, and string representation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">STRING</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>
+    <span class="n">INTEGER</span> <span class="o">=</span> <span class="s2">&quot;integer&quot;</span>
+    <span class="n">FLOAT</span> <span class="o">=</span> <span class="s2">&quot;float&quot;</span>
+    <span class="n">REAL</span> <span class="o">=</span> <span class="s2">&quot;real&quot;</span>
+    <span class="n">BOOLEAN</span> <span class="o">=</span> <span class="s2">&quot;boolean&quot;</span>
+    <span class="n">DATETIME</span> <span class="o">=</span> <span class="s2">&quot;datetime&quot;</span>
+    <span class="n">DATE</span> <span class="o">=</span> <span class="s2">&quot;date&quot;</span>
+    <span class="n">TIME</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span>
+    <span class="n">JSON</span> <span class="o">=</span> <span class="s2">&quot;json&quot;</span>
+    <span class="n">OBJECT</span> <span class="o">=</span> <span class="s2">&quot;object&quot;</span>
+    <span class="n">ARRAY</span> <span class="o">=</span> <span class="s2">&quot;array&quot;</span>
+    <span class="n">GRAPH</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>
+    <span class="n">VECTOR</span> <span class="o">=</span> <span class="s2">&quot;vector&quot;</span>
+    <span class="n">UUID</span> <span class="o">=</span> <span class="s2">&quot;uuid&quot;</span>
+    <span class="n">NULL</span> <span class="o">=</span> <span class="s2">&quot;null&quot;</span>
+    
+<div class="viewcode-block" id="DataType.from_string">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.DataType.from_string">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">type_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a string to a DataType enum value.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            type_str: String representation of the data type</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            DataType: The corresponding DataType enum value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+            <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">,</span>
+            <span class="s2">&quot;real&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">,</span>
+            <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">,</span>  <span class="c1"># For backward compatibility</span>
+            <span class="s2">&quot;boolean&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">,</span>
+            <span class="s2">&quot;datetime&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+            <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">JSON</span><span class="p">,</span>
+            <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">OBJECT</span><span class="p">,</span>
+            <span class="s2">&quot;array&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span>
+            <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">NULL</span><span class="p">,</span>
+            <span class="s2">&quot;graph&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">GRAPH</span><span class="p">,</span>
+            <span class="s2">&quot;vector&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">VECTOR</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_str</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STRING</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="DataType.validate_value">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.DataType.validate_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate a value against this data type.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            value: Value to validate</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the value is valid for this data type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">JSON</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">OBJECT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">DataType</span><span class="o">.</span><span class="n">NULL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Schema">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.Schema">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Schema</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for data schemas.</span>
+<span class="sd">    </span>
+<span class="sd">    Schema is used to define the structure and validation rules for data</span>
+<span class="sd">    in the system. Different types of schemas (TableSchema, RowSchema, etc.)</span>
+<span class="sd">    inherit from this class to provide specific validation logic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Schema instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the schema</span>
+<span class="sd">            description: A description of what the schema represents</span>
+<span class="sd">            schema: Dictionary containing the JSON schema definition</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the provided schema is not valid JSON schema</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+        <span class="c1"># check schema is a valid json schema </span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid schema: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Schema.validate">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.Schema.validate">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate data against this schema.</span>
+<span class="sd">        </span>
+<span class="sd">        This abstract method must be implemented by subclasses to provide</span>
+<span class="sd">        specific validation logic for each schema type.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: The data to validate</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data is valid according to the schema</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If validation fails with specific error details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    
+<div class="viewcode-block" id="Schema.get_field_type">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.Schema.get_field_type">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_field_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the data type of a field in the schema.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            field_name: Name of the field</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            DataType: The data type of the field</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">field_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{}):</span>
+            <span class="k">return</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span>
+        
+        <span class="n">field_schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">][</span><span class="n">field_name</span><span class="p">]</span>
+        <span class="n">type_str</span> <span class="o">=</span> <span class="n">field_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DataType</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">type_str</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># TableSchema is a json schema for a table</span>
+<span class="c1"># contains name, description, primary key, and rowSchema</span>
+<span class="c1"># rowSchema is a json schema for a row of the table</span>
+<span class="c1"># Example:</span>
+<span class="c1"># {</span>
+<span class="c1">#     &quot;name&quot;: &quot;table_name&quot;,</span>
+<span class="c1">#     &quot;description&quot;: &quot;description&quot;,</span>
+<span class="c1">#     &quot;primary_key&quot;: [&quot;field_name1&quot;, &quot;field_name2&quot;],</span>
+<span class="c1">#     &quot;rowSchema&quot;: {</span>
+<span class="c1">#         &quot;description&quot;: &quot;description&quot;,</span>
+<span class="c1">#         &quot;columns&quot;: [</span>
+<span class="c1">#             {</span>
+<span class="c1">#                 &quot;name&quot;: &quot;field1&quot;,</span>
+<span class="c1">#                 &quot;description&quot;: &quot;description&quot;,</span>
+<span class="c1">#                 &quot;type&quot;: &quot;STRING&quot;</span>
+<span class="c1">#             },</span>
+<span class="c1">#             {</span>
+<span class="c1">#                 &quot;name&quot;: &quot;field2&quot;,</span>
+<span class="c1">#                 &quot;description&quot;: &quot;description&quot;,</span>
+<span class="c1">#                 &quot;type&quot;: &quot;JSON&quot;</span>
+<span class="c1">#             }</span>
+<span class="c1">#         ]</span>
+<span class="c1">#     ]</span>
+<span class="c1"># }</span>
+
+<div class="viewcode-block" id="TableSchema">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.TableSchema">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TableSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Schema for database tables.</span>
+<span class="sd">    </span>
+<span class="sd">    TableSchema defines the structure of a database table, including its</span>
+<span class="sd">    name, description, primary key(s), and the schema for individual rows.</span>
+<span class="sd">    It is used for table creation and data validation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a TableSchema instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            schema: Dictionary containing the table schema definition,</span>
+<span class="sd">                   including name, description, primary key, and row schema</span>
+<span class="sd">                   </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the schema is not valid for a table</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span> <span class="n">schema</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rowSchema</span> <span class="o">=</span> <span class="n">RowSchema</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;rowSchema&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;primary_key&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="TableSchema.validate">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.TableSchema.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate data against the table schema.</span>
+<span class="sd">        </span>
+<span class="sd">        Verifies that the provided data follows the structure defined</span>
+<span class="sd">        for creating or modifying tables.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: The data to validate, expected to be a dictionary</span>
+<span class="sd">                 describing a table or set of tables</span>
+<span class="sd">                 </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data is valid according to the schema</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If validation fails with specific error details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># validate data is a schema for create table</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data must be a dictionary&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data must have name&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;tables&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data must have tables&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Tables must be a list&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Table must be a dictionary&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Table must have name&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;rowSchema&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Table must have schema&quot;</span><span class="p">)</span>
+            <span class="c1"># validate rowSchema is a RowSchema</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;rowSchema&quot;</span><span class="p">],</span> <span class="n">RowSchema</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;RowSchema must be a RowSchema&quot;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    
+<div class="viewcode-block" id="TableSchema.ToJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.TableSchema.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the table schema to a JSON-serializable dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: Dictionary representation of the table schema</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span></div>
+</div>
+
+
+<div class="viewcode-block" id="RowSchema">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.RowSchema">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RowSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Schema for database table rows.</span>
+<span class="sd">    </span>
+<span class="sd">    RowSchema defines the structure and validation rules for individual rows</span>
+<span class="sd">    in a database table, including column names, types, and constraints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a RowSchema instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            schema: Dictionary containing the row schema definition,</span>
+<span class="sd">                   including column specifications</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;datarow&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">schema</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        
+
+    <span class="c1"># row schema is for data in a row of a table</span>
+    <span class="c1"># it is a list of data items with type and name</span>
+    <span class="c1"># the type is a DataType enum</span>
+<div class="viewcode-block" id="RowSchema.validate">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.RowSchema.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate row data against the schema.</span>
+<span class="sd">        </span>
+<span class="sd">        Checks that the provided data conforms to the row structure,</span>
+<span class="sd">        with the expected column names and data types.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: The row data to validate, expected to be a list of</span>
+<span class="sd">                 dictionaries representing column values</span>
+<span class="sd">                 </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data is valid according to the schema</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If validation fails with specific error details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data must be a list&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Item must be a dictionary&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span> <span class="ow">or</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>    
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Item must have type and name&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Use DataType enum for validation</span>
+            <span class="n">data_type</span> <span class="o">=</span> <span class="n">DataType</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data_type</span><span class="o">.</span><span class="n">validate_value</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid data for type </span><span class="si">{</span><span class="n">data_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TupleSchema">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.TupleSchema">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TupleSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Schema for tuple data structures.</span>
+<span class="sd">    </span>
+<span class="sd">    TupleSchema defines the structure and validation rules for tuple data,</span>
+<span class="sd">    which is an ordered collection of typed elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a TupleSchema instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            schema: Dictionary containing the tuple schema definition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;tuple&quot;</span><span class="p">,</span> <span class="s2">&quot;tuple data&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TupleSchema.validate">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.TupleSchema.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate tuple data against the schema.</span>
+<span class="sd">        </span>
+<span class="sd">        Checks that the provided data conforms to the tuple structure,</span>
+<span class="sd">        with the expected element types and order.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: The tuple data to validate</span>
+<span class="sd">                 </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data is valid according to the schema</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If validation fails with specific error details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data must be a tuple&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;items&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Tuple length mismatch&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="n">item_schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">data_type</span> <span class="o">=</span> <span class="n">DataType</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">item_schema</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">data_type</span><span class="o">.</span><span class="n">validate_value</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid data for type </span><span class="si">{</span><span class="n">data_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+<div class="viewcode-block" id="JsonSchema">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.JsonSchema">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JsonSchema</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Schema for JSON data structures.</span>
+<span class="sd">    </span>
+<span class="sd">    JsonSchema defines the structure and validation rules for JSON data,</span>
+<span class="sd">    leveraging the JSON Schema standard for validation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a JsonSchema instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            schema: Dictionary containing the JSON schema definition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;json data&quot;</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JsonSchema.validate">
+<a class="viewcode-back" href="../../prompits.html#prompits.Schema.JsonSchema.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate JSON data against the schema.</span>
+<span class="sd">        </span>
+<span class="sd">        Uses the jsonschema library to validate that the provided data</span>
+<span class="sd">        conforms to the defined JSON Schema.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: The JSON data to validate</span>
+<span class="sd">                 </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the data is valid according to the schema</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If validation fails with specific error details</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">jsonschema</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JSON validation error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error validating JSON: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

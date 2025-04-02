@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.messages.UsePracticeMessage &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.messages.UsePracticeMessage</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.messages.UsePracticeMessage</h1><div class="highlight"><pre>
+<span></span><span class="c1"># UsePracticeMessage is a message that requests the use of a practice</span>
+<span class="c1"># contains the practice name, and the sender and recipients, and arguments</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..AgentAddress</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentAddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Message</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Attachment</span>
+
+<div class="viewcode-block" id="UsePracticeRequest">
+<a class="viewcode-back" href="../../../prompits.messages.html#prompits.UsePracticeRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UsePracticeRequest</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A message that requests the use of a practice.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">practice_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">AgentAddress</span><span class="p">,</span> <span class="n">recipients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AgentAddress</span><span class="p">],</span> <span class="n">arguments</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">msg_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attachments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Attachment</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a UsePracticeRequest message.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            practice_name (str): The name of the practice to use</span>
+<span class="sd">            sender (AgentAddress): The sender of the message</span>
+<span class="sd">            recipients (List[AgentAddress]): The recipients of the message</span>
+<span class="sd">            arguments (Dict[str, Any]): The arguments to pass to the practice</span>
+<span class="sd">            msg_id (str): The message ID</span>
+<span class="sd">            attachments (List[Attachment]): The attachments to pass to the practice</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;UsePracticeRequest&quot;</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;practice_name&quot;</span><span class="p">:</span> <span class="n">practice_name</span><span class="p">,</span> <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="n">arguments</span> <span class="ow">or</span> <span class="p">{}},</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">recipients</span><span class="o">=</span><span class="n">recipients</span><span class="p">,</span>
+            <span class="n">msg_id</span><span class="o">=</span><span class="n">msg_id</span><span class="p">,</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="n">attachments</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">practice_name</span> <span class="o">=</span> <span class="n">practice_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;UsePracticeRequest&#39;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">Message</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UsePracticeRequest</span><span class="p">(</span>
+            <span class="n">practice_name</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;practice_name&quot;</span><span class="p">],</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;arguments&quot;</span><span class="p">],</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">recipients</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">recipients</span><span class="p">,</span>
+            <span class="n">msg_id</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">msg_id</span><span class="p">,</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">attachments</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;UsePracticeMessage(practice_name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;practice_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, sender=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="si">}</span><span class="s2">, recipients=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">recipients</span><span class="si">}</span><span class="s2">, arguments=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;arguments&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="UsePracticeRequest.ToJson">
+<a class="viewcode-back" href="../../../prompits.messages.html#prompits.UsePracticeRequest.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">json_msg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+        <span class="n">json_msg</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">][</span><span class="s1">&#39;practice_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;practice_name&#39;</span><span class="p">]</span>
+        <span class="n">json_msg</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">][</span><span class="s1">&#39;arguments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;arguments&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">json_msg</span></div>
+
+
+<div class="viewcode-block" id="UsePracticeRequest.FromJson">
+<a class="viewcode-back" href="../../../prompits.messages.html#prompits.UsePracticeRequest.FromJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;practice_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">][</span><span class="s1">&#39;practice_name&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;arguments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">][</span><span class="s1">&#39;arguments&#39;</span><span class="p">]</span></div>
+</div>
+
+    
+<div class="viewcode-block" id="UsePracticeResponse">
+<a class="viewcode-back" href="../../../prompits.messages.html#prompits.UsePracticeResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UsePracticeResponse</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A message that responds to a UsePracticeRequest.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">practice_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">AgentAddress</span><span class="p">,</span> <span class="n">recipients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AgentAddress</span><span class="p">],</span> <span class="n">error</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">msg_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attachments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Attachment</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a UsePracticeResponse message.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            practice_name (str): The name of the practice to use</span>
+<span class="sd">            result (Any): The result of the practice</span>
+<span class="sd">            sender (AgentAddress): The sender of the message</span>
+<span class="sd">            recipients (List[AgentAddress]): The recipients of the message</span>
+<span class="sd">            error (Optional[str]): The error of the practice</span>
+<span class="sd">            msg_id (Optional[str]): The message ID</span>
+<span class="sd">            attachments (Optional[List[Attachment]]): The attachments of the message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;UsePracticeResponse&quot;</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;practice_name&quot;</span><span class="p">:</span> <span class="n">practice_name</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">error</span><span class="p">},</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">recipients</span><span class="o">=</span><span class="n">recipients</span><span class="p">,</span>
+            <span class="n">msg_id</span><span class="o">=</span><span class="n">msg_id</span><span class="p">,</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="n">attachments</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">practice_name</span> <span class="o">=</span> <span class="n">practice_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;UsePracticeResponse&#39;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">Message</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UsePracticeResponse</span><span class="p">(</span>
+            <span class="n">practice_name</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;practice_name&quot;</span><span class="p">],</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span>
+            <span class="n">error</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">),</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">recipients</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">recipients</span><span class="p">,</span>
+            <span class="n">msg_id</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">msg_id</span><span class="p">,</span>
+            <span class="n">attachments</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">attachments</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="UsePracticeResponse.ToJson">
+<a class="viewcode-back" href="../../../prompits.messages.html#prompits.UsePracticeResponse.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the UsePracticeResponse message to a JSON dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary containing the message information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if sender and recipients are AgentAddress objects, convert them to json   </span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span> <span class="n">AgentAddress</span><span class="p">):</span>
+            <span class="n">sender</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sender</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span>
+            
+        <span class="c1"># Initialize recipients variable</span>
+        <span class="n">recipients</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;recipients&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recipients</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">AgentAddress</span><span class="p">)</span> <span class="k">for</span> <span class="n">recipient</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span><span class="p">):</span>
+                <span class="n">recipients</span> <span class="o">=</span> <span class="p">[</span><span class="n">recipient</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span> <span class="k">for</span> <span class="n">recipient</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">recipients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span>
+                
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+            <span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="n">sender</span><span class="p">,</span>
+            <span class="s2">&quot;recipients&quot;</span><span class="p">:</span> <span class="n">recipients</span><span class="p">,</span>
+            <span class="s2">&quot;msg_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_id</span><span class="p">,</span>
+            <span class="s2">&quot;attachments&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span>
+        <span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="UsePracticeResponse.FromJson">
+<a class="viewcode-back" href="../../../prompits.messages.html#prompits.UsePracticeResponse.FromJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">AgentAddress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipients</span> <span class="o">=</span> <span class="p">[</span><span class="n">AgentAddress</span><span class="p">(</span><span class="n">recipient</span><span class="p">)</span> <span class="k">for</span> <span class="n">recipient</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;recipients&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;msg_id&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span> <span class="o">=</span> <span class="p">[</span><span class="n">Attachment</span><span class="p">(</span><span class="n">attachment</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">attachment</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">attachment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s1">&#39;attachments&#39;</span><span class="p">]]</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

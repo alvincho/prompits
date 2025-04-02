@@ -14,7 +14,25 @@ from ..Pool import Pool
 from ..Practice import Practice
 
 class DatabasePool(Pool, ABC):
+    """
+    Abstract base class for database-specific pool implementations.
+    
+    DatabasePool provides a common interface for interacting with different
+    database systems. It defines methods for executing queries, managing
+    transactions, and performing CRUD operations.
+    
+    This class should be subclassed to implement specific database adapters.
+    """
+    
     def __init__(self, name: str, description=None, connectionString=None):
+        """
+        Initialize a DatabasePool.
+        
+        Args:
+            name: Name of the database pool
+            description: Description of the pool's purpose
+            connectionString: Connection string for the database
+        """
         super().__init__(name, description)
         self.connectionString = connectionString
         # Add practices Query, Execute, Commit, Rollback
@@ -24,13 +42,40 @@ class DatabasePool(Pool, ABC):
 
     @abstractmethod
     def _Commit(self):
+        """
+        Commit the current transaction.
+        
+        This method should be implemented by subclasses to commit any
+        pending database changes.
+        
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Commit method not implemented")
 
     @abstractmethod
     def _Rollback(self):
+        """
+        Rollback the current transaction.
+        
+        This method should be implemented by subclasses to revert any
+        pending database changes.
+        
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Rollback method not implemented")
     
     def connect(self):
+        """
+        Establish a connection to the database.
+        
+        This method should be overridden by subclasses to implement
+        database-specific connection logic.
+        
+        Returns:
+            bool: True if connected successfully, False otherwise
+        """
         try:
             # Implementation of connect method
             return True
@@ -40,6 +85,15 @@ class DatabasePool(Pool, ABC):
             return False
 
     def disconnect(self):
+        """
+        Close the connection to the database.
+        
+        This method should be overridden by subclasses to implement
+        database-specific disconnection logic.
+        
+        Returns:
+            bool: True if disconnected successfully, False otherwise
+        """
         try:
             # Implementation of disconnect method
             return True
@@ -49,6 +103,18 @@ class DatabasePool(Pool, ABC):
             return False
 
     def execute_query(self, query):
+        """
+        Execute a SQL query against the database.
+        
+        This method should be overridden by subclasses to implement
+        database-specific query execution.
+        
+        Args:
+            query: SQL query to execute
+            
+        Returns:
+            Any: Query results, or None if an error occurred
+        """
         try:
             # Implementation of execute_query method
             return None
@@ -58,6 +124,19 @@ class DatabasePool(Pool, ABC):
             return None
 
     def get_data(self, table_name, data):
+        """
+        Retrieve data from a specified table.
+        
+        This method should be overridden by subclasses to implement
+        database-specific data retrieval.
+        
+        Args:
+            table_name: Name of the table to query
+            data: Dictionary of conditions to filter the results
+            
+        Returns:
+            List: List of retrieved records, or empty list if an error occurred
+        """
         try:
             # Implementation of get_data method
             return []
@@ -67,6 +146,19 @@ class DatabasePool(Pool, ABC):
             return []
 
     def insert_data(self, table_name, data):
+        """
+        Insert data into a specified table.
+        
+        This method should be overridden by subclasses to implement
+        database-specific data insertion.
+        
+        Args:
+            table_name: Name of the table to insert into
+            data: Dictionary of column-value pairs to insert
+            
+        Returns:
+            bool: True if inserted successfully, False otherwise
+        """
         try:
             # Implementation of insert_data method
             return False
@@ -76,6 +168,19 @@ class DatabasePool(Pool, ABC):
             return False
 
     def update_data(self, table_name, data):
+        """
+        Update data in a specified table.
+        
+        This method should be overridden by subclasses to implement
+        database-specific data updates.
+        
+        Args:
+            table_name: Name of the table to update
+            data: Dictionary containing update criteria and new values
+            
+        Returns:
+            bool: True if updated successfully, False otherwise
+        """
         try:
             # Implementation of update_data method
             return False
@@ -85,6 +190,19 @@ class DatabasePool(Pool, ABC):
             return False
 
     def delete_data(self, table_name, data):
+        """
+        Delete data from a specified table.
+        
+        This method should be overridden by subclasses to implement
+        database-specific data deletion.
+        
+        Args:
+            table_name: Name of the table to delete from
+            data: Dictionary of conditions to determine what to delete
+            
+        Returns:
+            bool: True if deleted successfully, False otherwise
+        """
         try:
             # Implementation of delete_data method
             return False
@@ -102,6 +220,19 @@ class DatabasePool(Pool, ABC):
         raise NotImplementedError("CreateTable not implemented")
 
     def _convert_to_db_value(self, value: Any, data_type: DataType) -> Any:
+        """
+        Convert a Python value to its database representation.
+        
+        This method handles type conversion between Python objects and
+        database-specific data formats based on the specified data type.
+        
+        Args:
+            value: Python value to convert
+            data_type: Target data type for conversion
+            
+        Returns:
+            Any: The converted value suitable for database storage
+        """
         if value is None:
             return None
         if data_type == DataType.DATETIME:
@@ -111,6 +242,19 @@ class DatabasePool(Pool, ABC):
         return value
 
     def _convert_from_db_value(self, value: Any, data_type: DataType) -> Any:
+        """
+        Convert a database value to its Python representation.
+        
+        This method handles type conversion between database-specific formats
+        and Python objects based on the specified data type.
+        
+        Args:
+            value: Database value to convert
+            data_type: Source data type for conversion
+            
+        Returns:
+            Any: The converted value as an appropriate Python object
+        """
         if value is None:
             return None
         if data_type == DataType.DATETIME:
@@ -126,6 +270,18 @@ class DatabasePool(Pool, ABC):
         return value
 
     def _validate_data(self, data: Dict[str, Any]) -> bool:
+        """
+        Validate data against the schema.
+        
+        This method checks if the provided data conforms to the schema
+        defined for this pool, validating data types and constraints.
+        
+        Args:
+            data: Dictionary of field-value pairs to validate
+            
+        Returns:
+            bool: True if data is valid, False otherwise
+        """
         row_schema = self.schema.schema.get("rowSchema", {})
         for field, field_schema in row_schema.items():
             if field not in data:
@@ -142,18 +298,80 @@ class DatabasePool(Pool, ABC):
         return True
 
     def Store(self, key: str, data: Dict[str, Any]) -> bool:
+        """
+        Store data in the database with the specified key.
+        
+        Args:
+            key: Unique identifier for the data
+            data: Dictionary of field-value pairs to store
+            
+        Returns:
+            bool: True if stored successfully, False otherwise
+            
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Store method not implemented")
 
     def Retrieve(self, key: str) -> Optional[Dict[str, Any]]:
+        """
+        Retrieve data from the database by key.
+        
+        Args:
+            key: Unique identifier for the data to retrieve
+            
+        Returns:
+            Optional[Dict[str, Any]]: Retrieved data, or None if not found
+            
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Retrieve method not implemented")
 
     def Search(self, where: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Search for data in the database that matches criteria.
+        
+        Args:
+            where: Dictionary of conditions to filter results
+            
+        Returns:
+            List[Dict[str, Any]]: List of matching records
+            
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Search method not implemented")
 
     def Update(self, key: str, data: Dict[str, Any]) -> bool:
+        """
+        Update data in the database by key.
+        
+        Args:
+            key: Unique identifier for the data to update
+            data: Dictionary of field-value pairs containing new values
+            
+        Returns:
+            bool: True if updated successfully, False otherwise
+            
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Update method not implemented")
 
     def Delete(self, key: str) -> bool:
+        """
+        Delete data from the database by key.
+        
+        Args:
+            key: Unique identifier for the data to delete
+            
+        Returns:
+            bool: True if deleted successfully, False otherwise
+            
+        Raises:
+            NotImplementedError: If not implemented by a subclass
+        """
         raise NotImplementedError("Delete method not implemented")
 
     def ToJson(self) -> Dict[str, Any]:

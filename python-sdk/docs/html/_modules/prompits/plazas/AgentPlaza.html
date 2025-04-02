@@ -1,0 +1,570 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.plazas.AgentPlaza &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.plazas.AgentPlaza</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.plazas.AgentPlaza</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Plaza module for agent communication.</span>
+
+<span class="sd">A Plaza is a communication channel between agents. It allows agents to advertise</span>
+<span class="sd">their practices and request services from other agents. It connect to a pool</span>
+<span class="sd">and store the advertisements in a table in the pool.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataType</span><span class="p">,</span> <span class="n">TableSchema</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Plaza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Plaza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..pools.DatabasePool</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabasePool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..AgentAddress</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentAddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..LogEvent</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogEvent</span>
+
+<div class="viewcode-block" id="AgentPlaza">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentPlaza</span><span class="p">(</span><span class="n">Plaza</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    AgentPlaza for agent communication.</span>
+<span class="sd">    </span>
+<span class="sd">    A AgentPlaza maintains a list of advertisements from agents and provides</span>
+<span class="sd">    methods for agents to advertise, search for advertisements, and</span>
+<span class="sd">    request services from other agents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;AgentPlaza&quot;</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an AgentPlaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the plaza</span>
+<span class="sd">            description: Description of the plaza</span>
+<span class="sd">            pool: Database pool</span>
+<span class="sd">            table_name: Name of the table to store agent data</span>
+<span class="sd">            agent: Reference to the owning agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the schema for the agents table</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">..Schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataType</span>
+        
+        <span class="c1"># Define the schema for the agents table</span>
+        <span class="c1"># contains the following columns:</span>
+        <span class="c1"># agent_id: string</span>
+        <span class="c1"># agent_name: string</span>
+        <span class="c1"># status: string</span>
+        <span class="c1"># create_time: datetime</span>
+        <span class="c1"># update_time: datetime</span>
+        <span class="c1"># stop_time: datetime</span>
+        <span class="c1"># description: string</span>
+        <span class="c1"># agent_info: json</span>
+        <span class="n">schema_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">table_name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;AgentPlaza&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;primary_key&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;agent_id&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;rowSchema&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                <span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                <span class="s2">&quot;stop_time&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">DATETIME</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                <span class="s2">&quot;agent_info&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">JSON</span><span class="p">,</span>
+                <span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">table_schema</span> <span class="o">=</span> <span class="n">TableSchema</span><span class="p">(</span><span class="n">schema_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_table_schema</span> <span class="o">=</span> <span class="n">table_schema</span>
+        
+        <span class="c1"># Initialize the plaza with the pool</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;AgentPlaza </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">table_schema</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
+        
+        <span class="c1"># Set up database connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span> <span class="o">=</span> <span class="p">[</span><span class="n">pool</span><span class="p">]</span> <span class="k">if</span> <span class="n">pool</span> <span class="k">else</span> <span class="p">[]</span>
+        
+        <span class="c1"># Don&#39;t Create the table </span>
+        <span class="c1"># if self.pool and self.pool.TableExists(self.table_name):</span>
+        <span class="c1">#     self.pool.DropTable(self.table_name)</span>
+            
+        <span class="c1"># Create the table if needed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pool is not set&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;TableExists&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating table </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="si">}</span><span class="s2">, schema: </span><span class="si">{</span><span class="n">table_schema</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;CreateTable&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="n">table_schema</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="si">}</span><span class="s2"> created&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="si">}</span><span class="s2"> creation failed&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent Table </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="si">}</span><span class="s2"> creation failed&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Add practices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;SearchAdvertisements&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_advertisements</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;Advertise&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Advertise</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;AddPool&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_pool</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;ListActiveAgents&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_active_agents</span><span class="p">))</span>
+        
+        <span class="c1"># Store reference to the owning agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AgentPlaza </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> initialized&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="AgentPlaza.ToJson">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the plaza to a JSON object.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: JSON representation of the plaza</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;AgentPlaza&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;table_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span>
+        <span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.list_active_agents">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.list_active_agents">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_active_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active_minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all active agents.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name_only: Whether to return only agent names</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of active agents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Listing active agents on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="n">active_minutes_ago</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">active_minutes</span><span class="p">)</span>
+            <span class="n">agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;GetTableData&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;$and&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$gt&quot;</span><span class="p">:</span> <span class="n">active_minutes_ago</span><span class="p">}},</span>
+                    <span class="p">{</span><span class="s2">&quot;stop_time&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">},</span> <span class="n">table_schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_table_schema</span><span class="p">)</span>
+            
+            <span class="n">active_agents</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stop_time&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">name_only</span><span class="p">:</span>
+                        <span class="n">active_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent_name&quot;</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">active_agents</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                            <span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent_id&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent_name&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;create_time&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;update_time&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot;agent_info&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent_info&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                        <span class="p">})</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">active_agents</span><span class="p">)</span><span class="si">}</span><span class="s2"> active agents&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">active_agents</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error listing active agents: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.FromJson">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.FromJson">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">pool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the plaza from a JSON object.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            json_data: JSON object containing plaza configuration</span>
+<span class="sd">            pool: Database pool</span>
+<span class="sd">            agent: Reference to the owning agent</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Plaza: The initialized plaza</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;AgentPlaza&quot;</span><span class="p">)</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;table_name&quot;</span><span class="p">,</span> <span class="s2">&quot;agents&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.Advertise">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.Advertise">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Advertise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">agent_info</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Advertise an agent on the plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent_id: ID of the agent</span>
+<span class="sd">            agent_name: Name of the agent</span>
+<span class="sd">            description: Description of the agent</span>
+<span class="sd">            agent_info: Information about the agent</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if advertised successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Check if the agent is already advertised</span>
+            <span class="n">existing_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;GetTableData&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">})</span>
+            
+            <span class="c1"># Get the current time</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            
+            <span class="c1"># Ensure agent_info practices are dictionaries</span>
+            <span class="k">if</span> <span class="n">agent_info</span> <span class="ow">and</span> <span class="s2">&quot;pits&quot;</span> <span class="ow">in</span> <span class="n">agent_info</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pit_name</span><span class="p">,</span> <span class="n">pit_info</span> <span class="ow">in</span> <span class="n">agent_info</span><span class="p">[</span><span class="s2">&quot;pits&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pit_info</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;practices&quot;</span> <span class="ow">in</span> <span class="n">pit_info</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pit_info</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                            <span class="n">practice_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                            <span class="k">for</span> <span class="n">practice</span> <span class="ow">in</span> <span class="n">pit_info</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">]:</span>
+                                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">practice</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">practice</span><span class="p">:</span>
+                                    <span class="n">practice_dict</span><span class="p">[</span><span class="n">practice</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">practice</span>
+                            <span class="n">pit_info</span><span class="p">[</span><span class="s2">&quot;practices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">practice_dict</span>
+            
+            <span class="c1"># Create the agent data</span>
+            <span class="n">agent_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">,</span>
+                <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="n">agent_name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;agent_info&quot;</span><span class="p">:</span> <span class="n">agent_info</span><span class="p">,</span>
+                <span class="s2">&quot;update_time&quot;</span><span class="p">:</span> <span class="n">now</span><span class="p">,</span>
+                <span class="s2">&quot;stop_time&quot;</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># Update or insert the agent</span>
+            <span class="k">if</span> <span class="n">existing_agent</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Update&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="n">agent_data</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">},</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_table_schema</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">agent_data</span><span class="p">[</span><span class="s2">&quot;create_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">now</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Insert&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="n">agent_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_table_schema</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Advertised agent </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2"> on plaza </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error advertising agent: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error advertising agent: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.update_agent_stop_time">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.update_agent_stop_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_agent_stop_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the stop time of an agent.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent_id: ID of the agent</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the update was successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;inactive&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stop_time&quot;</span><span class="p">:</span> <span class="n">now</span>
+            <span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Update&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">},</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_table_schema</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated stop time for agent </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error updating agent stop time: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.start">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Start the plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if started successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Plaza is already running&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting plaza&quot;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Start the cleanup thread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cleanup_loop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.stop">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stop the plaza.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1"># Wait for the cleanup thread to finish</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_thread</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.remove_advertisement">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.remove_advertisement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_advertisement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove an advertisement from the plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent_id: ID of the agent</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the removal was successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed advertisement for agent </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error removing advertisement: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.search_advertisements">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.search_advertisements">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_advertisements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for advertisements on the plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            where: Search criteria</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict]: List of advertisements matching the criteria</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;GetTableData&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="n">where</span> <span class="ow">or</span> <span class="p">{})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> advertisements&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">results</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error searching advertisements: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="AgentPlaza.get_agent_info">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.get_agent_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_agent_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get agent info from the plaza.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_advertisement</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ad</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found agent info for </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ad</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent_info&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No agent info found for </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="AgentPlaza.get_advertisement">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.get_advertisement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_advertisement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an advertisement from the plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent_id: ID of the agent</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict: Advertisement for the agent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">where</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">}</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">UsePractice</span><span class="p">(</span><span class="s2">&quot;GetTableData&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_name</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found advertisement for agent </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No advertisement found for agent </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting advertisement: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cleanup_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleanup loop to remove inactive agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Running cleanup loop&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+                <span class="c1"># TODO: Implement cleanup logic</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in cleanup loop: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="AgentPlaza.add_pool">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.add_pool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a pool to the plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            pool: Pool to add</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the pool was added successfully, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pool</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added pool </span><span class="si">{</span><span class="n">pool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to plaza </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="s1">&#39;connect_to_plaza&#39;</span><span class="p">):</span>
+                    <span class="n">pool</span><span class="o">.</span><span class="n">connect_to_plaza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected pool </span><span class="si">{</span><span class="n">pool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to plaza </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+                
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error adding pool to plaza: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="c1"># Explicitly inherit these methods to ensure log events are properly forwarded</span>
+<div class="viewcode-block" id="AgentPlaza.subscribe_to_logs">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.subscribe_to_logs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe_to_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subscribe to log events and ensure they&#39;re propagated from Pit.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">subscribe_to_logs</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+        <span class="c1">#self.log(f&quot;Subscribed to log events for AgentPlaza {self.name}&quot;, &#39;DEBUG&#39;)</span>
+        
+<div class="viewcode-block" id="AgentPlaza.unsubscribe_from_logs">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.unsubscribe_from_logs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe_from_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unsubscribe from log events.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">unsubscribe_from_logs</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+        <span class="c1">#self.log(f&quot;Unsubscribed from log events for AgentPlaza {self.name}&quot;, &#39;DEBUG&#39;)</span>
+        
+<div class="viewcode-block" id="AgentPlaza.log">
+<a class="viewcode-back" href="../../../prompits.plazas.html#prompits.AgentPlaza.log">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;INFO&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log a message and ensure it&#39;s properly handled.</span>
+<span class="sd">        </span>
+<span class="sd">        This overrides the Pit.log method to ensure proper formatting</span>
+<span class="sd">        and event propagation in the AgentPlaza context.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Call the parent class&#39;s log method</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1"># For backward compatibility</span>
+<span class="n">AgentBoard</span> <span class="o">=</span> <span class="n">AgentPlaza</span> 
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

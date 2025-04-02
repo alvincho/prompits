@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.plazas package &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="prompits.plugs package" href="prompits.plugs.html" />
+    <link rel="prev" title="prompits package" href="prompits.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="prompits.html">prompits package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="prompits.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">prompits.plazas package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-prompits.plazas.AgentPlaza">prompits.plazas.AgentPlaza module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits-plazas-messageplaza-module">prompits.plazas.MessagePlaza module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-prompits.plazas">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.messages.html">prompits.messages package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Agent">prompits.Agent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.AgentAddress">prompits.AgentAddress module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.LogEvent">prompits.LogEvent module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Message">prompits.Message module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pathfinder">prompits.Pathfinder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pathway">prompits.Pathway module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pioneer">prompits.Pioneer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pit">prompits.Pit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Plaza">prompits.Plaza module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Plug">prompits.Plug module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pool">prompits.Pool module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Practice">prompits.Practice module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Profiler">prompits.Profiler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Schema">prompits.Schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">prompits.plazas package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.plazas.AgentPlaza">prompits.plazas.AgentPlaza module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentBoard"><code class="docutils literal notranslate"><span class="pre">AgentBoard</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza"><code class="docutils literal notranslate"><span class="pre">AgentPlaza</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.Advertise"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.Advertise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.add_pool"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.add_pool()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.get_advertisement"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.get_advertisement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.get_agent_info"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.get_agent_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.list_active_agents"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.list_active_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.log"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.remove_advertisement"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.remove_advertisement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.search_advertisements"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.search_advertisements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.start"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.stop"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.unsubscribe_from_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza.update_agent_stop_time"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.update_agent_stop_time()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#prompits-plazas-messageplaza-module">prompits.plazas.MessagePlaza module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.plazas">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.plazas.AgentPlaza"><code class="docutils literal notranslate"><span class="pre">AgentPlaza</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.Advertise"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.Advertise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.add_pool"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.add_pool()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.get_advertisement"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.get_advertisement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.get_agent_info"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.get_agent_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.list_active_agents"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.list_active_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.log"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.remove_advertisement"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.remove_advertisement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.search_advertisements"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.search_advertisements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.start"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.stop"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.unsubscribe_from_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.plazas.AgentPlaza.update_agent_stop_time"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.update_agent_stop_time()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="prompits.html">prompits package</a></li>
+      <li class="breadcrumb-item active">prompits.plazas package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/prompits.plazas.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prompits-plazas-package">
+<h1>prompits.plazas package<a class="headerlink" href="#prompits-plazas-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-prompits.plazas.AgentPlaza">
+<span id="prompits-plazas-agentplaza-module"></span><h2>prompits.plazas.AgentPlaza module<a class="headerlink" href="#module-prompits.plazas.AgentPlaza" title="Link to this heading"></a></h2>
+<p>Plaza module for agent communication.</p>
+<p>A Plaza is a communication channel between agents. It allows agents to advertise
+their practices and request services from other agents. It connect to a pool
+and store the advertisements in a table in the pool.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentBoard">
+<span class="sig-prename descclassname"><span class="pre">prompits.plazas.AgentPlaza.</span></span><span class="sig-name descname"><span class="pre">AgentBoard</span></span><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentBoard" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#prompits.plazas.AgentPlaza.AgentPlaza" title="prompits.plazas.AgentPlaza.AgentPlaza"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgentPlaza</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.plazas.AgentPlaza.</span></span><span class="sig-name descname"><span class="pre">AgentPlaza</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'AgentPlaza'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'agents'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Plaza.Plaza" title="prompits.Plaza.Plaza"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plaza</span></code></a></p>
+<p>AgentPlaza for agent communication.</p>
+<p>A AgentPlaza maintains a list of advertisements from agents and provides
+methods for agents to advertise, search for advertisements, and
+request services from other agents.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.Advertise">
+<span class="sig-name descname"><span class="pre">Advertise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.Advertise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.Advertise" title="Link to this definition"></a></dt>
+<dd><p>Advertise an agent on the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_id</strong> – ID of the agent</p></li>
+<li><p><strong>agent_name</strong> – Name of the agent</p></li>
+<li><p><strong>description</strong> – Description of the agent</p></li>
+<li><p><strong>agent_info</strong> – Information about the agent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if advertised successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.FromJson">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize the plaza from a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_data</strong> – JSON object containing plaza configuration</p></li>
+<li><p><strong>pool</strong> – Database pool</p></li>
+<li><p><strong>agent</strong> – Reference to the owning agent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized plaza</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="prompits.html#prompits.Plaza" title="prompits.Plaza">Plaza</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the plaza to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the plaza</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.add_pool">
+<span class="sig-name descname"><span class="pre">add_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.add_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.add_pool" title="Link to this definition"></a></dt>
+<dd><p>Add a pool to the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pool</strong> – Pool to add</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the pool was added successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.get_advertisement">
+<span class="sig-name descname"><span class="pre">get_advertisement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.get_advertisement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.get_advertisement" title="Link to this definition"></a></dt>
+<dd><p>Get an advertisement from the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – ID of the agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Advertisement for the agent</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.get_agent_info">
+<span class="sig-name descname"><span class="pre">get_agent_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.get_agent_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.get_agent_info" title="Link to this definition"></a></dt>
+<dd><p>Get agent info from the plaza.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.list_active_agents">
+<span class="sig-name descname"><span class="pre">list_active_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.list_active_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.list_active_agents" title="Link to this definition"></a></dt>
+<dd><p>List all active agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_only</strong> – Whether to return only agent names</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of active agents</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.log" title="Link to this definition"></a></dt>
+<dd><p>Log a message and ensure it’s properly handled.</p>
+<p>This overrides the Pit.log method to ensure proper formatting
+and event propagation in the AgentPlaza context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.remove_advertisement">
+<span class="sig-name descname"><span class="pre">remove_advertisement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.remove_advertisement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.remove_advertisement" title="Link to this definition"></a></dt>
+<dd><p>Remove an advertisement from the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – ID of the agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the removal was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.search_advertisements">
+<span class="sig-name descname"><span class="pre">search_advertisements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.search_advertisements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.search_advertisements" title="Link to this definition"></a></dt>
+<dd><p>Search for advertisements on the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>where</strong> – Search criteria</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of advertisements matching the criteria</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.start" title="Link to this definition"></a></dt>
+<dd><p>Start the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if started successfully, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.stop" title="Link to this definition"></a></dt>
+<dd><p>Stop the plaza.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.subscribe_to_logs">
+<span class="sig-name descname"><span class="pre">subscribe_to_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.subscribe_to_logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.subscribe_to_logs" title="Link to this definition"></a></dt>
+<dd><p>Subscribe to log events and ensure they’re propagated from Pit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.unsubscribe_from_logs">
+<span class="sig-name descname"><span class="pre">unsubscribe_from_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.unsubscribe_from_logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.unsubscribe_from_logs" title="Link to this definition"></a></dt>
+<dd><p>Unsubscribe from log events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.AgentPlaza.update_agent_stop_time">
+<span class="sig-name descname"><span class="pre">update_agent_stop_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.update_agent_stop_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.AgentPlaza.update_agent_stop_time" title="Link to this definition"></a></dt>
+<dd><p>Update the stop time of an agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – ID of the agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the update was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="prompits-plazas-messageplaza-module">
+<h2>prompits.plazas.MessagePlaza module<a class="headerlink" href="#prompits-plazas-messageplaza-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-prompits.plazas">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-prompits.plazas" title="Link to this heading"></a></h2>
+<p>Plazas package initialization.</p>
+<p>This module initializes the Plazas package and imports all the necessary modules.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.plazas.</span></span><span class="sig-name descname"><span class="pre">AgentPlaza</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'AgentPlaza'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'agents'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Plaza.Plaza" title="prompits.Plaza.Plaza"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plaza</span></code></a></p>
+<p>AgentPlaza for agent communication.</p>
+<p>A AgentPlaza maintains a list of advertisements from agents and provides
+methods for agents to advertise, search for advertisements, and
+request services from other agents.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.Advertise">
+<span class="sig-name descname"><span class="pre">Advertise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.Advertise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.Advertise" title="Link to this definition"></a></dt>
+<dd><p>Advertise an agent on the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_id</strong> – ID of the agent</p></li>
+<li><p><strong>agent_name</strong> – Name of the agent</p></li>
+<li><p><strong>description</strong> – Description of the agent</p></li>
+<li><p><strong>agent_info</strong> – Information about the agent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if advertised successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.FromJson">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize the plaza from a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_data</strong> – JSON object containing plaza configuration</p></li>
+<li><p><strong>pool</strong> – Database pool</p></li>
+<li><p><strong>agent</strong> – Reference to the owning agent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized plaza</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="prompits.html#prompits.Plaza" title="prompits.Plaza">Plaza</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the plaza to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the plaza</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.add_pool">
+<span class="sig-name descname"><span class="pre">add_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.add_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.add_pool" title="Link to this definition"></a></dt>
+<dd><p>Add a pool to the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pool</strong> – Pool to add</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the pool was added successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.get_advertisement">
+<span class="sig-name descname"><span class="pre">get_advertisement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.get_advertisement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.get_advertisement" title="Link to this definition"></a></dt>
+<dd><p>Get an advertisement from the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – ID of the agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Advertisement for the agent</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.get_agent_info">
+<span class="sig-name descname"><span class="pre">get_agent_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.get_agent_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.get_agent_info" title="Link to this definition"></a></dt>
+<dd><p>Get agent info from the plaza.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.list_active_agents">
+<span class="sig-name descname"><span class="pre">list_active_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.list_active_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.list_active_agents" title="Link to this definition"></a></dt>
+<dd><p>List all active agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_only</strong> – Whether to return only agent names</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of active agents</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.log" title="Link to this definition"></a></dt>
+<dd><p>Log a message and ensure it’s properly handled.</p>
+<p>This overrides the Pit.log method to ensure proper formatting
+and event propagation in the AgentPlaza context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.remove_advertisement">
+<span class="sig-name descname"><span class="pre">remove_advertisement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.remove_advertisement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.remove_advertisement" title="Link to this definition"></a></dt>
+<dd><p>Remove an advertisement from the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – ID of the agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the removal was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.search_advertisements">
+<span class="sig-name descname"><span class="pre">search_advertisements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.search_advertisements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.search_advertisements" title="Link to this definition"></a></dt>
+<dd><p>Search for advertisements on the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>where</strong> – Search criteria</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of advertisements matching the criteria</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.start" title="Link to this definition"></a></dt>
+<dd><p>Start the plaza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if started successfully, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.stop" title="Link to this definition"></a></dt>
+<dd><p>Stop the plaza.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.subscribe_to_logs">
+<span class="sig-name descname"><span class="pre">subscribe_to_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.subscribe_to_logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.subscribe_to_logs" title="Link to this definition"></a></dt>
+<dd><p>Subscribe to log events and ensure they’re propagated from Pit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.unsubscribe_from_logs">
+<span class="sig-name descname"><span class="pre">unsubscribe_from_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.unsubscribe_from_logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.unsubscribe_from_logs" title="Link to this definition"></a></dt>
+<dd><p>Unsubscribe from log events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.plazas.AgentPlaza.update_agent_stop_time">
+<span class="sig-name descname"><span class="pre">update_agent_stop_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/plazas/AgentPlaza.html#AgentPlaza.update_agent_stop_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.plazas.AgentPlaza.update_agent_stop_time" title="Link to this definition"></a></dt>
+<dd><p>Update the stop time of an agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – ID of the agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the update was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="prompits.html" class="btn btn-neutral float-left" title="prompits package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="prompits.plugs.html" class="btn btn-neutral float-right" title="prompits.plugs package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -104,6 +104,15 @@ class AgentServicer(object):
 
 
 def add_AgentServicer_to_server(servicer, server):
+    """
+    Register AgentServicer with a gRPC server.
+    
+    This function adds the defined Agent service methods to the provided gRPC server.
+    
+    Args:
+        servicer: An implementation of the AgentServicer interface
+        server: The gRPC server to add the service to
+    """
     rpc_method_handlers = {
             'SendMessage': grpc.unary_unary_rpc_method_handler(
                     servicer.SendMessage,
@@ -153,6 +162,26 @@ class Agent(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
+        """
+        Send a message to the specified agent.
+        
+        This method is a client stub for the SendMessage RPC call.
+        
+        Args:
+            request: The message to send
+            target: The target agent address
+            options: RPC options
+            channel_credentials: Channel credentials for secure connection
+            call_credentials: Call-specific credentials
+            insecure: Whether to use an insecure connection
+            compression: Compression method
+            wait_for_ready: Whether to wait for the server to be ready
+            timeout: RPC timeout
+            metadata: Additional metadata
+            
+        Returns:
+            The response from the agent
+        """
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -180,6 +209,26 @@ class Agent(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
+        """
+        Echo a message back from the specified agent.
+        
+        This method is a client stub for the Echo RPC call.
+        
+        Args:
+            request: The message to echo
+            target: The target agent address
+            options: RPC options
+            channel_credentials: Channel credentials for secure connection
+            call_credentials: Call-specific credentials
+            insecure: Whether to use an insecure connection
+            compression: Compression method
+            wait_for_ready: Whether to wait for the server to be ready
+            timeout: RPC timeout
+            metadata: Additional metadata
+            
+        Returns:
+            The echoed message from the agent
+        """
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -207,6 +256,26 @@ class Agent(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
+        """
+        Get information about the specified agent.
+        
+        This method is a client stub for the GetAgentInfo RPC call.
+        
+        Args:
+            request: Empty request
+            target: The target agent address
+            options: RPC options
+            channel_credentials: Channel credentials for secure connection
+            call_credentials: Call-specific credentials
+            insecure: Whether to use an insecure connection
+            compression: Compression method
+            wait_for_ready: Whether to wait for the server to be ready
+            timeout: RPC timeout
+            metadata: Additional metadata
+            
+        Returns:
+            Agent information including ID, name, and capabilities
+        """
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -234,6 +303,26 @@ class Agent(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
+        """
+        List all available practices from the specified agent.
+        
+        This method is a client stub for the ListPractices RPC call.
+        
+        Args:
+            request: Empty request
+            target: The target agent address
+            options: RPC options
+            channel_credentials: Channel credentials for secure connection
+            call_credentials: Call-specific credentials
+            insecure: Whether to use an insecure connection
+            compression: Compression method
+            wait_for_ready: Whether to wait for the server to be ready
+            timeout: RPC timeout
+            metadata: Additional metadata
+            
+        Returns:
+            List of practices available from the agent
+        """
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -261,6 +350,26 @@ class Agent(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
+        """
+        Execute a practice on the specified agent.
+        
+        This method is a client stub for the ExecutePractice RPC call.
+        
+        Args:
+            request: Practice request containing the practice name and parameters
+            target: The target agent address
+            options: RPC options
+            channel_credentials: Channel credentials for secure connection
+            call_credentials: Call-specific credentials
+            insecure: Whether to use an insecure connection
+            compression: Compression method
+            wait_for_ready: Whether to wait for the server to be ready
+            timeout: RPC timeout
+            metadata: Additional metadata
+            
+        Returns:
+            Result of the practice execution
+        """
         return grpc.experimental.unary_unary(
             request,
             target,

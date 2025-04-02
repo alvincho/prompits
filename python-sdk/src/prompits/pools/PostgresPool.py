@@ -30,7 +30,28 @@ import types
 from ..LogEvent import LogEvent
 
 class DateTimeEncoder(json.JSONEncoder):
+    """
+    Custom JSON encoder that handles datetime objects and other non-serializable types.
+    
+    This encoder extends the standard JSONEncoder to properly serialize:
+    - datetime objects (converted to ISO format strings)
+    - methods and functions (converted to string representations)
+    - custom objects (converted to dictionaries of their public attributes)
+    """
+    
     def default(self, obj):
+        """
+        Convert Python objects to JSON-serializable types.
+        
+        Args:
+            obj: The object to convert
+            
+        Returns:
+            A JSON-serializable representation of the object
+            
+        Raises:
+            TypeError: If the object cannot be serialized
+        """
         if isinstance(obj, datetime):
             return obj.isoformat()
         elif isinstance(obj, (types.MethodType, types.FunctionType)):
@@ -47,7 +68,26 @@ class DateTimeEncoder(json.JSONEncoder):
             return super().default(obj)
 
 class PostgresPool(DatabasePool):
+    """
+    Pool implementation for PostgreSQL databases.
+    
+    This class provides methods to interact with PostgreSQL databases, including
+    connections, transactions, and CRUD operations. It implements the abstract
+    methods defined in DatabasePool.
+    """
+    
     def __init__(self, name: str, host: str, port: int, user: str, password: str, database: str):
+        """
+        Initialize a PostgresPool.
+        
+        Args:
+            name: Name of the pool (also used as the main table name)
+            host: PostgreSQL server hostname or IP address
+            port: PostgreSQL server port number
+            user: Username for database authentication
+            password: Password for database authentication
+            database: Database name to connect to
+        """
         super().__init__(name)
         self.host = host
         self.port = port
@@ -226,13 +266,40 @@ class PostgresPool(DatabasePool):
         }
 
     def _IsConnected(self):
+        """
+        Check if the database connection is active.
+        
+        Returns:
+            bool: True if connected, False otherwise
+        """
         return self.conn is not None and self.cursor is not None
-    
+
     def _GetTableSchema(self, table_name):
+        """
+        Get the schema information for a table.
+        
+        Args:
+            table_name: Name of the table
+            
+        Returns:
+            dict: Schema information for the table
+        """
         sql=f"SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = '{self.default_schema}' AND table_name = '{table_name}'"
         return self._Query(sql)
-    
+
     def _GetTableData(self, table_name, id_or_where=None, table_schema=None, max_rows=100):
+        """
+        Get data from a table with optional filtering.
+        
+        Args:
+            table_name: Name of the table to query
+            id_or_where: ID or dictionary of conditions for filtering
+            table_schema: Optional schema information for type conversion
+            max_rows: Maximum number of rows to return
+            
+        Returns:
+            list: List of rows matching the criteria
+        """
         sql=f"SELECT * FROM {self.default_schema}.{table_name}"
         if id_or_where:
             if isinstance(id_or_where, dict):
@@ -241,23 +308,33 @@ class PostgresPool(DatabasePool):
                 sql+=f" WHERE {id_or_where}"
         sql+=f" LIMIT {max_rows}"
         return self._Query(sql)
-    
-    # connect to the database
+
     def _Connect(self):
+        """
+        Establish a connection to the PostgreSQL database.
+        
+        This internal method handles the actual connection setup,
+        including error handling and connection state management.
+        
+        Returns:
+            bool: True if connected successfully, False otherwise
+        """
         try:
-            # connect to the database use psycopg2
-            self.conn = psycopg2.connect(self.connectionString, application_name=f"agent_{self.id}")
-            self.conn.autocommit = False
+            self.conn = psycopg2.connect(
+                host=self.host,
+                port=self.port,
+                user=self.user,
+                password=self.password,
+                database=self.database
+            )
             self.cursor = self.conn.cursor()
-            print(f"Connected to PostgreSQL database: {self.connectionString} with ID {self.id}")
+            self.log(f"Connected to PostgreSQL database {self.database} at {self.host}:{self.port}", 'DEBUG')
             return True
         except Exception as e:
-            print(f"Error connecting to PostgreSQL database: {str(e)}")
+            self.log(f"Error connecting to PostgreSQL: {str(e)}", 'ERROR')
             traceback.print_exc()
-            self.conn = None
-            raise e
+            return False
 
-    # disconnect from the database
     def _Disconnect(self):
         """
         Disconnect from the database.
@@ -280,7 +357,6 @@ class PostgresPool(DatabasePool):
             traceback.print_exc()
             return False
 
-    # convert the pool to a JSON object
     def ToJson(self):
         """
         Convert the pool to a JSON object.
@@ -294,6 +370,7 @@ class PostgresPool(DatabasePool):
             "default_schema": self.default_schema
         })
         return json_data
+
     def MapTypeFromDataType(self, data_type: DataType) -> str:
         """
         Map a DataType to a PostgreSQL data type.
@@ -307,22 +384,32 @@ class PostgresPool(DatabasePool):
         return self._MapTypeFromDataType(data_type)
 
     def _MapTypeFromDataType(self, data_type: DataType) -> str:
-        # loop DataType enum and return the Postgresql type
-        match data_type:
-            case DataType.STRING:
-                return "TEXT"
-            case DataType.INTEGER:
-                return "INTEGER"
-            case DataType.REAL:
-                return "REAL"
-            case DataType.BOOLEAN:
-                return "BOOLEAN"
-            case DataType.DATETIME:
-                return "TIMESTAMP"
-            case DataType.JSON:
-                return "JSONB"
-            case _:
-                raise ValueError(f"Unsupported data type: {data_type}")
+        """
+        Convert a DataType enum value to a PostgreSQL data type.
+        
+        Args:
+            data_type: DataType enum value
+            
+        Returns:
+            str: Corresponding PostgreSQL data type
+        """
+        # loop DataType enum and return the PostgreSQL type
+        if data_type == DataType.STRING:
+            return "VARCHAR(4096)"
+        elif data_type == DataType.INTEGER:
+            return "INTEGER"
+        elif data_type == DataType.FLOAT:
+            return "FLOAT"
+        elif data_type == DataType.BOOLEAN:
+            return "BOOLEAN"
+        elif data_type == DataType.DATETIME:
+            return "TIMESTAMP"
+        elif data_type == DataType.JSON:
+            return "JSONB"
+        elif data_type == DataType.BINARY:
+            return "BYTEA"
+        else:
+            return "VARCHAR(4096)"  # Default to string
 
     def MapTypeToDataType(self, data_type: str) -> DataType:
         """
@@ -337,31 +424,34 @@ class PostgresPool(DatabasePool):
         return self._MapTypeToDataType(data_type)
 
     def _MapTypeToDataType(self, data_type: str) -> DataType:
-        # loop DataType enum and return the Postgresql type
-        match data_type:
-            case "TEXT":
-                return DataType.STRING
-            case "INTEGER":
-                return DataType.INTEGER
-            case "REAL":
-                return DataType.REAL
-            case "BOOLEAN":
-                return DataType.BOOLEAN
-            case "TIMESTAMP":
-                return DataType.DATETIME
-            case "JSONB":
-                return DataType.JSON
-            case "UUID":
-                return DataType.UUID
-            case "JSON":
-                return DataType.JSON
-            case "VECTOR":
-                return DataType.VECTOR
-            case "TUPLE":
-                return DataType.TUPLE
-            case _:
-                raise ValueError(f"Unsupported data type: {data_type}")
-    
+        """
+        Convert a PostgreSQL data type to a DataType enum value.
+        
+        Args:
+            data_type: PostgreSQL data type
+            
+        Returns:
+            DataType: Corresponding DataType enum value
+        """
+        # Convert PostgreSQL type to DataType enum
+        data_type = data_type.lower()
+        if "varchar" in data_type or "text" in data_type or "char" in data_type:
+            return DataType.STRING
+        elif "int" in data_type:
+            return DataType.INTEGER
+        elif "float" in data_type or "real" in data_type or "double" in data_type or "numeric" in data_type or "decimal" in data_type:
+            return DataType.FLOAT
+        elif "bool" in data_type:
+            return DataType.BOOLEAN
+        elif "timestamp" in data_type or "date" in data_type:
+            return DataType.DATETIME
+        elif "json" in data_type:
+            return DataType.JSON
+        elif "bytea" in data_type or "blob" in data_type or "binary" in data_type:
+            return DataType.BINARY
+        else:
+            return DataType.STRING  # Default to string
+
     # convert a JSON object to a pool
     def FromJson(self, json_data):
         """
@@ -378,7 +468,6 @@ class PostgresPool(DatabasePool):
         self.connectionString = json_data.get("connectionString", self.connectionString)
         self.default_schema = json_data.get("default_schema", self.default_schema)
         return self
-
 
     def _ListTables(self):
         """
@@ -419,8 +508,18 @@ class PostgresPool(DatabasePool):
         return self._ListSchemas()
 
     def _ListSchemas(self):
-        self.cursor.execute("SELECT schema_name FROM information_schema.schemata order by schema_name")
-        return self.cursor.fetchall()
+        """
+        List all schemas in the database.
+        
+        Returns:
+            list: List of schema names
+        """
+        try:
+            self.cursor.execute("SELECT schema_name FROM information_schema.schemata")
+            return [row[0] for row in self.cursor.fetchall()]
+        except Exception as e:
+            self.log(f"Error listing schemas: {str(e)}", 'ERROR')
+            return []
 
     def _ensure_connection(self):
         """
@@ -605,7 +704,13 @@ class PostgresPool(DatabasePool):
             raise e
 
     def _ListDataTypes(self):
-        raise NotImplementedError("ListDataTypes is not implemented")
+        """
+        List all data types available in PostgreSQL.
+        
+        Returns:
+            list: List of data type names
+        """
+        return ["VARCHAR", "INTEGER", "FLOAT", "BOOLEAN", "TIMESTAMP", "JSONB", "BYTEA"]
     
     def _Execute(self, query, params=None):
         """
@@ -674,19 +779,42 @@ class PostgresPool(DatabasePool):
             return False
     
     def _ConvertToDataType(self, data_type:DataType, data: Any) -> Any:
-        # check if data is datetime
-        if data_type == DataType.DATETIME:
-            return datetime.fromisoformat(data)
-        return data
-    
+        """
+        Convert a value to the specified DataType.
+        
+        Args:
+            data_type: Target DataType
+            data: Value to convert
+            
+        Returns:
+            Any: Converted value
+        """
+        return self._convert_to_db_value(data, data_type)
+
     def _ConvertFromDataType(self, data_type:DataType, data: Any) -> Any:
-        # check if data is datetime
-        if data_type == DataType.DATETIME:
-            return data.isoformat()
-        return data
-    
+        """
+        Convert a database value to its Python representation.
+        
+        Args:
+            data_type: Source DataType
+            data: Value to convert
+            
+        Returns:
+            Any: Converted value
+        """
+        return self._convert_from_db_value(data, data_type)
+
     def _TableExists(self, table_name):
-        return table_name in self._ListTables()
+        """
+        Check if a table exists in the database.
+        
+        Args:
+            table_name: Name of the table to check
+            
+        Returns:
+            bool: True if the table exists, False otherwise
+        """
+        return self.TableExists(table_name)
     
     def _Insert(self, table_name, data):
         """

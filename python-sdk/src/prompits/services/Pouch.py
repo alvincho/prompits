@@ -68,6 +68,15 @@ class PathRun:
         
 
 class Pouch(Pit):
+    """
+    !!! This is a work in progress !!!
+    
+    Pouch is a service that store pathway and parameters
+    It also store the results of posts and the state of the pathway
+    It connects to multiple databases and can sync data between them
+    It supports JSON and graph databases
+    When traversing a graph, it can use a graph traversal algorithm
+    """
     def __init__(self, name: str, description: str, json_table_prefix: str="pouch_", graph_table_prefix: str="pouch_"):
         super().__init__(name, description)
 

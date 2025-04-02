@@ -36,7 +36,25 @@ if not logger.handlers:
     logger.addHandler(console_handler)
 
 class Pit(ABC):
+    """
+    Abstract base class for all Pit components in the Prompits framework.
+    
+    A Pit is the basic element of a multi-agent system. It provides a way to 
+    store and retrieve information. An agent can contain multiple pits, and 
+    each pit has a list of practices (actions) that it can perform.
+    
+    Other pits can use these practices through the UsePractice() method.
+    Pits can be serialized to and from JSON format.
+    """
+    
     def __init__(self, name, description):
+        """
+        Initialize a Pit with a name and description.
+        
+        Args:
+            name: The name of the pit
+            description: A description of the pit's purpose and functionality
+        """
         self.name = name
         self.description = description
         self.practices = {}

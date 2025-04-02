@@ -91,67 +91,122 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 class AgentInfo:
+    """
+    Represents the information about an agent.
+    
+    This class contains all the necessary metadata about an agent,
+    including its name, description, identifier, environments,
+    and associated components.
+    """
+    
     def __init__(self, agent_name: str="Agent", description: str = None, agent_id: str = None,
                  environments={}, plugs={}, pools={}, plazas={}, services={}):
+        """
+        Initialize agent information.
+        
+        Args:
+            agent_name: Name of the agent
+            description: Description of the agent
+            agent_id: Agent identifier (UUID will be generated if not provided)
+            environments: Dictionary of environments the agent operates in
+            plugs: Dictionary of communication plugs the agent has access to
+            pools: Dictionary of data pools the agent has access to
+            plazas: Dictionary of plazas the agent participates in
+            services: Dictionary of services the agent provides or uses
+        """
         self.agent_name = agent_name
         self.description = description
-        self.agent_id = agent_id
-        self.plugs: Dict[str, Plug] = plugs
-        self.pools: Dict[str, Pool] = pools
-        self.plazas: Dict[str, Plaza] = plazas
-        self.services: Dict[str, APIService] = services
+        self.agent_id = agent_id if agent_id else str(uuid.uuid4())
         self.environments = environments
-
+        self.plugs = plugs
+        self.pools = pools
+        self.plazas = plazas  
+        self.services = services
+        
     def ToJson(self):
-        plugs_json = {}
-        for plug in self.plugs.values():
-            if plug:
-                plugs_json[plug.name] = plug.ToJson()
-        pools_json = {}
-        for pool in self.pools.values():
-            if pool:
-                pools_json[pool.name] = pool.ToJson()
-        plazas_json = {}    
-        for plaza in self.plazas.values():
-            if plaza:
-                plazas_json[plaza.name] = plaza.ToJson()
-        services_json = {}
-        for service in self.services.values():
-            if service:
-                services_json[service.name] = service.ToJson()
+        """
+        Convert agent information to a JSON-serializable dictionary.
+        
+        Returns:
+            dict: A dictionary containing all agent information
+        """
+        components = {}
+        plugs = {}
+        for name, plug in self.plugs.items():
+            if isinstance(plug, Plug):
+                plugs[name] = plug.ToJson()
+            else:
+                plugs[name] = plug
+        pools = {}
+        for name, pool in self.pools.items():
+            if isinstance(pool, Pool):
+                pools[name] = pool.ToJson()
+            else:
+                pools[name] = pool
+        plazas = {}
+        for name, plaza in self.plazas.items():
+            if isinstance(plaza, Plaza):
+                plazas[name] = plaza.ToJson()
+            else:
+                plazas[name] = plaza
+        services = {}
+        for name, service in self.services.items():
+            if isinstance(service, APIService):
+                services[name] = service.ToJson()
+            else:
+                services[name] = service
+        components = {
+            "plugs": plugs,
+            "pools": pools,
+            "plazas": plazas,
+            "services": services
+        }
+        # practices are not determined in AgentInfo
+        practices = {}
         return {
             "agent_name": self.agent_name,
             "description": self.description,
             "agent_id": self.agent_id,
-            "components": {
-                "plugs": plugs_json,
-                "pools": pools_json,
-                "plazas": plazas_json,
-                "services": services_json
-            },
-            "environments": self.environments
+            "environments": self.environments,
+            "components": components
         }
-    # create a class method to create an AgentInfo object from a JSON object
+    
     @classmethod
-    def FromJson(cls, json: dict):
+    def FromJson(cls, json_data: dict):
+        """
+        Create an AgentInfo object from a JSON dictionary.
+        
+        Args:
+            json_data: Dictionary containing agent information
+            
+        Returns:
+            AgentInfo: A new AgentInfo object initialized with data from the JSON
+        """
+        components= json_data.get("components", {})
         return cls(
-            agent_name=json.get("agent_name"),
-            description=json.get("description"),
-            agent_id=json.get("agent_id"),
-            environments=json.get("environments", {}),
-            plugs=json.get("components", {}).get("plugs", {}),
-            pools=json.get("components", {}).get("pools", {}),
-            plazas=json.get("components", {}).get("plazas", {}),
-            services=json.get("components", {}).get("services", {})
+            agent_name=json_data.get("agent_name", "Agent"),
+            description=json_data.get("description"),
+            agent_id=json_data.get("agent_id"),
+            environments=json_data.get("environments", {}),
+            plugs=components.get("plugs", {}),
+            pools=components.get("pools", {}),
+            plazas=components.get("plazas", {}),
+            services=components.get("services", {})
         )
         
-        components = json.get("components", {})
-        self.plugs = components.get("plugs", {})
-        self.pools = components.get("pools", {})
-        self.plazas = components.get("plazas", {})
-        self.services = components.get("services", {})
-
 class Agent(Pit):
+    """
+    The main agent class in the Prompits framework.
+    
+    An Agent is a specialized Pit that can instantiate multiple other Pits,
+    communicate with other agents, and participate in plazas. It manages
+    plugs for communication, pools for data storage, and plazas for agent
+    discovery and collaboration.
+    
+    The Agent class is the central component that brings together all the 
+    pieces of the Prompits framework.
+    """
+    
     def __init__(self, name: str="Agent", description: str = None, agent_id: str = None):
         """
         Initialize an Agent.
@@ -187,9 +242,14 @@ class Agent(Pit):
         self.AddPractice(Practice("Advertise", self.Advertise))
         peer_list = []
 
-    # self.pits is a property that returns a dictionary of plugs, pools, plazas, services
     @property
     def pits(self):
+        """
+        Get all pits associated with this agent.
+        
+        Returns:
+            dict: A dictionary with categories of pits (plugs, pools, plazas, services)
+        """
         return {
             "plugs": self.plugs,
             "pools": self.pools,
@@ -197,8 +257,16 @@ class Agent(Pit):
             "services": self.services
         }
 
-    # ListPits returns a list of pits
     def ListPits(self, name_only=False):
+        """
+        List all pits associated with this agent.
+        
+        Args:
+            name_only: If True, returns only the names of the pits, otherwise returns the pit objects
+            
+        Returns:
+            list: A list of pit names or pit objects
+        """
         result=[]
         if name_only:
             for pit_type, pit_type_dict in self.pits.items():
@@ -210,7 +278,6 @@ class Agent(Pit):
                     result.append(pit)
         return result
     
-    #@classmethod
     def create_component(self, component_type: str, component_config: Dict[str, Any]):
         """
         Create a component from a configuration.
@@ -403,7 +470,7 @@ class Agent(Pit):
         """
         if not isinstance(agent_info, AgentInfo):
             raise TypeError("agent_info must be an AgentInfo object")
-        
+        print(f"Creating agent from AgentInfo: {agent_info.ToJson()}")
         # Set agent name and description
         agent = cls(agent_info.agent_name, agent_info.description)
         
@@ -484,30 +551,46 @@ class Agent(Pit):
         return agent
 
     def to_AgentInfo(self):
+        """
+        Convert this agent to an AgentInfo object.
+        
+        This method creates an AgentInfo representation of the current agent
+        that can be shared with other agents or serialized.
+        
+        Returns:
+            AgentInfo: An AgentInfo object representing this agent
+        """
         return AgentInfo(
-            agent_id=self.agent_id,
             agent_name=self.name,
             description=self.description,
+            agent_id=self.agent_id,
             environments=self.environments,
-            plugs=self.plugs,
-            pools=self.pools,
-            plazas=self.plazas,
-            services=self.services
+            plugs={name: plug for name, plug in self.plugs.items()},
+            pools={name: pool for name, pool in self.pools.items()},
+            plazas={name: plaza for name, plaza in self.plazas.items() if hasattr(plaza, 'ToJson')},
+            services={name: service for name, service in self.services.items() if hasattr(service, 'ToJson')}
         )
 
     def ToJson(self):
-        json_data = super().ToJson()
-        json_data["agent_id"] = self.agent_id
-        json_data["agent_name"] = self.name
-        json_data["description"] = self.description
-        json_data["environments"] = self.environments
-        components = {}
-        json_data["practices"] = {name: practice.ToJson() for name, practice in self.practices.items()}
-        components["plugs"] = {name: plug.ToJson() for name, plug in self.plugs.items()}
-        components["pools"] = {name: pool.ToJson() for name, pool in self.pools.items()}
-        components["plazas"] = {name: plaza.ToJson() for name, plaza in self.plazas.items()}
-        components["services"] = {name: service.ToJson() for name, service in self.services.items()}
-        json_data["components"] = components
+        """
+        Convert this agent to a JSON-serializable dictionary.
+        
+        Returns:
+            dict: A dictionary containing all agent information
+        """
+        agent_info = self.to_AgentInfo()
+        json_data = agent_info.ToJson()
+        json_data["practices"] = {}
+        for practice in self.practices.values():
+            json_data["practices"][practice.name] = practice.ToJson()
+        for pit in self.pits.values():
+            if isinstance(pit, Pit):
+                for practice in pit.practices.values():
+                    json_data["practices"][pit.name+"/"+practice.name] = practice.ToJson()
+            else:
+                if "practices" in pit:
+                    for practice in pit["practices"].values():
+                        json_data["practices"][pit["name"]+"/"+practice.name] = practice.ToJson()
         return json_data
         
     def request_use_practice(self, to_agent: str, practice: str, **kwargs):

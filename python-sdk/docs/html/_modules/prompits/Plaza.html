@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.Plaza &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pits.html">prompits.pits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.Plaza</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.Plaza</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Plaza is a service provide agents to store and retrieve data</span>
+<span class="c1"># it is a Pit and abstract class</span>
+<span class="c1"># it has predefiineed schema for the data that can be stored</span>
+<span class="c1"># it has StoreAd, RetrieveAd, UpdateAd, SearchAd, DeleteAd practices</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">TableSchema</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LogEvent</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pools.DatabasePool</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabasePool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Pit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pit</span>
+
+<div class="viewcode-block" id="Ad">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Ad">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ad</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents an advertisement stored in a Plaza.</span>
+<span class="sd">    </span>
+<span class="sd">    An Ad contains an identifier and associated data that can be stored,</span>
+<span class="sd">    retrieved, updated, and deleted from a Plaza&#39;s database pool.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an Ad instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            id: Unique identifier for the advertisement</span>
+<span class="sd">            data: Dictionary containing the advertisement data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="Plaza">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Plaza</span><span class="p">(</span><span class="n">Pit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Service that provides storage and retrieval capabilities for agents.</span>
+<span class="sd">    </span>
+<span class="sd">    Plaza acts as a central marketplace where agents can store, retrieve, update,</span>
+<span class="sd">    search, and delete data. It works with a database pool to persist data and</span>
+<span class="sd">    uses a predefined schema to validate and structure the data being stored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">table_schema</span><span class="p">:</span> <span class="n">TableSchema</span><span class="p">,</span> <span class="n">pool</span><span class="p">:</span> <span class="n">DatabasePool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Plaza instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the plaza</span>
+<span class="sd">            description: Description of the plaza&#39;s purpose</span>
+<span class="sd">            table_schema: Schema defining the structure of data that can be stored</span>
+<span class="sd">            pool: Database pool for storing and retrieving data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;Plaza </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_schema</span><span class="p">(</span><span class="n">table_schema</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">pool</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the Plaza to a JSON-serializable dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Dictionary representation of the Plaza</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">ToJson</span><span class="p">(),</span>
+            <span class="s2">&quot;pool&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+        <span class="p">}</span>
+    
+<div class="viewcode-block" id="Plaza.FromJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.FromJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Plaza from a JSON dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            json: Dictionary containing the serialized Plaza data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Plaza: Self reference for method chaining</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">TableSchema</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">DatabasePool</span><span class="o">.</span><span class="n">FromJson</span><span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;pool&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+        
+<div class="viewcode-block" id="Plaza.set_schema">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.set_schema">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the schema for the Plaza.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            schema: Table schema defining the structure of data that can be stored</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span></div>
+
+
+    <span class="c1"># Store an ad in the plaza&#39;s pool</span>
+<div class="viewcode-block" id="Plaza.StoreAd">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.StoreAd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">StoreAd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ad</span><span class="p">:</span> <span class="n">Ad</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store an advertisement in the plaza&#39;s pool.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            table_name: Name of the table to store the ad in</span>
+<span class="sd">            ad: The Advertisement object to store</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.RetrieveAd">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.RetrieveAd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">RetrieveAd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve an advertisement from the plaza&#39;s pool.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            table_name: Name of the table to retrieve from</span>
+<span class="sd">            id: ID of the advertisement to retrieve</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[Dict]: The retrieved advertisement data, or None if not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">Retrieve</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.UpdateAd">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.UpdateAd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">UpdateAd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update an advertisement in the plaza&#39;s pool.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            table_name: Name of the table containing the ad</span>
+<span class="sd">            id: ID of the advertisement to update</span>
+<span class="sd">            data: New data to update the advertisement with</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">Update</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.SearchAd">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.SearchAd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SearchAd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for advertisements in the plaza&#39;s pool.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            table_name: Name of the table to search in</span>
+<span class="sd">            where: Dictionary of conditions for the search</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict]: List of matching advertisements</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">Search</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.DeleteAd">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.DeleteAd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">DeleteAd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete an advertisement from the plaza&#39;s pool.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            id: ID of the advertisement to delete</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">Delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.Store">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.Store">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store data in the plaza using the specified key.</span>
+<span class="sd">        </span>
+<span class="sd">        This is an abstract method that must be implemented by subclasses.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            key: Unique identifier for the data</span>
+<span class="sd">            data: Data to store</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if successful, False otherwise</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If the method is not implemented by a subclass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Store method not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.Retrieve">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.Retrieve">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve data from the plaza using the specified key.</span>
+<span class="sd">        </span>
+<span class="sd">        This is an abstract method that must be implemented by subclasses.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            key: Unique identifier for the data to retrieve</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[Dict[str, Any]]: The retrieved data, or None if not found</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If the method is not implemented by a subclass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Retrieve method not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.Search">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.Search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for data in the plaza matching the specified conditions.</span>
+<span class="sd">        </span>
+<span class="sd">        This is an abstract method that must be implemented by subclasses.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            where: Dictionary of conditions for the search</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict[str, Any]]: List of matching data items</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If the method is not implemented by a subclass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Search method not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.Update">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.Update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update data in the plaza using the specified key.</span>
+<span class="sd">        </span>
+<span class="sd">        This is an abstract method that must be implemented by subclasses.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            key: Unique identifier for the data to update</span>
+<span class="sd">            data: New data to update with</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if successful, False otherwise</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If the method is not implemented by a subclass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Update method not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.Delete">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.Delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete data from the plaza using the specified key.</span>
+<span class="sd">        </span>
+<span class="sd">        This is an abstract method that must be implemented by subclasses.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            key: Unique identifier for the data to delete</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if successful, False otherwise</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If the method is not implemented by a subclass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Delete method not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plaza.ToJson">
+<a class="viewcode-back" href="../../prompits.html#prompits.Plaza.Plaza.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the Plaza to a JSON-serializable dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: Dictionary representation of the Plaza</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Plaza&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pool&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

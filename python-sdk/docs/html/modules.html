@@ -1,0 +1,775 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">prompits</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prompits">
+<h1>prompits<a class="headerlink" href="#prompits" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prompits.html">prompits package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.plazas.html">prompits.plazas package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plazas.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plazas.html#module-prompits.plazas.AgentPlaza">prompits.plazas.AgentPlaza module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plazas.html#prompits-plazas-messageplaza-module">prompits.plazas.MessagePlaza module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plazas.html#module-prompits.plazas">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.plugs.html">prompits.plugs package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#module-prompits.plugs.HTTPPlug">prompits.plugs.HTTPPlug module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#module-prompits.plugs.TCPPlug">prompits.plugs.TCPPlug module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#module-prompits.plugs.gRPCPlug">prompits.plugs.gRPCPlug module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#prompits-plugs-grpcplug-bak-module">prompits.plugs.gRPCPlug-bak module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.plugs.html#module-prompits.plugs">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.pools.html">prompits.pools package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.pools.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.pools.html#module-prompits.pools.DatabasePool">prompits.pools.DatabasePool module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.pools.html#module-prompits.pools.PostgresPool">prompits.pools.PostgresPool module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.pools.html#module-prompits.pools.SQLitePool">prompits.pools.SQLitePool module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.pools.html#module-prompits.pools">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.services.html">prompits.services package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.APIService">prompits.services.APIService module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.Job">prompits.services.Job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.JobMarket">prompits.services.JobMarket module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.JobResult">prompits.services.JobResult module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.LLM">prompits.services.LLM module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.MCPClient">prompits.services.MCPClient module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.Ollama">prompits.services.Ollama module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.Pouch">prompits.services.Pouch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services.Service">prompits.services.Service module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.services.html#module-prompits.services">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.messages.html">prompits.messages package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.messages.html#module-prompits.messages.StatusMessage">prompits.messages.StatusMessage module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.messages.html#module-prompits.messages.UsePracticeMessage">prompits.messages.UsePracticeMessage module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.messages.html#module-prompits.messages">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Agent">prompits.Agent module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Agent.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.AddPractice"><code class="docutils literal notranslate"><span class="pre">Agent.AddPractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.Advertise"><code class="docutils literal notranslate"><span class="pre">Agent.Advertise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.ConnectAgent"><code class="docutils literal notranslate"><span class="pre">Agent.ConnectAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.FromJson"><code class="docutils literal notranslate"><span class="pre">Agent.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.ListPits"><code class="docutils literal notranslate"><span class="pre">Agent.ListPits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.ReceiveMessage"><code class="docutils literal notranslate"><span class="pre">Agent.ReceiveMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.RefreshPractice"><code class="docutils literal notranslate"><span class="pre">Agent.RefreshPractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.SendMessage"><code class="docutils literal notranslate"><span class="pre">Agent.SendMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.StopAgent"><code class="docutils literal notranslate"><span class="pre">Agent.StopAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.ToJson"><code class="docutils literal notranslate"><span class="pre">Agent.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.UsePracticeRemote"><code class="docutils literal notranslate"><span class="pre">Agent.UsePracticeRemote()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.action"><code class="docutils literal notranslate"><span class="pre">Agent.action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.add_component"><code class="docutils literal notranslate"><span class="pre">Agent.add_component()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.add_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.add_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.add_plug"><code class="docutils literal notranslate"><span class="pre">Agent.add_plug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.connect_to_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.connect_to_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.create_component"><code class="docutils literal notranslate"><span class="pre">Agent.create_component()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.create_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.create_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.detect_environments"><code class="docutils literal notranslate"><span class="pre">Agent.detect_environments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.disconnect_from_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.disconnect_from_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.get_agent_info"><code class="docutils literal notranslate"><span class="pre">Agent.get_agent_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.get_pit"><code class="docutils literal notranslate"><span class="pre">Agent.get_pit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.get_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.get_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.handle_practice_request"><code class="docutils literal notranslate"><span class="pre">Agent.handle_practice_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.is_plaza_owner"><code class="docutils literal notranslate"><span class="pre">Agent.is_plaza_owner()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.pits"><code class="docutils literal notranslate"><span class="pre">Agent.pits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.remove_pit"><code class="docutils literal notranslate"><span class="pre">Agent.remove_pit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.remove_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.remove_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.request_use_practice"><code class="docutils literal notranslate"><span class="pre">Agent.request_use_practice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.search_advertisements"><code class="docutils literal notranslate"><span class="pre">Agent.search_advertisements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.set_message_handler"><code class="docutils literal notranslate"><span class="pre">Agent.set_message_handler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.start"><code class="docutils literal notranslate"><span class="pre">Agent.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.start_advertisement_refresh"><code class="docutils literal notranslate"><span class="pre">Agent.start_advertisement_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.stop"><code class="docutils literal notranslate"><span class="pre">Agent.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.stop_advertisement_refresh"><code class="docutils literal notranslate"><span class="pre">Agent.stop_advertisement_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.subscribe_to_component_logs"><code class="docutils literal notranslate"><span class="pre">Agent.subscribe_to_component_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.to_AgentInfo"><code class="docutils literal notranslate"><span class="pre">Agent.to_AgentInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.unsubscribe_from_component_logs"><code class="docutils literal notranslate"><span class="pre">Agent.unsubscribe_from_component_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Agent.update_agent_stop_time1"><code class="docutils literal notranslate"><span class="pre">Agent.update_agent_stop_time1()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Agent.AgentInfo"><code class="docutils literal notranslate"><span class="pre">AgentInfo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.AgentInfo.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentInfo.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.AgentInfo.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentInfo.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.AgentAddress">prompits.AgentAddress module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress"><code class="docutils literal notranslate"><span class="pre">AgentAddress</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress.FromAgent"><code class="docutils literal notranslate"><span class="pre">AgentAddress.FromAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentAddress.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress.FromPlaza"><code class="docutils literal notranslate"><span class="pre">AgentAddress.FromPlaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentAddress.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress.to_string"><code class="docutils literal notranslate"><span class="pre">AgentAddress.to_string()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.LogEvent">prompits.LogEvent module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.LogEvent.LogEvent"><code class="docutils literal notranslate"><span class="pre">LogEvent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.LogEvent.LogEvent.level"><code class="docutils literal notranslate"><span class="pre">LogEvent.level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.LogEvent.LogEvent.message"><code class="docutils literal notranslate"><span class="pre">LogEvent.message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.LogEvent.LogEvent.pit_name"><code class="docutils literal notranslate"><span class="pre">LogEvent.pit_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.LogEvent.LogEvent.timestamp"><code class="docutils literal notranslate"><span class="pre">LogEvent.timestamp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.LogEvent.LogEvent.to_dict"><code class="docutils literal notranslate"><span class="pre">LogEvent.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Message">prompits.Message module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Message.Attachment"><code class="docutils literal notranslate"><span class="pre">Attachment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Attachment.FromJson"><code class="docutils literal notranslate"><span class="pre">Attachment.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Attachment.ToJson"><code class="docutils literal notranslate"><span class="pre">Attachment.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Message.Message"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.FromJson"><code class="docutils literal notranslate"><span class="pre">Message.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.ToJson"><code class="docutils literal notranslate"><span class="pre">Message.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.attachments"><code class="docutils literal notranslate"><span class="pre">Message.attachments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.body"><code class="docutils literal notranslate"><span class="pre">Message.body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.msg_id"><code class="docutils literal notranslate"><span class="pre">Message.msg_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.recipients"><code class="docutils literal notranslate"><span class="pre">Message.recipients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.sender"><code class="docutils literal notranslate"><span class="pre">Message.sender</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.timestamp"><code class="docutils literal notranslate"><span class="pre">Message.timestamp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.Message.type"><code class="docutils literal notranslate"><span class="pre">Message.type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pathfinder">prompits.Pathfinder module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathfinder.FileMetricExporter"><code class="docutils literal notranslate"><span class="pre">FileMetricExporter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathfinder.Pathfinder"><code class="docutils literal notranslate"><span class="pre">Pathfinder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathfinder.Pathfinder.FromJson"><code class="docutils literal notranslate"><span class="pre">Pathfinder.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathfinder.Pathfinder.Run"><code class="docutils literal notranslate"><span class="pre">Pathfinder.Run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathfinder.Pathfinder.Status"><code class="docutils literal notranslate"><span class="pre">Pathfinder.Status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathfinder.Pathfinder.ToJson"><code class="docutils literal notranslate"><span class="pre">Pathfinder.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathfinder.Pathfinder.run_post"><code class="docutils literal notranslate"><span class="pre">Pathfinder.run_post()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pathway">prompits.Pathway module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathway.ExecutionPolicy"><code class="docutils literal notranslate"><span class="pre">ExecutionPolicy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.ExecutionPolicy.FromJson"><code class="docutils literal notranslate"><span class="pre">ExecutionPolicy.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.ExecutionPolicy.ToJson"><code class="docutils literal notranslate"><span class="pre">ExecutionPolicy.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathway.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Metadata.FromJson"><code class="docutils literal notranslate"><span class="pre">Metadata.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Metadata.ToJson"><code class="docutils literal notranslate"><span class="pre">Metadata.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway"><code class="docutils literal notranslate"><span class="pre">Pathway</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway.FromJson"><code class="docutils literal notranslate"><span class="pre">Pathway.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway.ToJson"><code class="docutils literal notranslate"><span class="pre">Pathway.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway.get_post_by_id"><code class="docutils literal notranslate"><span class="pre">Pathway.get_post_by_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway.validate"><code class="docutils literal notranslate"><span class="pre">Pathway.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathway.Post"><code class="docutils literal notranslate"><span class="pre">Post</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Post.FromJson"><code class="docutils literal notranslate"><span class="pre">Post.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.Post.ToJson"><code class="docutils literal notranslate"><span class="pre">Post.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pathway.PostGroup"><code class="docutils literal notranslate"><span class="pre">PostGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.PostGroup.FromJson"><code class="docutils literal notranslate"><span class="pre">PostGroup.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pathway.PostGroup.ToJson"><code class="docutils literal notranslate"><span class="pre">PostGroup.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pioneer">prompits.Pioneer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pit">prompits.Pit module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pit.Pit"><code class="docutils literal notranslate"><span class="pre">Pit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.AddPractice"><code class="docutils literal notranslate"><span class="pre">Pit.AddPractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.FromJson"><code class="docutils literal notranslate"><span class="pre">Pit.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.ListPractices"><code class="docutils literal notranslate"><span class="pre">Pit.ListPractices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.PracticeInfo"><code class="docutils literal notranslate"><span class="pre">Pit.PracticeInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.ToJson"><code class="docutils literal notranslate"><span class="pre">Pit.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.UsePractice"><code class="docutils literal notranslate"><span class="pre">Pit.UsePractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.emit_log_event"><code class="docutils literal notranslate"><span class="pre">Pit.emit_log_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.log"><code class="docutils literal notranslate"><span class="pre">Pit.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">Pit.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.Pit.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">Pit.unsubscribe_from_logs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Plaza">prompits.Plaza module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Plaza.Ad"><code class="docutils literal notranslate"><span class="pre">Ad</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza"><code class="docutils literal notranslate"><span class="pre">Plaza</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.Delete"><code class="docutils literal notranslate"><span class="pre">Plaza.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.DeleteAd"><code class="docutils literal notranslate"><span class="pre">Plaza.DeleteAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.FromJson"><code class="docutils literal notranslate"><span class="pre">Plaza.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.Retrieve"><code class="docutils literal notranslate"><span class="pre">Plaza.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.RetrieveAd"><code class="docutils literal notranslate"><span class="pre">Plaza.RetrieveAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.Search"><code class="docutils literal notranslate"><span class="pre">Plaza.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.SearchAd"><code class="docutils literal notranslate"><span class="pre">Plaza.SearchAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.Store"><code class="docutils literal notranslate"><span class="pre">Plaza.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.StoreAd"><code class="docutils literal notranslate"><span class="pre">Plaza.StoreAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.ToJson"><code class="docutils literal notranslate"><span class="pre">Plaza.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.Update"><code class="docutils literal notranslate"><span class="pre">Plaza.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.UpdateAd"><code class="docutils literal notranslate"><span class="pre">Plaza.UpdateAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Plaza.set_schema"><code class="docutils literal notranslate"><span class="pre">Plaza.set_schema()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Plug">prompits.Plug module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Plug.Plug"><code class="docutils literal notranslate"><span class="pre">Plug</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.Plug.FromJson"><code class="docutils literal notranslate"><span class="pre">Plug.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.Plug.ReceiveMessage"><code class="docutils literal notranslate"><span class="pre">Plug.ReceiveMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.Plug.SendMessage"><code class="docutils literal notranslate"><span class="pre">Plug.SendMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.Plug.ToJson"><code class="docutils literal notranslate"><span class="pre">Plug.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Pool">prompits.Pool module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.BooleanDataItem"><code class="docutils literal notranslate"><span class="pre">BooleanDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.BooleanDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">BooleanDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.BooleanDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">BooleanDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.BooleanDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">BooleanDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.BooleanDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">BooleanDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.DataItem"><code class="docutils literal notranslate"><span class="pre">DataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">DataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DataItem.from_json"><code class="docutils literal notranslate"><span class="pre">DataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">DataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DataItem.to_json"><code class="docutils literal notranslate"><span class="pre">DataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.DateTimeDataItem"><code class="docutils literal notranslate"><span class="pre">DateTimeDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DateTimeDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">DateTimeDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DateTimeDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">DateTimeDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DateTimeDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">DateTimeDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.DateTimeDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">DateTimeDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.IntegerDataItem"><code class="docutils literal notranslate"><span class="pre">IntegerDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.IntegerDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">IntegerDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.IntegerDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">IntegerDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.IntegerDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">IntegerDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.IntegerDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">IntegerDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.JsonDataItem"><code class="docutils literal notranslate"><span class="pre">JsonDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.JsonDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">JsonDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.JsonDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">JsonDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.JsonDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">JsonDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.JsonDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">JsonDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool"><code class="docutils literal notranslate"><span class="pre">MemoryPool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.Delete"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.Retrieve"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.Search"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.Store"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.ToJson"><code class="docutils literal notranslate"><span class="pre">MemoryPool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.Update"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.connect"><code class="docutils literal notranslate"><span class="pre">MemoryPool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.MemoryPool.disconnect"><code class="docutils literal notranslate"><span class="pre">MemoryPool.disconnect()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.ObjectDataItem"><code class="docutils literal notranslate"><span class="pre">ObjectDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.ObjectDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">ObjectDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.ObjectDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">ObjectDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.ObjectDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">ObjectDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.ObjectDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">ObjectDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.Pool"><code class="docutils literal notranslate"><span class="pre">Pool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.Delete"><code class="docutils literal notranslate"><span class="pre">Pool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.FromJson"><code class="docutils literal notranslate"><span class="pre">Pool.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.Retrieve"><code class="docutils literal notranslate"><span class="pre">Pool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.Search"><code class="docutils literal notranslate"><span class="pre">Pool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.Store"><code class="docutils literal notranslate"><span class="pre">Pool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.ToJson"><code class="docutils literal notranslate"><span class="pre">Pool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.Update"><code class="docutils literal notranslate"><span class="pre">Pool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.connect"><code class="docutils literal notranslate"><span class="pre">Pool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.disconnect"><code class="docutils literal notranslate"><span class="pre">Pool.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.log"><code class="docutils literal notranslate"><span class="pre">Pool.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">Pool.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Pool.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">Pool.unsubscribe_from_logs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.RealDataItem"><code class="docutils literal notranslate"><span class="pre">RealDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.RealDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">RealDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.RealDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">RealDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.RealDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">RealDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.RealDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">RealDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.TextDataItem"><code class="docutils literal notranslate"><span class="pre">TextDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TextDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">TextDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TextDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">TextDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TextDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">TextDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TextDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">TextDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool.TupleDataItem"><code class="docutils literal notranslate"><span class="pre">TupleDataItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TupleDataItem.from_dict"><code class="docutils literal notranslate"><span class="pre">TupleDataItem.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TupleDataItem.from_json"><code class="docutils literal notranslate"><span class="pre">TupleDataItem.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TupleDataItem.to_dict"><code class="docutils literal notranslate"><span class="pre">TupleDataItem.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.TupleDataItem.to_json"><code class="docutils literal notranslate"><span class="pre">TupleDataItem.to_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Practice">prompits.Practice module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Practice.Practice"><code class="docutils literal notranslate"><span class="pre">Practice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.FromJson"><code class="docutils literal notranslate"><span class="pre">Practice.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.Info"><code class="docutils literal notranslate"><span class="pre">Practice.Info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.ToJson"><code class="docutils literal notranslate"><span class="pre">Practice.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.Use"><code class="docutils literal notranslate"><span class="pre">Practice.Use()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.log"><code class="docutils literal notranslate"><span class="pre">Practice.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">Practice.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Practice.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">Practice.unsubscribe_from_logs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Profiler">prompits.Profiler module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Profiler.Evaluator"><code class="docutils literal notranslate"><span class="pre">Evaluator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Profiler.Evaluator.Evaluate"><code class="docutils literal notranslate"><span class="pre">Evaluator.Evaluate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Profiler.Profiler"><code class="docutils literal notranslate"><span class="pre">Profiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Profiler.Profiler.ProfilePathRun"><code class="docutils literal notranslate"><span class="pre">Profiler.ProfilePathRun()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits.Schema">prompits.Schema module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.ARRAY"><code class="docutils literal notranslate"><span class="pre">DataType.ARRAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.BOOLEAN"><code class="docutils literal notranslate"><span class="pre">DataType.BOOLEAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.DATE"><code class="docutils literal notranslate"><span class="pre">DataType.DATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.DATETIME"><code class="docutils literal notranslate"><span class="pre">DataType.DATETIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.FLOAT"><code class="docutils literal notranslate"><span class="pre">DataType.FLOAT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.GRAPH"><code class="docutils literal notranslate"><span class="pre">DataType.GRAPH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.INTEGER"><code class="docutils literal notranslate"><span class="pre">DataType.INTEGER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.JSON"><code class="docutils literal notranslate"><span class="pre">DataType.JSON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.NULL"><code class="docutils literal notranslate"><span class="pre">DataType.NULL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.OBJECT"><code class="docutils literal notranslate"><span class="pre">DataType.OBJECT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.REAL"><code class="docutils literal notranslate"><span class="pre">DataType.REAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.STRING"><code class="docutils literal notranslate"><span class="pre">DataType.STRING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.TIME"><code class="docutils literal notranslate"><span class="pre">DataType.TIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.UUID"><code class="docutils literal notranslate"><span class="pre">DataType.UUID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.VECTOR"><code class="docutils literal notranslate"><span class="pre">DataType.VECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.from_string"><code class="docutils literal notranslate"><span class="pre">DataType.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.DataType.validate_value"><code class="docutils literal notranslate"><span class="pre">DataType.validate_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema.JsonSchema"><code class="docutils literal notranslate"><span class="pre">JsonSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.JsonSchema.validate"><code class="docutils literal notranslate"><span class="pre">JsonSchema.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema.RowSchema"><code class="docutils literal notranslate"><span class="pre">RowSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.RowSchema.validate"><code class="docutils literal notranslate"><span class="pre">RowSchema.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema.Schema"><code class="docutils literal notranslate"><span class="pre">Schema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.Schema.get_field_type"><code class="docutils literal notranslate"><span class="pre">Schema.get_field_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.Schema.validate"><code class="docutils literal notranslate"><span class="pre">Schema.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema.TableSchema"><code class="docutils literal notranslate"><span class="pre">TableSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.TableSchema.ToJson"><code class="docutils literal notranslate"><span class="pre">TableSchema.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.TableSchema.validate"><code class="docutils literal notranslate"><span class="pre">TableSchema.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema.TupleSchema"><code class="docutils literal notranslate"><span class="pre">TupleSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.TupleSchema.validate"><code class="docutils literal notranslate"><span class="pre">TupleSchema.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prompits.html#module-prompits">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.AddPractice"><code class="docutils literal notranslate"><span class="pre">Agent.AddPractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.Advertise"><code class="docutils literal notranslate"><span class="pre">Agent.Advertise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.ConnectAgent"><code class="docutils literal notranslate"><span class="pre">Agent.ConnectAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.FromJson"><code class="docutils literal notranslate"><span class="pre">Agent.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.ListPits"><code class="docutils literal notranslate"><span class="pre">Agent.ListPits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.ReceiveMessage"><code class="docutils literal notranslate"><span class="pre">Agent.ReceiveMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.RefreshPractice"><code class="docutils literal notranslate"><span class="pre">Agent.RefreshPractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.SendMessage"><code class="docutils literal notranslate"><span class="pre">Agent.SendMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.StopAgent"><code class="docutils literal notranslate"><span class="pre">Agent.StopAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.ToJson"><code class="docutils literal notranslate"><span class="pre">Agent.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.UsePracticeRemote"><code class="docutils literal notranslate"><span class="pre">Agent.UsePracticeRemote()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.action"><code class="docutils literal notranslate"><span class="pre">Agent.action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.add_component"><code class="docutils literal notranslate"><span class="pre">Agent.add_component()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.add_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.add_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.add_plug"><code class="docutils literal notranslate"><span class="pre">Agent.add_plug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.connect_to_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.connect_to_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.create_component"><code class="docutils literal notranslate"><span class="pre">Agent.create_component()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.create_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.create_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.detect_environments"><code class="docutils literal notranslate"><span class="pre">Agent.detect_environments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.disconnect_from_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.disconnect_from_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.get_agent_info"><code class="docutils literal notranslate"><span class="pre">Agent.get_agent_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.get_pit"><code class="docutils literal notranslate"><span class="pre">Agent.get_pit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.get_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.get_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.handle_practice_request"><code class="docutils literal notranslate"><span class="pre">Agent.handle_practice_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.is_plaza_owner"><code class="docutils literal notranslate"><span class="pre">Agent.is_plaza_owner()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.pits"><code class="docutils literal notranslate"><span class="pre">Agent.pits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.remove_pit"><code class="docutils literal notranslate"><span class="pre">Agent.remove_pit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.remove_plaza"><code class="docutils literal notranslate"><span class="pre">Agent.remove_plaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.request_use_practice"><code class="docutils literal notranslate"><span class="pre">Agent.request_use_practice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.search_advertisements"><code class="docutils literal notranslate"><span class="pre">Agent.search_advertisements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.set_message_handler"><code class="docutils literal notranslate"><span class="pre">Agent.set_message_handler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.start"><code class="docutils literal notranslate"><span class="pre">Agent.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.start_advertisement_refresh"><code class="docutils literal notranslate"><span class="pre">Agent.start_advertisement_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.stop"><code class="docutils literal notranslate"><span class="pre">Agent.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.stop_advertisement_refresh"><code class="docutils literal notranslate"><span class="pre">Agent.stop_advertisement_refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.subscribe_to_component_logs"><code class="docutils literal notranslate"><span class="pre">Agent.subscribe_to_component_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.to_AgentInfo"><code class="docutils literal notranslate"><span class="pre">Agent.to_AgentInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.unsubscribe_from_component_logs"><code class="docutils literal notranslate"><span class="pre">Agent.unsubscribe_from_component_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Agent.update_agent_stop_time1"><code class="docutils literal notranslate"><span class="pre">Agent.update_agent_stop_time1()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.AgentAddress"><code class="docutils literal notranslate"><span class="pre">AgentAddress</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.FromAgent"><code class="docutils literal notranslate"><span class="pre">AgentAddress.FromAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentAddress.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.FromPlaza"><code class="docutils literal notranslate"><span class="pre">AgentAddress.FromPlaza()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentAddress.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentAddress.to_string"><code class="docutils literal notranslate"><span class="pre">AgentAddress.to_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.AgentInfo"><code class="docutils literal notranslate"><span class="pre">AgentInfo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentInfo.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentInfo.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentInfo.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentInfo.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.AgentPlaza"><code class="docutils literal notranslate"><span class="pre">AgentPlaza</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.Advertise"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.Advertise()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.FromJson"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.ToJson"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.add_pool"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.add_pool()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.get_advertisement"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.get_advertisement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.get_agent_info"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.get_agent_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.list_active_agents"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.list_active_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.log"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.remove_advertisement"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.remove_advertisement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.search_advertisements"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.search_advertisements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.start"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.stop"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.unsubscribe_from_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.AgentPlaza.update_agent_stop_time"><code class="docutils literal notranslate"><span class="pre">AgentPlaza.update_agent_stop_time()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.ARRAY"><code class="docutils literal notranslate"><span class="pre">DataType.ARRAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.BOOLEAN"><code class="docutils literal notranslate"><span class="pre">DataType.BOOLEAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.DATE"><code class="docutils literal notranslate"><span class="pre">DataType.DATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.DATETIME"><code class="docutils literal notranslate"><span class="pre">DataType.DATETIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.FLOAT"><code class="docutils literal notranslate"><span class="pre">DataType.FLOAT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.GRAPH"><code class="docutils literal notranslate"><span class="pre">DataType.GRAPH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.INTEGER"><code class="docutils literal notranslate"><span class="pre">DataType.INTEGER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.JSON"><code class="docutils literal notranslate"><span class="pre">DataType.JSON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.NULL"><code class="docutils literal notranslate"><span class="pre">DataType.NULL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.OBJECT"><code class="docutils literal notranslate"><span class="pre">DataType.OBJECT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.REAL"><code class="docutils literal notranslate"><span class="pre">DataType.REAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.STRING"><code class="docutils literal notranslate"><span class="pre">DataType.STRING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.TIME"><code class="docutils literal notranslate"><span class="pre">DataType.TIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.UUID"><code class="docutils literal notranslate"><span class="pre">DataType.UUID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.VECTOR"><code class="docutils literal notranslate"><span class="pre">DataType.VECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.from_string"><code class="docutils literal notranslate"><span class="pre">DataType.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DataType.validate_value"><code class="docutils literal notranslate"><span class="pre">DataType.validate_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.DatabasePool"><code class="docutils literal notranslate"><span class="pre">DatabasePool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.CreateTable"><code class="docutils literal notranslate"><span class="pre">DatabasePool.CreateTable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.Delete"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.Retrieve"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.Search"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.Store"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.TableExists"><code class="docutils literal notranslate"><span class="pre">DatabasePool.TableExists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.ToJson"><code class="docutils literal notranslate"><span class="pre">DatabasePool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.Update"><code class="docutils literal notranslate"><span class="pre">DatabasePool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.connect"><code class="docutils literal notranslate"><span class="pre">DatabasePool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.delete_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.delete_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.disconnect"><code class="docutils literal notranslate"><span class="pre">DatabasePool.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.execute_query"><code class="docutils literal notranslate"><span class="pre">DatabasePool.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.get_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.insert_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.insert_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.DatabasePool.update_data"><code class="docutils literal notranslate"><span class="pre">DatabasePool.update_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.HTTPPlug"><code class="docutils literal notranslate"><span class="pre">HTTPPlug</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.FromJson"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.ToJson"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.connect"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.delete"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.disconnect"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.echo"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.echo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.get"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.is_connected"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.is_connected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.post"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.post()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.put"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.put()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.receive"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.receive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.send"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.send()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.set_auth"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.set_auth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.HTTPPlug.set_headers"><code class="docutils literal notranslate"><span class="pre">HTTPPlug.set_headers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.MemoryPool"><code class="docutils literal notranslate"><span class="pre">MemoryPool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.Delete"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.Retrieve"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.Search"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.Store"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.ToJson"><code class="docutils literal notranslate"><span class="pre">MemoryPool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.Update"><code class="docutils literal notranslate"><span class="pre">MemoryPool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.connect"><code class="docutils literal notranslate"><span class="pre">MemoryPool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.MemoryPool.disconnect"><code class="docutils literal notranslate"><span class="pre">MemoryPool.disconnect()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Message"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.FromJson"><code class="docutils literal notranslate"><span class="pre">Message.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.ToJson"><code class="docutils literal notranslate"><span class="pre">Message.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.attachments"><code class="docutils literal notranslate"><span class="pre">Message.attachments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.body"><code class="docutils literal notranslate"><span class="pre">Message.body</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.msg_id"><code class="docutils literal notranslate"><span class="pre">Message.msg_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.recipients"><code class="docutils literal notranslate"><span class="pre">Message.recipients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.sender"><code class="docutils literal notranslate"><span class="pre">Message.sender</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.timestamp"><code class="docutils literal notranslate"><span class="pre">Message.timestamp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Message.type"><code class="docutils literal notranslate"><span class="pre">Message.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pit"><code class="docutils literal notranslate"><span class="pre">Pit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.AddPractice"><code class="docutils literal notranslate"><span class="pre">Pit.AddPractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.FromJson"><code class="docutils literal notranslate"><span class="pre">Pit.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.ListPractices"><code class="docutils literal notranslate"><span class="pre">Pit.ListPractices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.PracticeInfo"><code class="docutils literal notranslate"><span class="pre">Pit.PracticeInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.ToJson"><code class="docutils literal notranslate"><span class="pre">Pit.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.UsePractice"><code class="docutils literal notranslate"><span class="pre">Pit.UsePractice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.emit_log_event"><code class="docutils literal notranslate"><span class="pre">Pit.emit_log_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.log"><code class="docutils literal notranslate"><span class="pre">Pit.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">Pit.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pit.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">Pit.unsubscribe_from_logs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Plaza"><code class="docutils literal notranslate"><span class="pre">Plaza</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Delete"><code class="docutils literal notranslate"><span class="pre">Plaza.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.DeleteAd"><code class="docutils literal notranslate"><span class="pre">Plaza.DeleteAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.FromJson"><code class="docutils literal notranslate"><span class="pre">Plaza.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Retrieve"><code class="docutils literal notranslate"><span class="pre">Plaza.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.RetrieveAd"><code class="docutils literal notranslate"><span class="pre">Plaza.RetrieveAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Search"><code class="docutils literal notranslate"><span class="pre">Plaza.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.SearchAd"><code class="docutils literal notranslate"><span class="pre">Plaza.SearchAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Store"><code class="docutils literal notranslate"><span class="pre">Plaza.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.StoreAd"><code class="docutils literal notranslate"><span class="pre">Plaza.StoreAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.ToJson"><code class="docutils literal notranslate"><span class="pre">Plaza.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.Update"><code class="docutils literal notranslate"><span class="pre">Plaza.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.UpdateAd"><code class="docutils literal notranslate"><span class="pre">Plaza.UpdateAd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plaza.set_schema"><code class="docutils literal notranslate"><span class="pre">Plaza.set_schema()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Plug"><code class="docutils literal notranslate"><span class="pre">Plug</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.FromJson"><code class="docutils literal notranslate"><span class="pre">Plug.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.ReceiveMessage"><code class="docutils literal notranslate"><span class="pre">Plug.ReceiveMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.SendMessage"><code class="docutils literal notranslate"><span class="pre">Plug.SendMessage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Plug.ToJson"><code class="docutils literal notranslate"><span class="pre">Plug.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Pool"><code class="docutils literal notranslate"><span class="pre">Pool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Delete"><code class="docutils literal notranslate"><span class="pre">Pool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.FromJson"><code class="docutils literal notranslate"><span class="pre">Pool.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Retrieve"><code class="docutils literal notranslate"><span class="pre">Pool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Search"><code class="docutils literal notranslate"><span class="pre">Pool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Store"><code class="docutils literal notranslate"><span class="pre">Pool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.ToJson"><code class="docutils literal notranslate"><span class="pre">Pool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.Update"><code class="docutils literal notranslate"><span class="pre">Pool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.connect"><code class="docutils literal notranslate"><span class="pre">Pool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.disconnect"><code class="docutils literal notranslate"><span class="pre">Pool.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.log"><code class="docutils literal notranslate"><span class="pre">Pool.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">Pool.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Pool.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">Pool.unsubscribe_from_logs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.PostgresPool"><code class="docutils literal notranslate"><span class="pre">PostgresPool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.CreateTable"><code class="docutils literal notranslate"><span class="pre">PostgresPool.CreateTable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.Delete"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.FromJson"><code class="docutils literal notranslate"><span class="pre">PostgresPool.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.ListSchemas"><code class="docutils literal notranslate"><span class="pre">PostgresPool.ListSchemas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.MapTypeFromDataType"><code class="docutils literal notranslate"><span class="pre">PostgresPool.MapTypeFromDataType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.MapTypeToDataType"><code class="docutils literal notranslate"><span class="pre">PostgresPool.MapTypeToDataType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.Retrieve"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Retrieve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.Search"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.Store"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.TableExists"><code class="docutils literal notranslate"><span class="pre">PostgresPool.TableExists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.ToJson"><code class="docutils literal notranslate"><span class="pre">PostgresPool.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.Update"><code class="docutils literal notranslate"><span class="pre">PostgresPool.Update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.connect"><code class="docutils literal notranslate"><span class="pre">PostgresPool.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.PostgresPool.disconnect"><code class="docutils literal notranslate"><span class="pre">PostgresPool.disconnect()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Practice"><code class="docutils literal notranslate"><span class="pre">Practice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.FromJson"><code class="docutils literal notranslate"><span class="pre">Practice.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Info"><code class="docutils literal notranslate"><span class="pre">Practice.Info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.ToJson"><code class="docutils literal notranslate"><span class="pre">Practice.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.Use"><code class="docutils literal notranslate"><span class="pre">Practice.Use()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.log"><code class="docutils literal notranslate"><span class="pre">Practice.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.subscribe_to_logs"><code class="docutils literal notranslate"><span class="pre">Practice.subscribe_to_logs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Practice.unsubscribe_from_logs"><code class="docutils literal notranslate"><span class="pre">Practice.unsubscribe_from_logs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.Schema"><code class="docutils literal notranslate"><span class="pre">Schema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.get_field_type"><code class="docutils literal notranslate"><span class="pre">Schema.get_field_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.Schema.validate"><code class="docutils literal notranslate"><span class="pre">Schema.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.StatusMessage"><code class="docutils literal notranslate"><span class="pre">StatusMessage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.StatusMessage.FromJson"><code class="docutils literal notranslate"><span class="pre">StatusMessage.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.StatusMessage.ToJson"><code class="docutils literal notranslate"><span class="pre">StatusMessage.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.TCPPlug"><code class="docutils literal notranslate"><span class="pre">TCPPlug</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.FromJson"><code class="docutils literal notranslate"><span class="pre">TCPPlug.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.ToJson"><code class="docutils literal notranslate"><span class="pre">TCPPlug.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.connect"><code class="docutils literal notranslate"><span class="pre">TCPPlug.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.disconnect"><code class="docutils literal notranslate"><span class="pre">TCPPlug.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.echo"><code class="docutils literal notranslate"><span class="pre">TCPPlug.echo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.is_connected"><code class="docutils literal notranslate"><span class="pre">TCPPlug.is_connected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.receive"><code class="docutils literal notranslate"><span class="pre">TCPPlug.receive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.receive_message"><code class="docutils literal notranslate"><span class="pre">TCPPlug.receive_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.register_event_handler"><code class="docutils literal notranslate"><span class="pre">TCPPlug.register_event_handler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.send_message"><code class="docutils literal notranslate"><span class="pre">TCPPlug.send_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.trigger_event"><code class="docutils literal notranslate"><span class="pre">TCPPlug.trigger_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TCPPlug.unregister_event_handler"><code class="docutils literal notranslate"><span class="pre">TCPPlug.unregister_event_handler()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.TableSchema"><code class="docutils literal notranslate"><span class="pre">TableSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TableSchema.ToJson"><code class="docutils literal notranslate"><span class="pre">TableSchema.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.TableSchema.validate"><code class="docutils literal notranslate"><span class="pre">TableSchema.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prompits.html#prompits.UsePracticeResponse"><code class="docutils literal notranslate"><span class="pre">UsePracticeResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.UsePracticeResponse.FromJson"><code class="docutils literal notranslate"><span class="pre">UsePracticeResponse.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="prompits.html#prompits.UsePracticeResponse.ToJson"><code class="docutils literal notranslate"><span class="pre">UsePracticeResponse.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

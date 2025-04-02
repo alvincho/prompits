@@ -29,36 +29,133 @@ try:
 except ImportError:
     # Placeholder for when protos aren't generated yet
     class agent_pb2:
+        """
+        Generated Protocol Buffer classes for agent communication.
+        
+        This class contains the message types defined in the agent.proto file,
+        which are used for serializing and deserializing gRPC messages.
+        """
+        
         class Message:
+            """
+            Protocol buffer message class for agent messages.
+            
+            This class represents a message sent between agents, containing
+            information about the sender, recipient, and message content.
+            """
+            
             def __init__(self):
+                """
+                Initialize a new Message instance with default values.
+                
+                Sets default empty values for id, type, content, and timestamp.
+                """
                 self.id = ""
                 self.type = ""
                 self.content = ""
                 self.timestamp = 0
                 
         class AgentInfo:
+            """
+            Protocol buffer message class for agent information.
+            
+            This class represents details about an agent, including its
+            identifier, name, and other metadata.
+            """
+            
             def __init__(self):
+                """
+                Initialize a new AgentInfo instance with default values.
+                
+                Sets default empty values for agent_id and agent_name.
+                """
                 self.agent_id = ""
                 self.agent_name = ""
                 
     class agent_pb2_grpc:
+        """
+        Generated gRPC service classes for agent communication.
+        
+        This class contains the service definitions from the agent.proto file,
+        providing interfaces for both client and server implementations of
+        the agent service.
+        """
+        
         class AgentServicer:
+            """
+            Base class for implementing gRPC agent services.
+            
+            This is the abstract interface class that should be inherited
+            by service implementations to handle RPC calls from clients.
+            """
             pass
             
         class AgentStub:
+            """
+            Client-side stub for interacting with the Agent gRPC service.
+            
+            This class provides methods for making RPC calls to an Agent server.
+            """
+            
             def __init__(self, channel):
+                """
+                Initialize a new AgentStub connected to a gRPC channel.
+                
+                Args:
+                    channel: The gRPC channel to use for communication
+                """
                 self.channel = channel
             
         def add_AgentServicer_to_server(servicer, server):
+            """
+            Register an AgentServicer with a gRPC server.
+            
+            Args:
+                servicer: The AgentServicer implementation to register
+                server: The gRPC server to register with
+            """
             pass
 
 # Define the gRPC service
 class AgentServicer(agent_pb2_grpc.AgentServicer):
+    """
+    gRPC service implementation that handles incoming requests from other agents.
+    
+    This class implements the AgentServicer interface defined in the agent.proto file,
+    providing methods to handle various types of requests such as receiving messages,
+    echoing messages for connectivity testing, retrieving agent information, listing
+    available practices, and executing practices remotely.
+    
+    The servicer acts as a bridge between the gRPC communication layer and the
+    agent's internal functionality, translating protocol buffer messages into
+    Python objects that the agent can process, and vice versa.
+    """
+    
     def __init__(self, grpc_plug):
+        """
+        Initialize the AgentServicer with a reference to the gRPCPlug.
+        
+        Args:
+            grpc_plug: The gRPCPlug instance that this servicer is associated with
+        """
         super().__init__()
         self.grpc_plug = grpc_plug
         
     def SendMessage(self, request, context):
+        """
+        Handle incoming message requests from other agents.
+        
+        This method receives a message from another agent, triggers any registered
+        message event handlers, and adds the message to the message queue for
+        later processing.
+        
+        Args:
+            request: The gRPC Message request object containing the message data
+            context: The gRPC context object
+            
+        Returns:
+            MessageResponse: A response indicating success or failure
+        """
         # Convert protobuf message to dict
         message = {
             'id': request.id,
@@ -78,6 +175,20 @@ class AgentServicer(agent_pb2_grpc.AgentServicer):
         return agent_pb2.MessageResponse(success=True, message="Message received")
     
     def Echo(self, request, context):
+        """
+        Echo a message back to the sender.
+        
+        This method is used for testing connectivity between agents by
+        receiving a message and echoing it back to the sender with minimal
+        modifications.
+        
+        Args:
+            request: The gRPC Message request object to echo
+            context: The gRPC context object
+            
+        Returns:
+            Message: The echoed message with updated metadata
+        """
         # Echo the message back
         response = agent_pb2.Message()
         response.id = request.id
@@ -87,6 +198,19 @@ class AgentServicer(agent_pb2_grpc.AgentServicer):
         return response
         
     def GetAgentInfo(self, request, context):
+        """
+        Retrieve information about this agent.
+        
+        This method provides metadata about the agent, including its ID, name,
+        description, and a list of its capabilities (available practices).
+        
+        Args:
+            request: The gRPC GetAgentInfoRequest object
+            context: The gRPC context object
+            
+        Returns:
+            AgentInfo: Information about the agent
+        """
         # Get agent information from the plug's agent
         agent = self.grpc_plug.agent if hasattr(self.grpc_plug, 'agent') else None
         
@@ -109,6 +233,19 @@ class AgentServicer(agent_pb2_grpc.AgentServicer):
         )
     
     def ListPractices(self, request, context):
+        """
+        List all practices available from this agent.
+        
+        This method returns detailed information about all practices that this agent
+        can perform, including their names, descriptions, and parameter information.
+        
+        Args:
+            request: The gRPC ListPracticesRequest object
+            context: The gRPC context object
+            
+        Returns:
+            PracticeList: A list of available practices with their details
+        """
         # Get agent
         agent = self.grpc_plug.agent if hasattr(self.grpc_plug, 'agent') else None
         
@@ -158,6 +295,20 @@ class AgentServicer(agent_pb2_grpc.AgentServicer):
         return agent_pb2.PracticeList(practices=practice_list)
         
     def ExecutePractice(self, request, context):
+        """
+        Execute a practice that this agent can perform.
+        
+        This method allows remote agents to invoke a practice that this agent
+        has registered. It handles parameter conversion and error handling,
+        returning the result of the practice execution.
+        
+        Args:
+            request: The gRPC ExecutePracticeRequest containing the practice name and parameters
+            context: The gRPC context object
+            
+        Returns:
+            PracticeResponse: The result of executing the practice, or an error message
+        """
         # Get agent
         agent = self.grpc_plug.agent if hasattr(self.grpc_plug, 'agent') else None
         
@@ -209,6 +360,25 @@ class AgentServicer(agent_pb2_grpc.AgentServicer):
             )
 
 class gRPCPlug(Plug):
+    """
+    gRPC communication plug for connecting agents via gRPC.
+    
+    This class implements a bidirectional communication channel using gRPC,
+    allowing agents to send and receive messages, query agent information,
+    list available practices, and execute practices remotely.
+    
+    The plug can operate in either server mode (listening for incoming connections)
+    or client mode (connecting to remote servers). It handles serialization of
+    messages and manages the connection lifecycle.
+    
+    Attributes:
+        is_server: Whether this plug is operating as a server
+        server: The gRPC server instance (if in server mode)
+        channel: The gRPC channel (if in client mode)
+        stub: The gRPC stub for making calls (if in client mode)
+        message_queue: Queue of received messages
+        event_handlers: Dictionary of registered event handlers
+    """
     def __init__(self, name: str, description: str = None, host: str = "localhost", port: int = 9000, is_server: bool = False):
         """Initialize the gRPC plug
         

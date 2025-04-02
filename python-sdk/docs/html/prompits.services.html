@@ -1,0 +1,1161 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.services package &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="prompits.messages package" href="prompits.messages.html" />
+    <link rel="prev" title="prompits.pools package" href="prompits.pools.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">prompits.services package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.APIService">prompits.services.APIService module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.APIService.APIService"><code class="docutils literal notranslate"><span class="pre">APIService</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.AddEndpoint"><code class="docutils literal notranslate"><span class="pre">APIService.AddEndpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.FromJson"><code class="docutils literal notranslate"><span class="pre">APIService.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.GenerateOpenAPISpec"><code class="docutils literal notranslate"><span class="pre">APIService.GenerateOpenAPISpec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.GetEndpoints"><code class="docutils literal notranslate"><span class="pre">APIService.GetEndpoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.GetOpenAPISpec"><code class="docutils literal notranslate"><span class="pre">APIService.GetOpenAPISpec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.RemoveEndpoint"><code class="docutils literal notranslate"><span class="pre">APIService.RemoveEndpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.Request"><code class="docutils literal notranslate"><span class="pre">APIService.Request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.SetOpenAPISpec"><code class="docutils literal notranslate"><span class="pre">APIService.SetOpenAPISpec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.APIService.ToJson"><code class="docutils literal notranslate"><span class="pre">APIService.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.APIService.Endpoint"><code class="docutils literal notranslate"><span class="pre">Endpoint</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.APIService.OpenAPI"><code class="docutils literal notranslate"><span class="pre">OpenAPI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.OpenAPI.from_dict"><code class="docutils literal notranslate"><span class="pre">OpenAPI.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.OpenAPI.to_dict"><code class="docutils literal notranslate"><span class="pre">OpenAPI.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.Job">prompits.services.Job module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Job.Job"><code class="docutils literal notranslate"><span class="pre">Job</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.JobMarket">prompits.services.JobMarket module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.JobMarket.Job"><code class="docutils literal notranslate"><span class="pre">Job</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.Job.from_dict"><code class="docutils literal notranslate"><span class="pre">Job.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.Job.to_dict"><code class="docutils literal notranslate"><span class="pre">Job.to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket"><code class="docutils literal notranslate"><span class="pre">JobMarket</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.ApplyJob"><code class="docutils literal notranslate"><span class="pre">JobMarket.ApplyJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.CancelJob"><code class="docutils literal notranslate"><span class="pre">JobMarket.CancelJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.FinishJob"><code class="docutils literal notranslate"><span class="pre">JobMarket.FinishJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.FromJson"><code class="docutils literal notranslate"><span class="pre">JobMarket.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.GetJob"><code class="docutils literal notranslate"><span class="pre">JobMarket.GetJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.GetJobs"><code class="docutils literal notranslate"><span class="pre">JobMarket.GetJobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.PostJob"><code class="docutils literal notranslate"><span class="pre">JobMarket.PostJob()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.RateResult"><code class="docutils literal notranslate"><span class="pre">JobMarket.RateResult()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.SearchJobs"><code class="docutils literal notranslate"><span class="pre">JobMarket.SearchJobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.ToJson"><code class="docutils literal notranslate"><span class="pre">JobMarket.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.initialize"><code class="docutils literal notranslate"><span class="pre">JobMarket.initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobMarket.set_pool"><code class="docutils literal notranslate"><span class="pre">JobMarket.set_pool()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.JobMarket.JobResult"><code class="docutils literal notranslate"><span class="pre">JobResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobResult.from_dict"><code class="docutils literal notranslate"><span class="pre">JobResult.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.JobMarket.JobResult.to_dict"><code class="docutils literal notranslate"><span class="pre">JobResult.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.JobResult">prompits.services.JobResult module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.JobResult.JobResult"><code class="docutils literal notranslate"><span class="pre">JobResult</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.LLM">prompits.services.LLM module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.LLM.LLM"><code class="docutils literal notranslate"><span class="pre">LLM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.LLM.LLM.Chat"><code class="docutils literal notranslate"><span class="pre">LLM.Chat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.LLM.LLM.CurrentModelList"><code class="docutils literal notranslate"><span class="pre">LLM.CurrentModelList()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.LLM.LLM.ListModels"><code class="docutils literal notranslate"><span class="pre">LLM.ListModels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.LLM.LLM.ToJson"><code class="docutils literal notranslate"><span class="pre">LLM.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.MCPClient">prompits.services.MCPClient module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.MCPClient.MCPClient"><code class="docutils literal notranslate"><span class="pre">MCPClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.MCPClient.MCPClient.FromJson"><code class="docutils literal notranslate"><span class="pre">MCPClient.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.MCPClient.MCPClient.ToJson"><code class="docutils literal notranslate"><span class="pre">MCPClient.ToJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.MCPClient.MCPClient.handle_sampling_message"><code class="docutils literal notranslate"><span class="pre">MCPClient.handle_sampling_message()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.Ollama">prompits.services.Ollama module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Ollama.Ollama"><code class="docutils literal notranslate"><span class="pre">Ollama</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Ollama.Ollama.Chat"><code class="docutils literal notranslate"><span class="pre">Ollama.Chat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Ollama.Ollama.CurrentModelList"><code class="docutils literal notranslate"><span class="pre">Ollama.CurrentModelList()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Ollama.Ollama.Embeddings"><code class="docutils literal notranslate"><span class="pre">Ollama.Embeddings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Ollama.Ollama.ListModels"><code class="docutils literal notranslate"><span class="pre">Ollama.ListModels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Ollama.Ollama.ToJson"><code class="docutils literal notranslate"><span class="pre">Ollama.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.Pouch">prompits.services.Pouch module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Pouch.PathRun"><code class="docutils literal notranslate"><span class="pre">PathRun</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.PathRun.AddPostStep"><code class="docutils literal notranslate"><span class="pre">PathRun.AddPostStep()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Pouch.PostStep"><code class="docutils literal notranslate"><span class="pre">PostStep</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Pouch.Pouch"><code class="docutils literal notranslate"><span class="pre">Pouch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.AddPostStep"><code class="docutils literal notranslate"><span class="pre">Pouch.AddPostStep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.CreatePathRun"><code class="docutils literal notranslate"><span class="pre">Pouch.CreatePathRun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.CreatePathway"><code class="docutils literal notranslate"><span class="pre">Pouch.CreatePathway()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.DeletePathway"><code class="docutils literal notranslate"><span class="pre">Pouch.DeletePathway()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.DeletePostStep"><code class="docutils literal notranslate"><span class="pre">Pouch.DeletePostStep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.GetPathRun"><code class="docutils literal notranslate"><span class="pre">Pouch.GetPathRun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.GetPathway"><code class="docutils literal notranslate"><span class="pre">Pouch.GetPathway()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.GetPostStep"><code class="docutils literal notranslate"><span class="pre">Pouch.GetPostStep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.ListPathRuns"><code class="docutils literal notranslate"><span class="pre">Pouch.ListPathRuns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.ListPathways"><code class="docutils literal notranslate"><span class="pre">Pouch.ListPathways()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.ListPostSteps"><code class="docutils literal notranslate"><span class="pre">Pouch.ListPostSteps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.StopPathRun"><code class="docutils literal notranslate"><span class="pre">Pouch.StopPathRun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.UpdatePathRun"><code class="docutils literal notranslate"><span class="pre">Pouch.UpdatePathRun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.UpdatePathway"><code class="docutils literal notranslate"><span class="pre">Pouch.UpdatePathway()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.UpdatePostStep"><code class="docutils literal notranslate"><span class="pre">Pouch.UpdatePostStep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.set_graph_pool"><code class="docutils literal notranslate"><span class="pre">Pouch.set_graph_pool()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.Pouch.set_json_pool"><code class="docutils literal notranslate"><span class="pre">Pouch.set_json_pool()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Pouch.StepState"><code class="docutils literal notranslate"><span class="pre">StepState</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.StepState.Completed"><code class="docutils literal notranslate"><span class="pre">StepState.Completed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.StepState.Failed"><code class="docutils literal notranslate"><span class="pre">StepState.Failed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.StepState.Pending"><code class="docutils literal notranslate"><span class="pre">StepState.Pending</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Pouch.StepState.Running"><code class="docutils literal notranslate"><span class="pre">StepState.Running</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Pouch.StepVariables"><code class="docutils literal notranslate"><span class="pre">StepVariables</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services.Service">prompits.services.Service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Service.Service"><code class="docutils literal notranslate"><span class="pre">Service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Service.Service.FromJson"><code class="docutils literal notranslate"><span class="pre">Service.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Service.Service.ToJson"><code class="docutils literal notranslate"><span class="pre">Service.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-prompits.services">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.APIService"><code class="docutils literal notranslate"><span class="pre">APIService</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.AddEndpoint"><code class="docutils literal notranslate"><span class="pre">APIService.AddEndpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.FromJson"><code class="docutils literal notranslate"><span class="pre">APIService.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.GenerateOpenAPISpec"><code class="docutils literal notranslate"><span class="pre">APIService.GenerateOpenAPISpec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.GetEndpoints"><code class="docutils literal notranslate"><span class="pre">APIService.GetEndpoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.GetOpenAPISpec"><code class="docutils literal notranslate"><span class="pre">APIService.GetOpenAPISpec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.RemoveEndpoint"><code class="docutils literal notranslate"><span class="pre">APIService.RemoveEndpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.Request"><code class="docutils literal notranslate"><span class="pre">APIService.Request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.SetOpenAPISpec"><code class="docutils literal notranslate"><span class="pre">APIService.SetOpenAPISpec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.APIService.ToJson"><code class="docutils literal notranslate"><span class="pre">APIService.ToJson()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prompits.services.Service"><code class="docutils literal notranslate"><span class="pre">Service</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Service.FromJson"><code class="docutils literal notranslate"><span class="pre">Service.FromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompits.services.Service.ToJson"><code class="docutils literal notranslate"><span class="pre">Service.ToJson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="prompits.html">prompits package</a></li>
+      <li class="breadcrumb-item active">prompits.services package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/prompits.services.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prompits-services-package">
+<h1>prompits.services package<a class="headerlink" href="#prompits-services-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-prompits.services.APIService">
+<span id="prompits-services-apiservice-module"></span><h2>prompits.services.APIService module<a class="headerlink" href="#module-prompits.services.APIService" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.APIService.</span></span><span class="sig-name descname"><span class="pre">APIService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Service</span></code></a></p>
+<p>Service that provides API functionality through defined endpoints.</p>
+<p>APIService allows agents to expose and consume APIs by defining endpoints
+or importing an OpenAPI specification. It provides methods for registering
+handlers, generating API documentation, and making requests to endpoints.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.AddEndpoint">
+<span class="sig-name descname"><span class="pre">AddEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint"><span class="pre">Endpoint</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.AddEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.AddEndpoint" title="Link to this definition"></a></dt>
+<dd><p>Add an endpoint to this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>endpoint</strong> (<a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint"><em>Endpoint</em></a>) – The endpoint to add</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if added successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.FromJson">
+<span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize the service from a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> – JSON object containing service configuration</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized service</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#prompits.services.APIService.APIService" title="prompits.services.APIService.APIService">APIService</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.GenerateOpenAPISpec">
+<span class="sig-name descname"><span class="pre">GenerateOpenAPISpec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.GenerateOpenAPISpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.GenerateOpenAPISpec" title="Link to this definition"></a></dt>
+<dd><p>Generate an OpenAPI specification from the endpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generated OpenAPI specification</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI">OpenAPI</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.GetEndpoints">
+<span class="sig-name descname"><span class="pre">GetEndpoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.GetEndpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.GetEndpoints" title="Link to this definition"></a></dt>
+<dd><p>Get the list of endpoints for this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of endpoints</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint">Endpoint</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.GetOpenAPISpec">
+<span class="sig-name descname"><span class="pre">GetOpenAPISpec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.GetOpenAPISpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.GetOpenAPISpec" title="Link to this definition"></a></dt>
+<dd><p>Get the OpenAPI specification for this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenAPI specification</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI">OpenAPI</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.RemoveEndpoint">
+<span class="sig-name descname"><span class="pre">RemoveEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.RemoveEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.RemoveEndpoint" title="Link to this definition"></a></dt>
+<dd><p>Remove an endpoint from this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The path of the endpoint</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if removed successfully, False if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.Request">
+<span class="sig-name descname"><span class="pre">Request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint"><span class="pre">Endpoint</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.Request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.Request" title="Link to this definition"></a></dt>
+<dd><p>Request an endpoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.SetOpenAPISpec">
+<span class="sig-name descname"><span class="pre">SetOpenAPISpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">openapi_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI"><span class="pre">OpenAPI</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.SetOpenAPISpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.SetOpenAPISpec" title="Link to this definition"></a></dt>
+<dd><p>Set the OpenAPI specification for this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>openapi_spec</strong> (<a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI"><em>OpenAPI</em></a>) – The OpenAPI specification</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.APIService.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.APIService.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the service to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the service</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.APIService.Endpoint">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.APIService.</span></span><span class="sig-name descname"><span class="pre">Endpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#Endpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.Endpoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an API endpoint with its path, HTTP method, and handler function.</p>
+<p>Endpoints are the core components of an APIService, defining the routes
+that the service exposes and the functions that handle requests to those routes.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.APIService.OpenAPI">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.APIService.</span></span><span class="sig-name descname"><span class="pre">OpenAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#OpenAPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.OpenAPI" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an OpenAPI specification that describes an API.</p>
+<p>The OpenAPI specification provides a standardized format for API documentation,
+including information about available endpoints, request/response formats,
+authentication methods, and more.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.OpenAPI.from_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#OpenAPI.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.OpenAPI.from_dict" title="Link to this definition"></a></dt>
+<dd><p>Create OpenAPI from dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.OpenAPI.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#OpenAPI.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.OpenAPI.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Convert OpenAPI to dictionary</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.Job">
+<span id="prompits-services-job-module"></span><h2>prompits.services.Job module<a class="headerlink" href="#module-prompits.services.Job" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Job.Job">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Job.</span></span><span class="sig-name descname"><span class="pre">Job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Job.html#Job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Job.Job" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>!!! This is a work in progress !!!</p>
+<p>Represents a task or work unit that can be executed by agents.</p>
+<p>A Job encapsulates metadata about a task including its name, description,
+execution pathway, pricing information, and ownership. Jobs can be posted
+in job markets, assigned to agents, and tracked through their lifecycle.</p>
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.JobMarket">
+<span id="prompits-services-jobmarket-module"></span><h2>prompits.services.JobMarket module<a class="headerlink" href="#module-prompits.services.JobMarket" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.Job">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.JobMarket.</span></span><span class="sig-name descname"><span class="pre">Job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">practices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#Job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.Job" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>!!! This is a work in progress !!!</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.Job.from_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#Job.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.Job.from_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.Job.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#Job.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.Job.to_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.JobMarket.</span></span><span class="sig-name descname"><span class="pre">JobMarket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Service</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.ApplyJob">
+<span class="sig-name descname"><span class="pre">ApplyJob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.ApplyJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.ApplyJob" title="Link to this definition"></a></dt>
+<dd><p>Apply for a job</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.CancelJob">
+<span class="sig-name descname"><span class="pre">CancelJob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.CancelJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.CancelJob" title="Link to this definition"></a></dt>
+<dd><p>Cancel a job (only the owner can cancel)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.FinishJob">
+<span class="sig-name descname"><span class="pre">FinishJob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.FinishJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.FinishJob" title="Link to this definition"></a></dt>
+<dd><p>Finish a job and submit results</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.FromJson">
+<span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize from JSON data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.GetJob">
+<span class="sig-name descname"><span class="pre">GetJob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.GetJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.GetJob" title="Link to this definition"></a></dt>
+<dd><p>Get a job by ID</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.GetJobs">
+<span class="sig-name descname"><span class="pre">GetJobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">practices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.GetJobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.GetJobs" title="Link to this definition"></a></dt>
+<dd><p>Get jobs filtered by agent ID, practices, or status</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.PostJob">
+<span class="sig-name descname"><span class="pre">PostJob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">practices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.PostJob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.PostJob" title="Link to this definition"></a></dt>
+<dd><p>Post a new job to the market</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.RateResult">
+<span class="sig-name descname"><span class="pre">RateResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.RateResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.RateResult" title="Link to this definition"></a></dt>
+<dd><p>Rate a job result (only the job owner can rate)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.SearchJobs">
+<span class="sig-name descname"><span class="pre">SearchJobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'open'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.SearchJobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.SearchJobs" title="Link to this definition"></a></dt>
+<dd><p>Search for jobs in the market</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert to JSON for serialization</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize the job market by creating necessary tables</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobMarket.set_pool">
+<span class="sig-name descname"><span class="pre">set_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobMarket.set_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobMarket.set_pool" title="Link to this definition"></a></dt>
+<dd><p>Set the database pool for the job market</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.JobMarket.</span></span><span class="sig-name descname"><span class="pre">JobResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobResult.from_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobResult.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobResult.from_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.JobMarket.JobResult.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobMarket.html#JobResult.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobMarket.JobResult.to_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.JobResult">
+<span id="prompits-services-jobresult-module"></span><h2>prompits.services.JobResult module<a class="headerlink" href="#module-prompits.services.JobResult" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.JobResult.JobResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.JobResult.</span></span><span class="sig-name descname"><span class="pre">JobResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.Job.Job" title="prompits.services.Job.Job"><span class="pre">Job</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/JobResult.html#JobResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.JobResult.JobResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>!!! This is a work in progress !!!
+Represents the result of a job execution.</p>
+<p>JobResult encapsulates the outcome of a job, including the original job
+that was executed and the result data produced by that job. It also tracks
+the owner (agent) that created or is responsible for the result.</p>
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.LLM">
+<span id="prompits-services-llm-module"></span><h2>prompits.services.LLM module<a class="headerlink" href="#module-prompits.services.LLM" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.LLM.LLM">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.LLM.</span></span><span class="sig-name descname"><span class="pre">LLM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4o-mini'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/LLM.html#LLM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.LLM.LLM" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.services.APIService.APIService" title="prompits.services.APIService.APIService"><code class="xref py py-class docutils literal notranslate"><span class="pre">APIService</span></code></a></p>
+<p>LLM service for prompt generation and execution.</p>
+<p>LLM has practices: Chat, ListModels, CurrentModelList.
+LLM is an APIService and abstract class.</p>
+<p>!!! This class will be deprecated by APIService class !!!</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.LLM.LLM.Chat">
+<span class="sig-name descname"><span class="pre">Chat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gpt-4o-mini'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/LLM.html#LLM.Chat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.LLM.LLM.Chat" title="Link to this definition"></a></dt>
+<dd><p>Chat with the LLM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The response from the LLM</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.LLM.LLM.CurrentModelList">
+<span class="sig-name descname"><span class="pre">CurrentModelList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/LLM.html#LLM.CurrentModelList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.LLM.LLM.CurrentModelList" title="Link to this definition"></a></dt>
+<dd><p>List all models currently available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.LLM.LLM.ListModels">
+<span class="sig-name descname"><span class="pre">ListModels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/LLM.html#LLM.ListModels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.LLM.LLM.ListModels" title="Link to this definition"></a></dt>
+<dd><p>List all models available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.LLM.LLM.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/LLM.html#LLM.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.LLM.LLM.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the LLM service to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the LLM service</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.MCPClient">
+<span id="prompits-services-mcpclient-module"></span><h2>prompits.services.MCPClient module<a class="headerlink" href="#module-prompits.services.MCPClient" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.MCPClient.MCPClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.MCPClient.</span></span><span class="sig-name descname"><span class="pre">MCPClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcp_server_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/MCPClient.html#MCPClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.MCPClient.MCPClient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Pit.Pit" title="prompits.Pit.Pit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pit</span></code></a></p>
+<p>MCPClient is a Pit that gets tools information from the Anthropic Model Content Protocol service
+and creates practices for the agent</p>
+<p>The CallTool practice is not implemented correctly yet and can’t be used in a pathway.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.MCPClient.MCPClient.FromJson">
+<span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/MCPClient.html#MCPClient.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.MCPClient.MCPClient.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize the MCP client from a JSON object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> (<em>dict</em>) – The JSON object to initialize the MCP client from</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.MCPClient.MCPClient.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/MCPClient.html#MCPClient.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.MCPClient.MCPClient.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the MCP client to a JSON object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The JSON object to convert the MCP client to</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.MCPClient.MCPClient.handle_sampling_message">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_sampling_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CreateMessageResult</span></span></span><a class="reference internal" href="_modules/prompits/services/MCPClient.html#MCPClient.handle_sampling_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.MCPClient.MCPClient.handle_sampling_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.Ollama">
+<span id="prompits-services-ollama-module"></span><h2>prompits.services.Ollama module<a class="headerlink" href="#module-prompits.services.Ollama" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Ollama.Ollama">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Ollama.</span></span><span class="sig-name descname"><span class="pre">Ollama</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'http://localhost:11434'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Ollama.html#Ollama"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Ollama.Ollama" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.services.LLM.LLM" title="prompits.services.LLM.LLM"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLM</span></code></a></p>
+<p>Ollama is an LLM service that uses Ollama to complete prompts
+Ollama has endpoints: /generate, /chat, /embeddings
+has base url: <a class="reference external" href="http://localhost:11434">http://localhost:11434</a> and can be initialized with a base url</p>
+<p>!!! This class will be deprecated by APIService class !!!</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Ollama.Ollama.Chat">
+<span class="sig-name descname"><span class="pre">Chat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Ollama.html#Ollama.Chat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Ollama.Ollama.Chat" title="Link to this definition"></a></dt>
+<dd><p>Chat with the LLM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> (<em>str</em>) – The prompt to send</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – The model to use. Defaults to the default model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The chat response</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Ollama.Ollama.CurrentModelList">
+<span class="sig-name descname"><span class="pre">CurrentModelList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Ollama.html#Ollama.CurrentModelList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Ollama.Ollama.CurrentModelList" title="Link to this definition"></a></dt>
+<dd><p>List all models currently available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of model names</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Ollama.Ollama.Embeddings">
+<span class="sig-name descname"><span class="pre">Embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Ollama.html#Ollama.Embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Ollama.Ollama.Embeddings" title="Link to this definition"></a></dt>
+<dd><p>Embed a prompt using the LLM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> (<em>str</em>) – The prompt to embed</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – The model to use. Defaults to the default model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The embedding response</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Ollama.Ollama.ListModels">
+<span class="sig-name descname"><span class="pre">ListModels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Ollama.html#Ollama.ListModels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Ollama.Ollama.ListModels" title="Link to this definition"></a></dt>
+<dd><p>List all models available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The models response</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Ollama.Ollama.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Ollama.html#Ollama.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Ollama.Ollama.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the Ollama service to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the Ollama service</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.Pouch">
+<span id="prompits-services-pouch-module"></span><h2>prompits.services.Pouch module<a class="headerlink" href="#module-prompits.services.Pouch" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Pouch.PathRun">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Pouch.</span></span><span class="sig-name descname"><span class="pre">PathRun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathway:</span> <span class="pre">~prompits.Pathway.Pathway</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_agent:</span> <span class="pre">~prompits.AgentAddress.AgentAddress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/datetime.py'&gt;</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#PathRun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.PathRun" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.PathRun.AddPostStep">
+<span class="sig-name descname"><span class="pre">AddPostStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post:</span> <span class="pre">~prompits.Pathway.Post</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state:</span> <span class="pre">~prompits.services.Pouch.StepState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/datetime.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/datetime.py'&gt;</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables:</span> <span class="pre">~prompits.services.Pouch.StepVariables</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_poststep:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poststep_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#PathRun.AddPostStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.PathRun.AddPostStep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Pouch.PostStep">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Pouch.</span></span><span class="sig-name descname"><span class="pre">PostStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post:</span> <span class="pre">~prompits.Pathway.Post</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state:</span> <span class="pre">~prompits.services.Pouch.StepState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/datetime.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/datetime.py'&gt;</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables:</span> <span class="pre">~prompits.services.Pouch.StepVariables</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_poststep:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poststep_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#PostStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.PostStep" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Pouch.</span></span><span class="sig-name descname"><span class="pre">Pouch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_table_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pouch_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_table_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pouch_'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Pit.Pit" title="prompits.Pit.Pit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pit</span></code></a></p>
+<p>!!! This is a work in progress !!!</p>
+<p>Pouch is a service that store pathway and parameters
+It also store the results of posts and the state of the pathway
+It connects to multiple databases and can sync data between them
+It supports JSON and graph databases
+When traversing a graph, it can use a graph traversal algorithm</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.AddPostStep">
+<span class="sig-name descname"><span class="pre">AddPostStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pathway.Post" title="prompits.Pathway.Post"><span class="pre">Post</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.AddPostStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.AddPostStep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.CreatePathRun">
+<span class="sig-name descname"><span class="pre">CreatePathRun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.AgentAddress.AgentAddress" title="prompits.AgentAddress.AgentAddress"><span class="pre">AgentAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathway</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway" title="prompits.Pathway.Pathway"><span class="pre">Pathway</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_take_over</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.CreatePathRun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.CreatePathRun" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.CreatePathway">
+<span class="sig-name descname"><span class="pre">CreatePathway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathway</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway" title="prompits.Pathway.Pathway"><span class="pre">Pathway</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.CreatePathway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.CreatePathway" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.DeletePathway">
+<span class="sig-name descname"><span class="pre">DeletePathway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathwayid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.DeletePathway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.DeletePathway" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.DeletePostStep">
+<span class="sig-name descname"><span class="pre">DeletePostStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poststepid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.DeletePostStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.DeletePostStep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.GetPathRun">
+<span class="sig-name descname"><span class="pre">GetPathRun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.GetPathRun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.GetPathRun" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.GetPathway">
+<span class="sig-name descname"><span class="pre">GetPathway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathwayid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.GetPathway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.GetPathway" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.GetPostStep">
+<span class="sig-name descname"><span class="pre">GetPostStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poststepid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.GetPostStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.GetPostStep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.ListPathRuns">
+<span class="sig-name descname"><span class="pre">ListPathRuns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.ListPathRuns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.ListPathRuns" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.ListPathways">
+<span class="sig-name descname"><span class="pre">ListPathways</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.ListPathways"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.ListPathways" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.ListPostSteps">
+<span class="sig-name descname"><span class="pre">ListPostSteps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.ListPostSteps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.ListPostSteps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.StopPathRun">
+<span class="sig-name descname"><span class="pre">StopPathRun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.StopPathRun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.StopPathRun" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.UpdatePathRun">
+<span class="sig-name descname"><span class="pre">UpdatePathRun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.UpdatePathRun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.UpdatePathRun" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.UpdatePathway">
+<span class="sig-name descname"><span class="pre">UpdatePathway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathwayid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathway</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pathway.Pathway" title="prompits.Pathway.Pathway"><span class="pre">Pathway</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.UpdatePathway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.UpdatePathway" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.UpdatePostStep">
+<span class="sig-name descname"><span class="pre">UpdatePostStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathrunid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poststepid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pathway.Post" title="prompits.Pathway.Post"><span class="pre">Post</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.UpdatePostStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.UpdatePostStep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.set_graph_pool">
+<span class="sig-name descname"><span class="pre">set_graph_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pool.Pool" title="prompits.Pool.Pool"><span class="pre">Pool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.set_graph_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.set_graph_pool" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Pouch.Pouch.set_json_pool">
+<span class="sig-name descname"><span class="pre">set_json_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="prompits.html#prompits.Pool.Pool" title="prompits.Pool.Pool"><span class="pre">Pool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#Pouch.set_json_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.Pouch.set_json_pool" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Pouch.StepState">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Pouch.</span></span><span class="sig-name descname"><span class="pre">StepState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#StepState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.StepState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="prompits.services.Pouch.StepState.Completed">
+<span class="sig-name descname"><span class="pre">Completed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#prompits.services.Pouch.StepState.Completed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="prompits.services.Pouch.StepState.Failed">
+<span class="sig-name descname"><span class="pre">Failed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#prompits.services.Pouch.StepState.Failed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="prompits.services.Pouch.StepState.Pending">
+<span class="sig-name descname"><span class="pre">Pending</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#prompits.services.Pouch.StepState.Pending" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="prompits.services.Pouch.StepState.Running">
+<span class="sig-name descname"><span class="pre">Running</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#prompits.services.Pouch.StepState.Running" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Pouch.StepVariables">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Pouch.</span></span><span class="sig-name descname"><span class="pre">StepVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Pouch.html#StepVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Pouch.StepVariables" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-prompits.services.Service">
+<span id="prompits-services-service-module"></span><h2>prompits.services.Service module<a class="headerlink" href="#module-prompits.services.Service" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Service.Service">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.Service.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Service.Service" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Pit.Pit" title="prompits.Pit.Pit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pit</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Service is a specialized abstract Pit that provides functionality to agents.</p>
+<p>A Service is owned by the agent that created it and can be used by other agents
+depending on access permissions. Services can provide various capabilities like
+API access, job scheduling, or data processing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Service.Service.FromJson">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service"><span class="pre">Service</span></a></span></span><a class="reference internal" href="_modules/prompits/services/Service.html#Service.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Service.Service.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Create a Service instance from a JSON dictionary.</p>
+<p>This class method deserializes a JSON dictionary into a Service instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> – Dictionary containing the serialized Service data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Service instance initialized with the provided data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service">Service</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Service.Service.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/prompits/services/Service.html#Service.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Service.Service.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the Service to a JSON-serializable dictionary.</p>
+<p>This method extends the base Pit.ToJson method to include service-specific
+fields in the serialized representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary representation of the Service</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-prompits.services">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-prompits.services" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.APIService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.</span></span><span class="sig-name descname"><span class="pre">APIService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">Service</span></code></a></p>
+<p>Service that provides API functionality through defined endpoints.</p>
+<p>APIService allows agents to expose and consume APIs by defining endpoints
+or importing an OpenAPI specification. It provides methods for registering
+handlers, generating API documentation, and making requests to endpoints.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.AddEndpoint">
+<span class="sig-name descname"><span class="pre">AddEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint"><span class="pre">Endpoint</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.AddEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.AddEndpoint" title="Link to this definition"></a></dt>
+<dd><p>Add an endpoint to this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>endpoint</strong> (<a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint"><em>Endpoint</em></a>) – The endpoint to add</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if added successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.FromJson">
+<span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Initialize the service from a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> – JSON object containing service configuration</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized service</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#prompits.services.APIService.APIService" title="prompits.services.APIService.APIService">APIService</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.GenerateOpenAPISpec">
+<span class="sig-name descname"><span class="pre">GenerateOpenAPISpec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.GenerateOpenAPISpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.GenerateOpenAPISpec" title="Link to this definition"></a></dt>
+<dd><p>Generate an OpenAPI specification from the endpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generated OpenAPI specification</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI">OpenAPI</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.GetEndpoints">
+<span class="sig-name descname"><span class="pre">GetEndpoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.GetEndpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.GetEndpoints" title="Link to this definition"></a></dt>
+<dd><p>Get the list of endpoints for this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of endpoints</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint">Endpoint</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.GetOpenAPISpec">
+<span class="sig-name descname"><span class="pre">GetOpenAPISpec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.GetOpenAPISpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.GetOpenAPISpec" title="Link to this definition"></a></dt>
+<dd><p>Get the OpenAPI specification for this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenAPI specification</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI">OpenAPI</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.RemoveEndpoint">
+<span class="sig-name descname"><span class="pre">RemoveEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.RemoveEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.RemoveEndpoint" title="Link to this definition"></a></dt>
+<dd><p>Remove an endpoint from this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The path of the endpoint</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if removed successfully, False if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.Request">
+<span class="sig-name descname"><span class="pre">Request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.APIService.Endpoint" title="prompits.services.APIService.Endpoint"><span class="pre">Endpoint</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.Request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.Request" title="Link to this definition"></a></dt>
+<dd><p>Request an endpoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.SetOpenAPISpec">
+<span class="sig-name descname"><span class="pre">SetOpenAPISpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">openapi_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI"><span class="pre">OpenAPI</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.SetOpenAPISpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.SetOpenAPISpec" title="Link to this definition"></a></dt>
+<dd><p>Set the OpenAPI specification for this API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>openapi_spec</strong> (<a class="reference internal" href="#prompits.services.APIService.OpenAPI" title="prompits.services.APIService.OpenAPI"><em>OpenAPI</em></a>) – The OpenAPI specification</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.APIService.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/APIService.html#APIService.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.APIService.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the service to a JSON object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON representation of the service</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="prompits.services.Service">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">prompits.services.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prompits/services/Service.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Service" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="prompits.html#prompits.Pit.Pit" title="prompits.Pit.Pit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pit</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Service is a specialized abstract Pit that provides functionality to agents.</p>
+<p>A Service is owned by the agent that created it and can be used by other agents
+depending on access permissions. Services can provide various capabilities like
+API access, job scheduling, or data processing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Service.FromJson">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service"><span class="pre">Service</span></a></span></span><a class="reference internal" href="_modules/prompits/services/Service.html#Service.FromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Service.FromJson" title="Link to this definition"></a></dt>
+<dd><p>Create a Service instance from a JSON dictionary.</p>
+<p>This class method deserializes a JSON dictionary into a Service instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>json_data</strong> – Dictionary containing the serialized Service data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new Service instance initialized with the provided data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#prompits.services.Service.Service" title="prompits.services.Service.Service">Service</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="prompits.services.Service.ToJson">
+<span class="sig-name descname"><span class="pre">ToJson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/prompits/services/Service.html#Service.ToJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#prompits.services.Service.ToJson" title="Link to this definition"></a></dt>
+<dd><p>Convert the Service to a JSON-serializable dictionary.</p>
+<p>This method extends the base Pit.ToJson method to include service-specific
+fields in the serialized representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary representation of the Service</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="prompits.pools.html" class="btn btn-neutral float-left" title="prompits.pools package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="prompits.messages.html" class="btn btn-neutral float-right" title="prompits.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

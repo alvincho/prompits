@@ -1,0 +1,29 @@
+src.prompits.messages package
+=============================
+
+Submodules
+----------
+
+src.prompits.messages.StatusMessage module
+------------------------------------------
+
+.. automodule:: src.prompits.messages.StatusMessage
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.messages.UsePracticeMessage module
+-----------------------------------------------
+
+.. automodule:: src.prompits.messages.UsePracticeMessage
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: src.prompits.messages
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,138 @@
+src.prompits package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   src.prompits.messages
+   src.prompits.pits
+   src.prompits.plazas
+   src.prompits.plugs
+   src.prompits.pools
+   src.prompits.services
+
+Submodules
+----------
+
+src.prompits.Agent module
+-------------------------
+
+.. automodule:: src.prompits.Agent
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.AgentAddress module
+--------------------------------
+
+.. automodule:: src.prompits.AgentAddress
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.LogEvent module
+----------------------------
+
+.. automodule:: src.prompits.LogEvent
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Message module
+---------------------------
+
+.. automodule:: src.prompits.Message
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Pathfinder module
+------------------------------
+
+.. automodule:: src.prompits.Pathfinder
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Pathway module
+---------------------------
+
+.. automodule:: src.prompits.Pathway
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Pioneer module
+---------------------------
+
+.. automodule:: src.prompits.Pioneer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Pit module
+-----------------------
+
+.. automodule:: src.prompits.Pit
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Plaza module
+-------------------------
+
+.. automodule:: src.prompits.Plaza
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Plug module
+------------------------
+
+.. automodule:: src.prompits.Plug
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Pool module
+------------------------
+
+.. automodule:: src.prompits.Pool
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Practice module
+----------------------------
+
+.. automodule:: src.prompits.Practice
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Profiler module
+----------------------------
+
+.. automodule:: src.prompits.Profiler
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+src.prompits.Schema module
+--------------------------
+
+.. automodule:: src.prompits.Schema
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: src.prompits
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,10 @@
+prompits.pits package
+=====================
+
+Module contents
+---------------
+
+.. automodule:: prompits.pits
+   :members:
+   :show-inheritance:
+   :undoc-members:

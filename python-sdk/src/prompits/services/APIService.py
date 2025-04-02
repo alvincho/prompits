@@ -18,13 +18,44 @@ from ..AgentAddress import AgentAddress
 from ..LogEvent import LogEvent
 
 class Endpoint:
+    """
+    Represents an API endpoint with its path, HTTP method, and handler function.
+    
+    Endpoints are the core components of an APIService, defining the routes
+    that the service exposes and the functions that handle requests to those routes.
+    """
+    
     def __init__(self, path: str, method: str, handler: callable):
+        """
+        Initialize an Endpoint instance.
+        
+        Args:
+            path: The URL path of the endpoint (e.g., "/users")
+            method: The HTTP method (e.g., "GET", "POST")
+            handler: The callable function that handles requests to this endpoint
+        """
         self.path = path
         self.method = method
         self.handler = handler
 
 class OpenAPI:
+    """
+    Represents an OpenAPI specification that describes an API.
+    
+    The OpenAPI specification provides a standardized format for API documentation,
+    including information about available endpoints, request/response formats,
+    authentication methods, and more.
+    """
+    
     def __init__(self, info: Dict, paths: Dict, components: Dict = None):
+        """
+        Initialize an OpenAPI specification.
+        
+        Args:
+            info: Dictionary containing API information (title, version, etc.)
+            paths: Dictionary mapping endpoint paths to their operations
+            components: Dictionary of reusable components (schemas, parameters, etc.)
+        """
         self.info = info
         self.paths = paths
         self.components = components or {}
@@ -47,7 +78,22 @@ class OpenAPI:
         )
 
 class APIService(Service):
+    """
+    Service that provides API functionality through defined endpoints.
+    
+    APIService allows agents to expose and consume APIs by defining endpoints
+    or importing an OpenAPI specification. It provides methods for registering
+    handlers, generating API documentation, and making requests to endpoints.
+    """
+    
     def __init__(self, name: str, description: str = None):
+        """
+        Initialize an APIService instance.
+        
+        Args:
+            name: The name of the API service
+            description: Optional description of the API service's purpose
+        """
         super().__init__(name, description or f"APIService {name}")
         self.endpoints = {}
         self.server = None

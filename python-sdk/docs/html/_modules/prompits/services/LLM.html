@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prompits.services.LLM &mdash; Prompits 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Prompits
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Prompits Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.html">prompits package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plazas.html">prompits.plazas package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.pools.html">prompits.pools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.plugs.html">prompits.plugs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.services.html">prompits.services package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../prompits.messages.html">prompits.messages package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Prompits</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">prompits.services.LLM</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for prompits.services.LLM</h1><div class="highlight"><pre>
+<span></span><span class="c1"># LLM service for prompt generation and execution</span>
+<span class="c1"># LLM has practices: Chat, ListModels, CurrentModelList</span>
+<span class="c1"># LLM is an APIService and abstract class</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.APIService</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompits.Practice</span><span class="w"> </span><span class="kn">import</span> <span class="n">Practice</span>
+<div class="viewcode-block" id="LLM">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.LLM.LLM">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLM</span><span class="p">(</span><span class="n">APIService</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    LLM service for prompt generation and execution.</span>
+<span class="sd">    </span>
+<span class="sd">    LLM has practices: Chat, ListModels, CurrentModelList.</span>
+<span class="sd">    LLM is an APIService and abstract class.</span>
+
+<span class="sd">    !!! This class will be deprecated by APIService class !!!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new LLM service.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: The name of the LLM service</span>
+<span class="sd">            description: Optional description of the service</span>
+<span class="sd">            default_model: The default model to use for chat requests</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;Chat&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Chat</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;ListModels&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ListModels</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddPractice</span><span class="p">(</span><span class="n">Practice</span><span class="p">(</span><span class="s2">&quot;CurrentModelList&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CurrentModelList</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_model</span> <span class="o">=</span> <span class="n">default_model</span>
+
+<div class="viewcode-block" id="LLM.Chat">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.LLM.LLM.Chat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Chat with the LLM.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The response from the LLM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Chat is not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LLM.ListModels">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.LLM.LLM.ListModels">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ListModels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all models available.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ListModels is not implemented&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LLM.CurrentModelList">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.LLM.LLM.CurrentModelList">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CurrentModelList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all models currently available.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;CurrentModelList is not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LLM.ToJson">
+<a class="viewcode-back" href="../../../prompits.services.html#prompits.services.LLM.LLM.ToJson">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToJson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the LLM service to a JSON object.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: JSON representation of the LLM service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get base JSON data from parent which includes practices</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">ToJson</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLM ToJson start: </span><span class="si">{</span><span class="n">json_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
+        <span class="c1"># Add LLM-specific fields</span>
+        <span class="n">json_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;default_model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_model</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;LLM&quot;</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLM ToJson end: </span><span class="si">{</span><span class="n">json_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">json_data</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Alvin Cho.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
