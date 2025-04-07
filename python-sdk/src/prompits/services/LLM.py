@@ -13,6 +13,8 @@ class LLM(APIService):
 
     !!! This class will be deprecated by APIService class !!!
     """
+    # TODO: migrate to APIService class
+    
     def __init__(self, name: str, description: str = None, default_model: str = "gpt-4o-mini"):
         """
         Initialize a new LLM service.

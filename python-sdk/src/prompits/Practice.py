@@ -64,6 +64,9 @@ class Practice:
 
     def Use(self, *args, **kwargs) -> Any:
         """Execute the practice with given arguments."""
+        # TODO: Add a timeout to the practice
+        # TODO: Add a retry mechanism to the practice
+        # TODO: Add async support to the practice
         try:
             # Log start
             start_msg = f"Using practice {self.name} with args: {args} and kwargs: {kwargs}"

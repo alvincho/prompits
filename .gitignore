@@ -1,6 +1,6 @@
 .DS_Store
 scratch/
-*test_lite.db
+examples/test_lite.db
 Job*
 .cursor/*
 # Byte-compiled / optimized / DLL files

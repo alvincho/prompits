@@ -13,7 +13,9 @@ This roadmap outlines the planned development milestones for Prompits. It may ev
 - [x] Getting start and samples
 
 ## 🔹 Phase 2: Internal Testing & Tooling
+- [ ] Add memory support for pathway execution
 - [ ] Build a web-based Pathway editor
+- [ ] Build OSMB on Prompits
 - [ ] Integrate Neo4j for storing and editing Pathways
 - [ ] Develop visual interface for job queue management
 - [ ] Expand Profiler with leaderboard and historical tracking

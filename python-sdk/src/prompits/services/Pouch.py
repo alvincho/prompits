@@ -30,6 +30,9 @@ class StepVariables:
 
 
 class PostStep:
+    # PostStep is a running Post in a PathRun
+    # It is created by an agent, and can be taken over by another agent
+
     def __init__(self, pathrunid: str, post: Post, state: StepState,
                  start_time: datetime, end_time: datetime=None,
                  variables: StepVariables=None,
@@ -45,6 +48,9 @@ class PostStep:
         self.poststep_id = poststep_id
 
 class PathRun:
+    # PathRun is a running pathway
+    # It is created by an agent, and can be taken over by another agent
+    
     def __init__(self, pathrunid: str, pathway: Pathway, create_agent: AgentAddress, start_time: datetime=None):
         self.pathrunid = pathrunid
         self.pathway = pathway
@@ -74,7 +80,7 @@ class Pouch(Pit):
     Pouch is a service that store pathway and parameters
     It also store the results of posts and the state of the pathway
     It connects to multiple databases and can sync data between them
-    It supports JSON and graph databases
+    It supports JSON and graph databases, built-in syncing between them
     When traversing a graph, it can use a graph traversal algorithm
     """
     def __init__(self, name: str, description: str, json_table_prefix: str="pouch_", graph_table_prefix: str="pouch_"):

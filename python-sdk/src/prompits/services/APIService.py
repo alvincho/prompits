@@ -85,6 +85,7 @@ class APIService(Service):
     or importing an OpenAPI specification. It provides methods for registering
     handlers, generating API documentation, and making requests to endpoints.
     """
+    # TODO: Support OpenAPI spec from a file or URL
     
     def __init__(self, name: str, description: str = None):
         """

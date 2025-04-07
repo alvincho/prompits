@@ -206,7 +206,10 @@ class Agent(Pit):
     The Agent class is the central component that brings together all the 
     pieces of the Prompits framework.
     """
-    
+    # TODO: Support multiple plazas
+    # TODO: Support remote pools via plugs
+    # TODO: Support remote plazas via plugs
+
     def __init__(self, name: str="Agent", description: str = None, agent_id: str = None):
         """
         Initialize an Agent.
@@ -470,7 +473,7 @@ class Agent(Pit):
         """
         if not isinstance(agent_info, AgentInfo):
             raise TypeError("agent_info must be an AgentInfo object")
-        print(f"Creating agent from AgentInfo: {agent_info.ToJson()}")
+        #print(f"Creating agent from AgentInfo: {agent_info.ToJson()}")
         # Set agent name and description
         agent = cls(agent_info.agent_name, agent_info.description)
         
@@ -506,7 +509,7 @@ class Agent(Pit):
                 agent.log(f"Created plaza {plaza_name}", 'DEBUG')
             else:
                 raise ValueError(f"Unknown plaza type: {type(plaza)}")
-            print(f"plaza created: {agent.plazas[plaza_name]}")
+            #print(f"plaza created: {agent.plazas[plaza_name]}")
         # Add plaza practices to the agent
         for plaza_name, plaza in agent.plazas.items():
             # Add plaza practices to the agent

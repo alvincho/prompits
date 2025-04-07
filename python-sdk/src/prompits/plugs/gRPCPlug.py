@@ -379,6 +379,9 @@ class gRPCPlug(Plug):
         message_queue: Queue of received messages
         event_handlers: Dictionary of registered event handlers
     """
+    # TODO: Support listening on all interfaces
+    # TODO: Support listening on a specific interface
+
     def __init__(self, name: str, description: str = None, host: str = "localhost", port: int = 9000, is_server: bool = False):
         """Initialize the gRPC plug
         

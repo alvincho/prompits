@@ -15,6 +15,7 @@ from .Pit import Pit
 from .Agent import Agent
 from .Pathway import Pathway,Post
 from .Practice import Practice
+from .services.Pouch import Pouch
 import time
 import json
 import os
@@ -30,6 +31,27 @@ from typing import Dict, Any
 metrics_dir = "metrics"
 if not os.path.exists(metrics_dir):
     os.makedirs(metrics_dir)
+class PathfinderStatus(Enum):
+    """
+    PathfinderStatus is a class that contains the status of a pathway run.
+    """
+    STANDBY = "standby"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+class PathfinderState:
+    """
+    PathfinderState is a class that contains the state of a pathway run.
+    """
+    def __init__(self, pouch: Pouch):
+        self.pouch = pouch
+        self.status : PathfinderStatus = PathfinderStatus.STANDBY
+        self.pathway : Pathway = None
+        self.parameters : Dict[str, Any] = {}
+        self.result : Dict[str, Any] = {}
+        self.start_time : float = 0
+        self.end_time : float = 0
+        self.duration : float = 0
 
 # Set up file-based OTLP exporter
 class FileMetricExporter(OTLPMetricExporter):
@@ -151,14 +173,18 @@ class Pathfinder(Pit):
     runs the posts in the pathway with the given parameters, and returns results.
     It can be used to run a pathway in a single agent or in a multi-agent environment.
 
-    TODO:
-        - Support concurrent execution of pathways
-        - Support store memory and state of a pathway run
-        - Support async execution of pathways
-        - Support OpenTelemetry metrics
+    If a pouch is provided, the Pathfinder will use it to store and retrieve pathway and parameters.
+    If a pouch is not provided, the Pathfinder can run pathways with no memory or state.
+
     """
+        # TODO: Support store memory and state of a pathway run though Pouch
+        # TODO: Support async execution of pathways though Pouch
+        # TODO: Support concurrent execution of pathways
+        # TODO: Support OpenTelemetry metrics
     
-    def __init__(self, agent: Agent, name="Pathfinder", description="Pathfinder is a service that takes a pathway and parameters and runs the posts in the pathway with the given parameters"):
+    def __init__(self, agent: Agent, name="Pathfinder", 
+                 description="Pathfinder is a service that takes a pathway and parameters and runs the posts in the pathway with the given parameters",
+                 pouch: Pouch = None):
         """
         Initialize a Pathfinder instance.
         
@@ -170,9 +196,13 @@ class Pathfinder(Pit):
         super().__init__(name, description)
         self.agent = agent
 
+        self.state = PathfinderState(pouch)
+        self.state.status = PathfinderStatus.STANDBY
+        
         # Add practices
-        self.AddPractice(Practice("Status", self.Status))
+        self.AddPractice(Practice("GetStatus", self.GetStatus))
         self.AddPractice(Practice("Run", self.Run))
+        self.AddPractice(Practice("GetState", self.GetState))
                 
         # Copy log subscribers from agent
         if hasattr(agent, 'log_subscribers'):
@@ -240,17 +270,20 @@ class Pathfinder(Pit):
         self.log(f"No agent found for practice {practice}", 'WARNING')
         return None
     
-    def Status(self):
+    def GetStatus(self):
         """
         Get the current status of the Pathfinder.
         
         Returns:
-            Dict: A dictionary containing the status and a message
+            str: The current status of the Pathfinder
         """
-        return {
-            "status": "running",
-            "message": "Pathfinder is running"
-        }
+        return self.state.status
+    
+    def GetState(self):
+        """
+        Get the current state of the Pathfinder.
+        """
+        return self.state
     
     # run_post is a helper function to run a post with the given variables
     def run_post(self, pathway: Pathway, post: Post, variables: Dict[str, Any]):

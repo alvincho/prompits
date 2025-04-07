@@ -109,6 +109,7 @@ def main():
     result = pathfinder.Run(pathway, **input_vars)
     
     print(f"\nPathway Result: {result}")
+    agent.UsePractice("StopAgent")
 
 if __name__ == "__main__":
     main()

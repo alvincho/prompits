@@ -12,6 +12,7 @@ from typing import Dict, List, Any, Optional, Union
 import traceback
 from .Pit import Pit
 
+
 class Post:
     """
     Post class representing a single task in a Pathway.
