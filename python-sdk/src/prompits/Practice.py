@@ -71,6 +71,9 @@ class Practice:
             # Log start
             #start_msg = f"Using practice {self.name} with args: {args} and kwargs: {kwargs}"
             #self.log(start_msg, 'DEBUG')
+            if self.parameters:
+                print(f"*** parameters: {self.parameters}")
+                kwargs = {**self.parameters, **kwargs}
             if self.is_async:
                 result = asyncio.run(self.function(*args, **kwargs))
             else:

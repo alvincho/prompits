@@ -1,6 +1,6 @@
 .DS_Store
 scratch/
-examples/test_lite.db
+python-sdk/examples/test_lite.db*
 Job*
 .cursor/*
 # Byte-compiled / optimized / DLL files

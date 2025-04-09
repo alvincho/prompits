@@ -17,27 +17,6 @@ from ..Message import Message
 from ..AgentAddress import AgentAddress
 from ..LogEvent import LogEvent
 
-class Endpoint:
-    """
-    Represents an API endpoint with its path, HTTP method, and handler function.
-    
-    Endpoints are the core components of an APIService, defining the routes
-    that the service exposes and the functions that handle requests to those routes.
-    """
-    
-    def __init__(self, path: str, method: str, handler: callable):
-        """
-        Initialize an Endpoint instance.
-        
-        Args:
-            path: The URL path of the endpoint (e.g., "/users")
-            method: The HTTP method (e.g., "GET", "POST")
-            handler: The callable function that handles requests to this endpoint
-        """
-        self.path = path
-        self.method = method
-        self.handler = handler
-
 class OpenAPI:
     """
     Represents an OpenAPI specification that describes an API.
@@ -47,47 +26,50 @@ class OpenAPI:
     authentication methods, and more.
     """
     
-    def __init__(self, info: Dict, paths: Dict, components: Dict = None):
+    def __init__(self, openapi_spec: dict):
         """
         Initialize an OpenAPI specification.
         
         Args:
-            info: Dictionary containing API information (title, version, etc.)
-            paths: Dictionary mapping endpoint paths to their operations
-            components: Dictionary of reusable components (schemas, parameters, etc.)
+            openapi_spec: JSON data containing OpenAPI specification, supports 3.0.0 and above
         """
-        self.info = info
-        self.paths = paths
-        self.components = components or {}
+        self.openapi = openapi_spec.get("openapi", "unknown")
+        # if self.openapi is under 3.0.0, raise an error
+        if self.openapi < "3.0.0":
+            raise ValueError("OpenAPI version must be 3.0.0 or higher")
+        self.info = openapi_spec.get("info", {})
+        self.servers = openapi_spec.get("servers", [])
+        self.paths = openapi_spec.get("paths", {})
+        self.components = openapi_spec.get("components", {})
+        self.security = openapi_spec.get("security", {})
+        self.tags = openapi_spec.get("tags", [])
+        self.externalDocs = openapi_spec.get("externalDocs", {})
     
-    def to_dict(self):
+    def ToJson(self):
         """Convert OpenAPI to dictionary"""
         return {
+            "openapi": self.openapi,
             "info": self.info,
+            "servers": self.servers,
             "paths": self.paths,
-            "components": self.components
+            "components": self.components,
+            "security": self.security,
+            "tags": self.tags,
+            "externalDocs": self.externalDocs
         }
     
-    @classmethod
-    def from_dict(cls, data):
-        """Create OpenAPI from dictionary"""
-        return cls(
-            info=data.get("info", {}),
-            paths=data.get("paths", {}),
-            components=data.get("components", {})
-        )
 
 class APIService(Service):
     """
     Service that provides API functionality through defined endpoints.
     
-    APIService allows agents to expose and consume APIs by defining endpoints
-    or importing an OpenAPI specification. It provides methods for registering
-    handlers, generating API documentation, and making requests to endpoints.
+    APIService is a Pit that allows agents to expose and consume APIs by defining endpoints
+    It takes an OpenAPI specification and allows agents to expose and consume APIs by defining endpoints
+    Each endpoint is mapped to a practice that can be called by an agent
     """
-    # TODO: Support OpenAPI spec from a file or URL
+    # TODO: Implement security schemes
     
-    def __init__(self, name: str, description: str = None):
+    def __init__(self, name: str, description: str = None, openapi_spec: OpenAPI = None):
         """
         Initialize an APIService instance.
         
@@ -97,24 +79,89 @@ class APIService(Service):
         """
         super().__init__(name, description or f"APIService {name}")
         self.endpoints = {}
-        self.server = None
+        self.servers = []
         self.running = False
-        self.AddPractice(Practice("GetEndpoints", self.GetEndpoints))
-        self.AddPractice(Practice("GetOpenAPISpec", self.GetOpenAPISpec))
-        self.openapi_spec = None
+        self.openapi_spec = openapi_spec
+
+        # map openapi_spec paths to practices
+        # operationId is the practice name
+        if self.openapi_spec:
+            if self.openapi_spec.servers:
+                self.servers = self.openapi_spec.servers
+            for path, path_item in self.openapi_spec.paths.items():
+                for method, method_item in path_item.items():
+                    print(f"{path} {method}")
+                if "operationId" in method_item:
+                    practice_name = method_item.get("operationId", f"{method} {path}")
+                else:
+                    practice_name = f"{method} {path}"
+                if "summary" in method_item:
+                    description = method_item.get("summary", "")
+                elif "description" in method_item:
+                    description = method_item.get("description", "")
+                else:
+                    description = practice_name
+                if method == "get":
+                    parameters = method_item.get("parameters", [])
+                    input_schema = {}
+                    for parameter in parameters:
+                        if "$ref" in parameter:
+                            schema = self.openapi_spec.components.get("schemas", {}).get(parameter["$ref"].split("/")[-1], {})
+                            input_schema[schema["name"]] = schema
+                        else:
+                            print(f"*** parameter: {parameter}")
+                            input_schema[parameter["name"]] = parameter
+                elif method == "post":
+                    input_schema = method_item.get("requestBody", {}).get("content", {}).get("application/json", {}).get("schema", {})
+                    if "callbacks" in input_schema:
+                        raise ValueError("Callbacks are not supported")
+                    if "$ref" in input_schema:
+                        input_schema = self.openapi_spec.components.get("schemas", {}).get(input_schema["$ref"].split("/")[-1], {})
+                else:
+                    raise ValueError(f"Method {method} is not supported")
+                if "servers" in method_item:
+                    servers = method_item.get("servers", [])
+                else:
+                    servers = self.servers
+                parameters = {
+                    "path": path,
+                    "method": method,
+                    "servers": servers,
+                    "body_required": method_item.get("requestBody", {}).get("required", False),
+                    "responses": method_item.get("responses", {})
+                }
+                print(f"practice_name: {practice_name}\ndescription: {description}\ninput_schema: {input_schema}\nparameters: {parameters}")
+                self.AddPractice(Practice(practice_name , self._request, description, input_schema, False, parameters))
         
-    def Request(self, endpoint: Endpoint, body: Dict = None, headers: Dict = None, params: Dict = None):
+    def _request(self, body: Dict = None, headers: Dict = None, params: Dict = None,
+                 path: str = None, method: str = None, servers: List[Dict] = None,
+                 body_required: bool = False, responses: Dict = None):
         """
         Request an endpoint.
         """
         # implement using requests
-        if not self.server:
+        if not servers:
             raise ValueError("Server is not set")
+        if not path:
+            raise ValueError("Path is not set")
+        if not method:
+            raise ValueError("Method is not set")
+        if not servers:
+            raise ValueError("Servers are not set")
             
-        url = f"{self.server}{endpoint.path}"
-        request_body = body if body is not None else endpoint.body
-        response = requests.request(endpoint.method, url, json=request_body, headers=headers, params=params)
-        return response.json()
+        url = f"{servers[0]['url']}{path}"
+        print(f"url: {url}")
+        request_body = body if body is not None else {}
+        if method == "get":
+            response = requests.get(url, headers=headers, params=params)
+        elif method == "post":
+            response = requests.post(url, json=request_body, headers=headers, params=params)
+        else:
+            raise ValueError(f"Method {method} is not supported")
+        if response.status_code != 200:
+            raise ValueError(f"Response status code is not 200: {response.status_code} {response.text}")
+        print(f"response: {response}")
+        return response.text
     
     def ToJson(self):
         """
@@ -176,89 +223,3 @@ class APIService(Service):
         
         return self
     
-    def GetEndpoints(self):
-        """
-        Get the list of endpoints for this API service.
-        
-        Returns:
-            List[Endpoint]: List of endpoints
-        """
-        return list(self.endpoints.values())
-
-    def GetOpenAPISpec(self):
-        """
-        Get the OpenAPI specification for this API service.
-        
-        Returns:
-            OpenAPI: OpenAPI specification
-        """
-        return self.openapi_spec
-    
-    def AddEndpoint(self, endpoint: Endpoint):
-        """
-        Add an endpoint to this API service.
-        
-        Args:
-            endpoint (Endpoint): The endpoint to add
-            
-        Returns:
-            bool: True if added successfully
-        """
-        self.endpoints[endpoint.path] = endpoint
-        return True
-    
-    def RemoveEndpoint(self, path: str):
-        """
-        Remove an endpoint from this API service.
-        
-        Args:
-            path (str): The path of the endpoint
-            
-        Returns:
-            bool: True if removed successfully, False if not found
-        """
-        return self.endpoints.pop(path, False)
-    
-    def SetOpenAPISpec(self, openapi_spec: OpenAPI):
-        """
-        Set the OpenAPI specification for this API service.
-        
-        Args:
-            openapi_spec (OpenAPI): The OpenAPI specification
-            
-        Returns:
-            bool: True if set successfully
-        """
-        self.openapi_spec = openapi_spec
-        return True
-    
-    def GenerateOpenAPISpec(self):
-        """
-        Generate an OpenAPI specification from the endpoints.
-        
-        Returns:
-            OpenAPI: Generated OpenAPI specification
-        """
-        if not self.endpoints:
-            return None
-        
-        paths = {}
-        for endpoint in self.endpoints.values():
-            if endpoint.path not in paths:
-                paths[endpoint.path] = {}
-            
-            paths[endpoint.path][endpoint.method.lower()] = {
-                "description": endpoint.description or "",
-                "parameters": endpoint.parameters,
-                "responses": endpoint.responses
-            }
-        
-        info = {
-            "title": self.name,
-            "description": self.description or f"API Service: {self.name}",
-            "version": "1.0.0"
-        }
-        
-        self.openapi_spec = OpenAPI(info=info, paths=paths)
-        return self.openapi_spec
-
