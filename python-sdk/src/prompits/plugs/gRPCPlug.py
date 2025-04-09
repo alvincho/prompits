@@ -648,7 +648,7 @@ class gRPCPlug(Plug):
             Message: Received message, or None if no message is available
         """
         # Receive message
-        print(f"gRPCPlug {self.name} ReceiveMessage")
+        #print(f"gRPCPlug {self.name} ReceiveMessage")
         try:
             msg = self.message_queue.pop(0)
             #print(f"Received message: {msg}")

@@ -204,10 +204,10 @@ class TableSchema(Schema):
         """
         super().__init__(schema["name"], schema["description"], schema)
         self.schema = schema
-        self.rowSchema = RowSchema(schema["rowSchema"])
-        self.primary_key = schema["primary_key"]
-        self.name = schema["name"]
-        self.description = schema["description"]
+        self.rowSchema = RowSchema(schema.get("rowSchema", {}))
+        self.primary_key = schema.get("primary_key", [])
+        self.name = schema.get("name", "")
+        self.description = schema.get("description", "")
     
     def validate(self, data: Any) -> bool:
         """

@@ -4,6 +4,7 @@ import os
 import time
 import datetime
 import traceback
+import pandas as pd
 from prompits.Pit import Pit
 from prompits.Agent import Agent, AgentInfo
 from prompits.Pathway import Pathway
@@ -30,7 +31,8 @@ class PathfinderExecutor(Pit):
                 self.agent.pits['plugs']['grpc_server'].start()
             
             # Create Pathfinder
-            self.pathfinder = Pathfinder(self.agent)
+            self.pathfinder = Pathfinder(self.agent, pouch="pouch")
+            self.pouch = self.agent.services["pouch"]
             
             return True
         except Exception as e:
@@ -65,6 +67,7 @@ class PathfinderExecutor(Pit):
             
             # Run the pathway
             self.log(f"Running pathway with inputs: {input_vars}")
+            description = f"Monitor-web execution {execution_id}"
             result = self.pathfinder.Run(pathway, **input_vars)
             
             # Update execution with result
@@ -340,11 +343,24 @@ if st.button("Execute Pathway", disabled=not st.session_state.agent_initialized)
                     with st.spinner("Executing pathway..."):
                         execution_id, result = executor.execute_pathfinder(pathway_path, input_vars)
                         
+                        
                         # Store result in session state
                         st.session_state.executions.append(execution_id)
                         st.session_state.execution_results[execution_id] = result
                         
                         st.success(f"Execution completed successfully! Execution ID: {execution_id}")
+                        
+                        # Add tracking for this execution with refresh
+                        if "tracked_executions" not in st.session_state:
+                            st.session_state.tracked_executions = {}
+                        
+                        st.session_state.tracked_executions[execution_id] = {
+                            "start_time": datetime.datetime.now(),
+                            "pathway_path": pathway_path,
+                            "input_vars": input_vars,
+                            "last_refresh": datetime.datetime.now(),
+                            "active": True
+                        }
             else:
                 # If we can't validate inputs, just run with what we have
                 with st.spinner("Executing pathway..."):
@@ -355,6 +371,18 @@ if st.button("Execute Pathway", disabled=not st.session_state.agent_initialized)
                     st.session_state.execution_results[execution_id] = result
                     
                     st.success(f"Execution completed successfully! Execution ID: {execution_id}")
+                    
+                    # Add tracking for this execution with refresh
+                    if "tracked_executions" not in st.session_state:
+                        st.session_state.tracked_executions = {}
+                    
+                    st.session_state.tracked_executions[execution_id] = {
+                        "start_time": datetime.datetime.now(),
+                        "pathway_path": pathway_path,
+                        "input_vars": input_vars,
+                        "last_refresh": datetime.datetime.now(),
+                        "active": True
+                    }
         except json.JSONDecodeError:
             st.error("Invalid JSON format for input variables")
         except Exception as e:
@@ -363,7 +391,128 @@ if st.button("Execute Pathway", disabled=not st.session_state.agent_initialized)
     else:
         st.error(f"Pathway file not found: {pathway_path}")
 
-# Execution history
+# Active Executions Status (with auto-refresh)
+if "tracked_executions" in st.session_state and st.session_state.tracked_executions:
+    st.header("Active Executions")
+    
+    # Refresh tracked executions
+    for execution_id, tracking_info in list(st.session_state.tracked_executions.items()):
+        if tracking_info["active"]:
+            current_time = datetime.datetime.now()
+            time_diff = (current_time - tracking_info["last_refresh"]).total_seconds()
+            
+            # Auto-refresh every 10 seconds
+            if time_diff >= 10:
+                tracking_info["last_refresh"] = current_time
+                st.session_state.tracked_executions[execution_id] = tracking_info
+                st.rerun()
+            
+            with st.expander(f"Execution: {execution_id} (Running)", expanded=True):
+                # Get current pathway run status from pathfinder
+                try:
+                    # Get pathway run ID from execution result
+                    if execution_id in st.session_state.execution_results:
+                        result = st.session_state.execution_results[execution_id]
+                        pathrun_id = result.get("pathrun_id")
+                        
+                        if pathrun_id:
+                            # Get the status from the pouch service in the agent
+                            pouch = executor.agent.services["pouch"] if executor.agent else None
+                            
+                            if pouch:
+                                # Get the pathrun and poststeps
+                                pathrun = pouch.UsePractice("GetPathRun", pathrun_id)
+                                
+                                if pathrun:
+                                    # Display pathrun status
+                                    status = pathrun[0].get("status", "Unknown")
+                                    started = pathrun[0].get("create_time", "Unknown")
+                                    stopped = pathrun[0].get("stop_time", "Not completed")
+                                    
+                                    # Calculate elapsed time
+                                    if isinstance(started, str):
+                                        try:
+                                            started = datetime.datetime.fromisoformat(started)
+                                        except:
+                                            pass
+                                    
+                                    if isinstance(started, datetime.datetime):
+                                        elapsed = (current_time - started).total_seconds()
+                                        elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
+                                    else:
+                                        elapsed_str = "Unknown"
+                                    
+                                    # Status display
+                                    st.markdown(f"**Pathway Run ID:** {pathrun_id}")
+                                    st.markdown(f"**Status:** {status}")
+                                    st.markdown(f"**Started:** {started}")
+                                    st.markdown(f"**Elapsed Time:** {elapsed_str}")
+                                    
+                                    # Stop button
+                                    if status == "running":
+                                        if st.button(f"Stop execution {execution_id}", key=f"stop_{execution_id}"):
+                                            pouch.UsePractice("StopPathRun", pathrun_id)
+                                            st.success(f"Stopping execution {execution_id}...")
+                                            st.session_state.tracked_executions[execution_id]["last_refresh"] = current_time
+                                            st.rerun()
+                                    
+                                    # Mark as inactive if completed or stopped
+                                    if status in ["stopped", "completed", "failed"]:
+                                        tracking_info["active"] = False
+                                        st.session_state.tracked_executions[execution_id] = tracking_info
+                                    
+                                    # Display post steps
+                                    poststeps = pouch.UsePractice("Select", f"pouch_poststep", {"pathrun_id": pathrun_id})
+                                    
+                                    if poststeps:
+                                        st.markdown("### Post Steps")
+                                        
+                                        # Sort poststeps by ID
+                                        poststeps.sort(key=lambda x: x.get("poststep_id", 0))
+                                        
+                                        # Create a table for poststeps
+                                        table_data = []
+                                        for step in poststeps:
+                                            step_id = step.get("poststep_id", "Unknown")
+                                            post_id = step.get("post_id", "Unknown")
+                                            status_msg = step.get("status_msg", "Unknown")
+                                            state = step.get("state", "Unknown")
+                                            start_time = step.get("start_time", "Unknown")
+                                            stop_time = step.get("stop_time", "-")
+                                            
+                                            if isinstance(state, int):
+                                                state_map = {0: "PENDING", 1: "RUNNING", 2: "COMPLETED", 3: "FAILED"}
+                                                state = state_map.get(state, f"Unknown ({state})")
+                                            
+                                            table_data.append([step_id, post_id, state, status_msg, start_time, stop_time])
+                                        
+                                        # Display the table
+                                        st.table(pd.DataFrame(
+                                            table_data, 
+                                            columns=["Step ID", "Post ID", "State", "Status Message", "Start Time", "End Time"]
+                                        ))
+                                        
+                                        # Show auto-refresh indicator
+                                        st.info(f"Auto-refreshing every 10 seconds. Last update: {tracking_info['last_refresh'].strftime('%H:%M:%S')}")
+                                        
+                                        # Add a manual refresh button
+                                        if st.button(f"Refresh Now", key=f"refresh_{execution_id}"):
+                                            tracking_info["last_refresh"] = current_time
+                                            st.session_state.tracked_executions[execution_id] = tracking_info
+                                            st.rerun()
+                                else:
+                                    st.warning(f"Pathway run {pathrun_id} not found")
+                            else:
+                                st.warning("Pouch service not available")
+                        else:
+                            st.warning("Pathway run ID not found in execution result")
+                    else:
+                        st.warning(f"Execution {execution_id} results not found")
+                except Exception as e:
+                    st.error(f"Error retrieving execution status: {str(e)}")
+                    st.code(traceback.format_exc())
+
+# Regular execution history (now separated from active executions)
 if st.session_state.executions:
     st.header("Execution History")
     

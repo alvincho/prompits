@@ -122,7 +122,7 @@ class PostgresPool(DatabasePool):
         self.cursor = None
         self.conn = None
 
-    def TableExists(self, table_name: str) -> bool:
+    def _TableExists(self, table_name: str) -> bool:
         """Check if a table exists."""
         try:
             self.cursor.execute("""
@@ -136,7 +136,7 @@ class PostgresPool(DatabasePool):
             self.log(f"Error checking table existence: {e}", 'ERROR')
             return False
 
-    def CreateTable(self, table_name: str, schema: TableSchema):
+    def _CreateTable(self, table_name: str, schema: TableSchema):
         """Create a table with the given schema."""
         try:
             columns = []
@@ -157,7 +157,17 @@ class PostgresPool(DatabasePool):
             self.log(f"Error creating table: {e}", 'ERROR')
             return False
 
-    def Store(self, id: str, data: Dict[str, Any]):
+    def _CreateTableIndex(self, table_name: str, index_name: str, column_names: List[str]):
+        """Create an index on a table."""
+        try:
+            self.cursor.execute(f"CREATE INDEX IF NOT EXISTS {index_name} ON {table_name} ({', '.join(column_names)})")
+            self.conn.commit()
+            return True
+        except Exception as e:
+            self.log(f"Error creating table index: {e}", 'ERROR')
+            return False
+
+    def _Store(self, id: str, data: Dict[str, Any]):
         """Store data in the database."""
         try:
             columns = list(data.keys()) + ['id']
@@ -178,7 +188,7 @@ class PostgresPool(DatabasePool):
             self.log(f"Error storing data: {e}", 'ERROR')
             return False
 
-    def Retrieve(self, id: str) -> Optional[Dict[str, Any]]:
+    def _Retrieve(self, id: str) -> Optional[Dict[str, Any]]:
         """Retrieve data from the database."""
         try:
             self.cursor.execute(f"SELECT * FROM {self.name} WHERE id = %s", (id,))
@@ -191,7 +201,7 @@ class PostgresPool(DatabasePool):
             self.log(f"Error retrieving data: {e}", 'ERROR')
             return None
 
-    def Update(self, id: str, data: Dict[str, Any]):
+    def _Update(self, id: str, data: Dict[str, Any]):
         """Update data in the database."""
         try:
             set_values = ', '.join([f"{k} = %s" for k in data.keys()])
@@ -209,7 +219,7 @@ class PostgresPool(DatabasePool):
             self.log(f"Error updating data: {e}", 'ERROR')
             return False
 
-    def Search(self, where: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _Search(self, where: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Search data in the database."""
         try:
             conditions = []
@@ -232,7 +242,7 @@ class PostgresPool(DatabasePool):
             self.log(f"Error searching data: {e}", 'ERROR')
             return []
 
-    def Delete(self, id: str):
+    def _Delete(self, id: str):
         """Delete data from the database."""
         try:
             self.cursor.execute(f"DELETE FROM {self.name} WHERE id = %s", (id,))

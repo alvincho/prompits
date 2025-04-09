@@ -22,6 +22,12 @@
       }
     },
     "services": {
+      "pouch": {
+        "type": "Pouch",
+        "name": "pouch",
+        "description": "Pouch service",
+        "json_pool": "db_pool"
+      }
     },
     "plazas": {
       "MainPlaza": {

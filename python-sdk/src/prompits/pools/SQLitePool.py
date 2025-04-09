@@ -79,25 +79,70 @@ class SQLitePool(DatabasePool):
         self.connect()
 
     def connect(self):
-        """Connect to the database."""
+        """Connect to the database with proper timeout and isolation level settings."""
         try:
-            self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
+            # Set a longer timeout and enable WAL mode for better concurrency
+            self.conn = sqlite3.connect(
+                self.db_path,
+                timeout=60.0,  # 60 second timeout
+                isolation_level='IMMEDIATE',  # Stronger isolation level
+                check_same_thread=False
+            )
+            
+            # Enable WAL mode for better concurrency
+            self.conn.execute('PRAGMA journal_mode=WAL')
+            
+            # Set busy timeout to wait for locks to be released
+            self.conn.execute('PRAGMA busy_timeout=30000')  # 30 second busy timeout
+            
             self.cursor = self.conn.cursor()
+            self.is_connected = True
             self.log(f"Connected to SQLite database: {self.db_path}", 'DEBUG')
             return True
         except Exception as e:
             self.log(f"Error connecting to database: {e}", 'ERROR')
             return False
 
-    def disconnect(self):
-        """Disconnect from the database."""
-        if self.cursor:
-            self.cursor.close()
-        if self.conn:
-            self.conn.close()
-        self.cursor = None
-        self.conn = None
-        self.log("Disconnected from database", 'DEBUG')
+    def _ensure_connection(self):
+        """Ensure database connection is active, reconnect if needed."""
+        if not self.is_connected or not self.conn:
+            return self.connect()
+        try:
+            # Test the connection
+            self.conn.execute("SELECT 1")
+            return True
+        except (sqlite3.OperationalError, sqlite3.ProgrammingError):
+            # Connection lost, try to reconnect
+            return self.connect()
+
+    def _execute_with_retry(self, operation, *args, max_retries=3):
+        """Execute a database operation with retries on lock errors.
+        
+        Args:
+            operation: Function to execute
+            *args: Arguments to pass to the operation
+            max_retries: Maximum number of retry attempts
+            
+        Returns:
+            Result of the operation if successful
+            
+        Raises:
+            Exception: If all retries fail
+        """
+        for attempt in range(max_retries):
+            try:
+                self._ensure_connection()
+                return operation(*args)
+            except sqlite3.OperationalError as e:
+                if "database is locked" in str(e) and attempt < max_retries - 1:
+                    self.log(f"Database locked, retrying operation (attempt {attempt + 1}/{max_retries})", 'WARNING')
+                    import time
+                    time.sleep(1)  # Wait before retrying
+                    continue
+                raise
+            except Exception as e:
+                self.log(f"Database operation failed: {e}", 'ERROR')
+                raise
 
     def _TableExists(self, table_name: str) -> bool:
         """Check if a table exists."""
@@ -114,51 +159,93 @@ class SQLitePool(DatabasePool):
 
     def _CreateTable(self, table_name: str, schema: TableSchema):
         """Create a table with the given schema."""
-        try:
-            columns = []
-            for column_name, column_type in schema.rowSchema.columns.items():
-                sqlite_type = self._get_sqlite_type(column_type)
-                columns.append(f"{column_name} {sqlite_type}")
-            
-            create_table_sql = f"""
-                CREATE TABLE IF NOT EXISTS {table_name} (
-                    id TEXT PRIMARY KEY,
-                    {', '.join(columns)}
-                )
-            """
-            self.cursor.execute(create_table_sql)
-            self.conn.commit()
-            # check if the table exists
-            if not self._TableExists(table_name):
-                self.log(f"Table {table_name} does not exist", 'ERROR')
+        self.log(f"Creating table {table_name} with schema {schema}", 'DEBUG')
+        #print(f"Creating table {table_name} with schema {schema}")
+        def create_table():
+            try:
+                columns = []
+                for column_name, column_type in schema.rowSchema.columns.items():
+                    sqlite_type = self._get_sqlite_type(column_type)
+                    columns.append(f"{column_name} {sqlite_type}")
+                
+                # don't add id to the columns
+                create_table_sql = f"""
+                    CREATE TABLE IF NOT EXISTS {table_name} (
+                        {', '.join(columns)}
+                    )
+                """
+                self.cursor.execute(create_table_sql)
+                self.conn.commit()
+                return self._TableExists(table_name)
+            except Exception as e:
+                self.log(f"Error creating table: {e}\n{traceback.format_exc()}", 'ERROR')
+                print(f"Error creating table: {e}\n{traceback.format_exc()}")
                 return False
-            self.log(f"Created table {table_name}", 'DEBUG')
-            #print(f"**** DIRECT PRINT: Created table {table_name}")
-            return True
-        except Exception as e:
-            self.log(f"Error creating table: {e}\n{traceback.format_exc()}", 'ERROR')
-            #print(f"**** DIRECT PRINT: Error creating table: {e}\n{traceback.format_exc()}")
-            return False
+                
+        return self._execute_with_retry(create_table)
 
     def _Store(self, id: str, data: Dict[str, Any]):
         """Store data in the database."""
-        try:
-            columns = list(data.keys()) + ['id']
-            values = list(data.values()) + [id]
-            placeholders = ', '.join(['?' * len(columns)])
-            columns_str = ', '.join(columns)
-            
-            insert_sql = f"""
-                INSERT OR REPLACE INTO {self.name} ({columns_str})
-                VALUES ({placeholders})
-            """
-            self.cursor.execute(insert_sql, values)
-            self.conn.commit()
-            self.log(f"Stored data with id {id}", 'DEBUG')
-            return True
-        except Exception as e:
-            self.log(f"Error storing data: {e}\n{traceback.format_exc()}", 'ERROR')
-            return False
+        def store_data():
+            try:
+                columns = list(data.keys()) + ['id']
+                values = list(data.values()) + [id]
+                placeholders = ', '.join(['?' * len(columns)])
+                columns_str = ', '.join(columns)
+                
+                insert_sql = f"""
+                    INSERT OR REPLACE INTO {self.name} ({columns_str})
+                    VALUES ({placeholders})
+                """
+                self.cursor.execute(insert_sql, values)
+                self.conn.commit()
+                self.log(f"Stored data with id {id}", 'DEBUG')
+                return True
+            except Exception as e:
+                self.log(f"Error storing data: {e}\n{traceback.format_exc()}", 'ERROR')
+                return False
+                
+        return self._execute_with_retry(store_data)
+
+    def _Update(self, table_name: str, data: Dict[str, Any], where: Dict[str, Any]=None, table_schema: TableSchema=None):
+        """Update data in the database."""
+        def update_data():
+            try:
+                set_values = ', '.join([f"{k} = ?" for k in data.keys()])
+                values = list(self._ConvertToDataType(table_schema.rowSchema.columns[key], value) for key, value in data.items()) 
+                
+                if where is not None:
+                    # Build WHERE conditions correctly
+                    where_conditions = []
+                    where_values = []
+                    
+                    for k, v in where.items():
+                        where_conditions.append(f"{k} = ?")
+                        if table_schema and k in table_schema.rowSchema.columns:
+                            where_values.append(self._ConvertToDataType(table_schema.rowSchema.columns[k], v))
+                        else:
+                            where_values.append(v)
+                    
+                    where_clause = ' AND '.join(where_conditions)
+                    values += where_values
+                    
+                    update_sql = f"""
+                        UPDATE {table_name}
+                        SET {set_values}
+                        WHERE {where_clause}
+                    """
+                    self.log(f"Update SQL: {update_sql} with values: {values}", 'DEBUG')
+                    self.cursor.execute(update_sql, values)
+                    self.conn.commit()
+                    self.log(f"Updated data in table {table_name}", 'DEBUG')
+                    return True
+                else:
+                    raise ValueError("No where clause provided")
+            except Exception as e:
+                self.log(f"Error updating data: {e}\n{traceback.format_exc()}", 'ERROR')
+                return False
+                
+        return self._execute_with_retry(update_data)
 
     def _Execute(self, query: str, params: List[Any]=None):
         """Execute a query."""
@@ -183,25 +270,6 @@ class SQLitePool(DatabasePool):
         except Exception as e:
             self.log(f"Error retrieving data: {e}\n{traceback.format_exc()}", 'ERROR')
             return None
-
-    def _Update(self, id: str, data: Dict[str, Any]):
-        """Update data in the database."""
-        try:
-            set_values = ', '.join([f"{k} = ?" for k in data.keys()])
-            values = list(data.values()) + [id]
-            
-            update_sql = f"""
-                UPDATE {self.name}
-                SET {set_values}
-                WHERE id = ?
-            """
-            self.cursor.execute(update_sql, values)
-            self.conn.commit()
-            self.log(f"Updated data with id {id}", 'DEBUG')
-            return True
-        except Exception as e:
-            self.log(f"Error updating data: {e}\n{traceback.format_exc()}", 'ERROR')
-            return False
 
     def _Search(self, where: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Search data in the database."""
@@ -241,6 +309,8 @@ class SQLitePool(DatabasePool):
 
     def _get_sqlite_type(self, column_type: DataType) -> str:
         """Convert schema type to SQLite type."""
+        if isinstance(column_type, dict):
+            column_type = column_type["type"]
         type_map = {
             DataType.STRING: 'TEXT',
             DataType.INTEGER: 'INTEGER',
@@ -271,13 +341,6 @@ class SQLitePool(DatabasePool):
         
         return json_data
 
-    def _ensure_connection(self):
-        """Ensure that the connection is established."""
-        if not hasattr(self, 'conn') or self.conn is None:
-            self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
-            self.conn.row_factory = sqlite3.Row  # Return rows as dictionaries
-            self.cursor = self.conn.cursor()
-    
     def _Connect(self):
         """
         Connect to the SQLite database.
@@ -414,13 +477,19 @@ class SQLitePool(DatabasePool):
             The converted value
         """
         #print(f"Converting value {value} to {data_type}")
-        self.log(f"Converting value {value} to {data_type}", 'DEBUG')
+        #self.log(f"Converting value {value} to {data_type}", 'DEBUG')
         if value is None:
             return None
-            
+        
+        if isinstance(data_type, dict):
+            data_type = data_type["type"]
         if data_type == DataType.INTEGER:
             return int(value)
         elif data_type == DataType.FLOAT:
+            return float(value)
+        elif data_type == DataType.STRING:
+            return str(value)
+        elif data_type == DataType.REAL:
             return float(value)
         elif data_type == DataType.BOOLEAN:
             return 1 if value else 0  # SQLite doesn't have a boolean type
@@ -505,6 +574,13 @@ class SQLitePool(DatabasePool):
         else:
             raise NotImplementedError(f"Conversion from DataType {data_type} not supported")
     
+    def _CreateTableIndex(self, table_name: str, index_name: str, column_names: List[str]):
+        """
+        Create an index on a table in the pool.
+        """
+        # TODO: SQLite CreateTableIndex not implemented
+        raise NotImplementedError("CreateTableIndex not implemented")
+
     def _GetTableData(self, table_name: str, id_or_where: str=None, table_schema: TableSchema=None) -> dict[str, Any]:
         """
         Get data from a table.
@@ -703,198 +779,6 @@ class SQLitePool(DatabasePool):
         
         return " AND ".join(not_clauses), not_values
             
-    def _TableExists(self, table_name: str) -> bool:
-        """Check if a table exists."""
-        try:
-            self.cursor.execute("""
-                SELECT name FROM sqlite_master 
-                WHERE type='table' AND name=?
-            """, (table_name,))
-            return bool(self.cursor.fetchone())
-        except Exception as e:
-            self.log(f"Error checking table existence: {e}", 'ERROR')
-            return False
-        
-    def _CreateTable(self, table_name: str, schema: TableSchema):
-        """Create a table with the given schema."""
-        try:
-            create_table_sql = ""
-            columns = []
-            self.log(f"Creating table {table_name}, schema: {schema}", 'DEBUG')
-            for column_name, column_type in schema.rowSchema.columns.items():
-                self.log(f"Mapping column: {column_name}, type: {column_type}", 'DEBUG')
-                sqlite_type = self._get_sqlite_type(column_type)
-                self.log(f"sqlite_type: {sqlite_type}", 'DEBUG')
-                columns.append(f"{column_name} {sqlite_type}")
-                
-            create_table_sql = f"""
-                CREATE TABLE IF NOT EXISTS {table_name} (
-                    id TEXT PRIMARY KEY,
-                    {', '.join(columns)}
-                )
-            """
-            self.cursor.execute(create_table_sql)
-            self.conn.commit()
-            self.log(f"Created table {table_name}", 'DEBUG')
-            return True
-        except Exception as e:
-            self.log(f"Error creating table {table_name}: sql: {create_table_sql}\n{e}\n{traceback.format_exc()}", 'ERROR')
-            return False
-        
-    def _Store(self, id: str, data: Dict[str, Any]):
-        """Store data in the database."""
-        try:
-            columns = list(data.keys()) + ['id']
-            values = list(data.values()) + [id]
-            placeholders = ', '.join(['?' * len(columns)])
-            columns_str = ', '.join(columns)
-            
-            insert_sql = f"""
-                INSERT OR REPLACE INTO {self.name} ({columns_str})
-                VALUES ({placeholders})
-            """
-            self.cursor.execute(insert_sql, values)
-            self.conn.commit()
-            self.log(f"Stored data with id {id}", 'DEBUG')
-            return True
-        except Exception as e:
-            self.log(f"Error storing data: {e}", 'ERROR')
-            return False
-        
-    def _Retrieve(self, id: str) -> Optional[Dict[str, Any]]:
-        """Retrieve data from the database."""
-        try:
-            self.cursor.execute(f"SELECT * FROM {self.name} WHERE id = ?", (id,))
-            row = self.cursor.fetchone()
-            if row:
-                columns = [desc[0] for desc in self.cursor.description]
-                self.log(f"Retrieved data with id {id}", 'DEBUG')
-                return dict(zip(columns, row))
-            self.log(f"No data found with id {id}", 'WARNING')
-            return None
-        except Exception as e:
-            self.log(f"Error retrieving data: {e}", 'ERROR')
-            return None
-        
-    def _Update(self, table_name: str, data: Dict[str, Any], where_clause: str, table_schema: TableSchema):
-        """Update data in the database."""
-        try:
-            # map each of the data to the correct data types using _ConvertToDataType
-            for key, value in data.items():
-                data[key] = self._ConvertToDataType(table_schema.rowSchema.columns[key], value)
-            set_values = ', '.join([f"{k} = ?" for k in data.keys()])
-            values = list(data.values())
-            for key, value in where_clause.items():
-                values.append(self._ConvertToDataType(table_schema.rowSchema.columns[key], value))
-            
-            # Build where clause string
-            where_conditions = []
-            for key in where_clause.keys():
-                where_conditions.append(f"{key} = ?")
-            where_clause_str = " AND ".join(where_conditions)
-            update_sql = f"""
-                UPDATE {table_name} SET {set_values} WHERE {where_clause_str}
-            """
-            #print(f"*** where_clause: {where_clause}")
-            #print(f"*** update_sql: {update_sql}, \nvalues: {values}")
-            #self.log(f"update_sql: {update_sql}", 'DEBUG')
-            #self.log(f"values: {values}", 'DEBUG')
-            self.cursor.execute(update_sql, values)
-            self.conn.commit()
-            #self.log(f"Updated data with {values}", 'DEBUG')
-            return True
-        except Exception as e:
-            self.log(f"Error updating data: {e}\n{update_sql}\n{traceback.format_exc()}", 'ERROR')
-            return False
-        
-    def _Search(self, where: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Search data in the database."""
-        try:
-            where_sql, where_values = self._build_where_clause(where)
-            select_sql = f"SELECT * FROM {self.name} WHERE {where_sql}"
-            self.cursor.execute(select_sql, where_values)
-            rows = self.cursor.fetchall()
-            columns = [desc[0] for desc in self.cursor.description]
-            results = [dict(zip(columns, row)) for row in rows]
-            self.log(f"Found {len(results)} results", 'DEBUG')
-            return results
-        except Exception as e:
-            self.log(f"Error searching data: {e}", 'ERROR')
-            return []
-        
-    def _Delete(self, id: str):
-        """Delete data from the database."""
-        try:
-            self.cursor.execute(f"DELETE FROM {self.name} WHERE id = ?", (id,))
-            self.conn.commit()
-            self.log(f"Deleted data with id {id}", 'DEBUG')
-            return True
-        except Exception as e:
-            self.log(f"Error deleting data: {e}", 'ERROR')
-            return False
-        
-    def _GetTableData(self, table_name: str, id_or_where: str=None, table_schema: TableSchema=None) -> dict[str, Any]:
-        """
-        Get data from a table.
-        
-        Args:
-            table_name: Name of the table
-            id_or_where: ID or WHERE clause
-            table_schema: Table schema
-
-        Returns:
-            dict: Data from the table
-        """
-        try:
-            # Assume key is a primary key value unless it's a dict
-            if id_or_where and isinstance(id_or_where, dict):
-                where_sql, where_values = self._build_where_clause(id_or_where)
-                select_sql = f"SELECT * FROM {table_name} WHERE {where_sql}"
-                values = where_values
-            elif id_or_where:
-                select_sql = f"SELECT * FROM {table_name} WHERE id = ?"
-                values = [id_or_where]
-            else:
-                select_sql = f"SELECT * FROM {table_name}"
-                values = []
-            
-            # check if cursor is connected, if not, reconnect
-            if not self.cursor:
-                self.log("SQLitePool: Cursor is not connected, reconnecting", 'ERROR')
-                self.connect()
-            self.cursor.execute(select_sql, values)
-            
-            # Get column names
-            column_names = [description[0] for description in self.cursor.description]
-            
-            # Fetch and convert row to dictionary
-            rows = []
-            while True:
-                row = self.cursor.fetchone()
-                
-                if row is None:
-                    break
-                
-                row_dict = {column_names[i]: row[i] for i in range(len(column_names))}
-                for key, value in row_dict.items():
-                    if isinstance(value, str):
-                        # convert value to the correct data type
-                        if table_schema is not None:
-                            row_dict[key] = self._ConvertFromDataType(table_schema.rowSchema.columns[key], value)
-                        else:
-                            try:
-                                # Try to parse as JSON
-                                if value.startswith('{') or value.startswith('['):
-                                    row_dict[key] = json.loads(value)
-                            except:
-                                pass
-                rows.append(row_dict)
-            
-            return rows
-        except Exception as e:
-            self.log(f"Error getting table data: {e}\n{select_sql}\n{traceback.format_exc()}", 'ERROR')
-            return []
-        
     def _DropTable(self, table_name: str):
         """Drop a table."""
         try:
@@ -905,6 +789,26 @@ class SQLitePool(DatabasePool):
         except Exception as e:
             self.log(f"Error dropping table: {e}", 'ERROR')
             return False
+    
+    def _Select(self, table_name: str, where: Dict[str, Any]):
+        """Select data from the database."""
+        try:
+            where_sql, where_values = self._build_where_clause(where)
+            select_sql = f"SELECT * FROM {table_name} WHERE {where_sql}"
+            self.cursor.execute(select_sql, where_values)
+            rows = self.cursor.fetchall()
+            
+            # Convert tuples to dictionaries
+            column_names = [desc[0] for desc in self.cursor.description]
+            result = []
+            for row in rows:
+                row_dict = {column_names[i]: row[i] for i in range(len(column_names))}
+                result.append(row_dict)
+                
+            return result
+        except Exception as e:
+            self.log(f"Error selecting data: {e}", 'ERROR')
+            return []
         
     def _Commit(self):
         """Commit the current transaction."""
@@ -954,8 +858,11 @@ class SQLitePool(DatabasePool):
         try:    
             # map each of the data to the correct data types using _ConvertToDataType
             for key, value in data.items():
+                #print(f"converting key: {key} value: {value}")
                 data[key] = self._ConvertToDataType(table_schema.rowSchema.columns[key], value)
-            self.cursor.execute(f"INSERT INTO {table_name} ({', '.join(data.keys())}) VALUES ({', '.join(['?' for _ in data])})", list(data.values()))
+            sql = f"INSERT INTO {table_name} ({', '.join(data.keys())}) VALUES ({', '.join(['?' for _ in data])})"
+            #print(f"Insert SQL: {sql} with values: {list(data.values())}")
+            self.cursor.execute(sql, list(data.values()))
             self.conn.commit()
             self.log(f"Inserted data into table {table_name}", 'DEBUG')
             return True

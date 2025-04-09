@@ -1,5 +1,5 @@
 {
-    "pathway_id": "llm_completion_demo_001",
+    "pathway_id": "62c8f871-32cb-478b-a577-bd7139d3c652",
     "name": "Simple LLM Completion",
     "description": "A simple pathway for LLM text completion with preprocessing and postprocessing",
     "entrance_post": {

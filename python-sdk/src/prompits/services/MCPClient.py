@@ -24,14 +24,14 @@ class MCPClient(Pit):
             self.mcp_server_params = StdioServerParameters(**mcp_server_params)
         else:
             self.mcp_server_params = mcp_server_params
-        print(f"MCPClient init: {self.mcp_server_params}")
+        #print(f"MCPClient init: {self.mcp_server_params}")
         self.tools= asyncio.run(self._GetTools())
         self.AddPractice(Practice("GetTools", self._GetTools, 
                                   description="Get tools from the MCP server", 
                                   is_async=True))
         for tool in self.tools:
-            print(f"tool: {tool.name}")
-            print(f"tool.inputSchema: {tool.inputSchema}")
+            #print(f"tool: {tool.name}")
+            #print(f"tool.inputSchema: {tool.inputSchema}")
             self.AddPractice(Practice(tool.name, 
                                       function= self._CallTool, input_schema=tool.inputSchema, 
                                       description=tool.description, parameters={"tool_name":tool.name},

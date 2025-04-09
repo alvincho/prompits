@@ -69,8 +69,8 @@ class Practice:
         # TODO: Add async support to the practice
         try:
             # Log start
-            start_msg = f"Using practice {self.name} with args: {args} and kwargs: {kwargs}"
-            self.log(start_msg, 'DEBUG')
+            #start_msg = f"Using practice {self.name} with args: {args} and kwargs: {kwargs}"
+            #self.log(start_msg, 'DEBUG')
             if self.is_async:
                 result = asyncio.run(self.function(*args, **kwargs))
             else:

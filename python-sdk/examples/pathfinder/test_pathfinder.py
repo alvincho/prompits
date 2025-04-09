@@ -96,7 +96,7 @@ def main():
     
     #print(agent.UsePractice("MainPlaza/ListActiveAgents"))
     # Create Pathfinder
-    pathfinder = Pathfinder(agent)
+    pathfinder = Pathfinder(agent, pouch="pouch")
     pathfinder.subscribe_to_logs(log_handler)
     
     # Load pathway

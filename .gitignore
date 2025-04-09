@@ -7,7 +7,7 @@ Job*
 __pycache__/
 *.py[cod]
 *$py.class
-
+test-local/
 # C extensions
 *.so
 

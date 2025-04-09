@@ -1,6 +1,6 @@
 {
-    "pathway_id": "llm_completion_001",
-    "name": "Simple LLM Completion",
+    "pathway_id": "a27ab449-327a-4171-a451-d0ffb76e7b43",
+    "name": "Simple LLM Completion used in monitor-web",
     "description": "A simple pathway for LLM text completion with preprocessing and postprocessing. This pathway has two posts: the first post takes a prompt as input and preprocesses it, and the second post takes the preprocessed text as input and completes it.\n\nSpecify the model and prompt in the input variables.\n\nExample input variables: {\"completion_model\": \"qwen2.5:32b\", \"prompt\": \"What is the capital of France?\", \"translate_model\": \"qwen2.5:32b\"}",
     "entrance_post": {
         "post_id": "post_1",
@@ -14,6 +14,10 @@
             "completion_model": {
                 "type": "string",
                 "description": "The model to be used for the LLM completion"
+            },
+            "translate_model": {
+                "type": "string",
+                "description": "The model to be used for the LLM translation"
             },
             "prompt": {
                 "type": "string",

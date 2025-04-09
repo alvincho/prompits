@@ -74,7 +74,7 @@ from .Pit import Pit
 from .Pool import Pool
 from .pools.DatabasePool import DatabasePool
 from .AgentAddress import AgentAddress
-
+from .services.Pouch import Pouch
 # Setup logging
 logger = logging.getLogger('prompits')
 logger.setLevel(logging.DEBUG)
@@ -355,6 +355,14 @@ class Agent(Pit):
                 self.log(f"Error creating component {component_type} with name {name}: {str(e)}", 'ERROR')
                 traceback.print_exc()
                 return None
+        elif component_type == "Pouch":
+            # Import the component class
+            try:
+                from prompits.services.Pouch import Pouch
+                component_class = Pouch
+            except ImportError as e:
+                self.log(f"Error importing Pouch: {str(e)}", 'ERROR')
+                return None
         elif component_type == "TCPPlug":
             # Import the component class
             try:
@@ -401,7 +409,7 @@ class Agent(Pit):
         elif component_type=="Pathfinder":
             # Import the component class
             try:
-                from prompits.services.Pathfinder import Pathfinder
+                from prompits.Pathfinder import Pathfinder
                 component_class = Pathfinder
             except ImportError as e:
                 self.log(f"Error importing Pathfinder: {str(e)}\n{traceback.format_exc()}", 'ERROR')
@@ -528,7 +536,23 @@ class Agent(Pit):
             else:
                 agent.services[service_name] = components
                 agent.log(f"Added service {service_name} to agent {agent.name}", 'DEBUG')
-                
+
+            print(f"Agent.FromJson: components: {components} type: {type(components)}")
+            agent.log(f"Agent.FromJson: components: {components} type: {type(components)}", 'DEBUG')
+            if isinstance(components, Pouch):
+                print(f"Agent.FromJson: Setting json pool for {service_name}")
+                agent.log(f"Agent.FromJson: Setting json pool for {service_name}", 'DEBUG')
+                if "json_pool" in service:
+                    print(f"Agent.FromJson: Setting json pool for {service_name} to {service['json_pool']}")
+                    agent.log(f"Agent.FromJson: Setting json pool for {service_name} to {service['json_pool']}", 'DEBUG')
+                    #print(f"Setting json_pool for {service_name} to {service['json_pool']}")
+                    components.set_json_pool(agent.pools[service["json_pool"]])
+                if "graph_pool" in service:
+                    print(f"Agent.FromJson: Setting graph pool for {service_name} to {service['graph_pool']}")
+                    agent.log(f"Agent.FromJson: Setting graph pool for {service_name} to {service['graph_pool']}", 'DEBUG')
+                    #print(f"Setting graph_pool for {service_name} to {service['graph_pool']}")
+                    components.set_graph_pool(agent.pools[service["graph_pool"]])
+
             # If service is a JobMarket and has a pool_name, set the pool
             if isinstance(service, JobMarket) and hasattr(service, "pool_name") and service.pool_name:
                 pool_name = service.pool_name
@@ -680,7 +704,7 @@ class Agent(Pit):
                         if plugs_info[plug_info]['type'] == 'gRPCPlug':
                             address={"host": plugs_info[plug_info]['host'], "port": plugs_info[plug_info]['port']}
                             plug = gRPCPlug(address["host"], address["port"])
-                            print(f"Sending via gRPCPlug to {address}")
+                            #f"Sending via gRPCPlug to {address}")
                             self.log(f"Sending via gRPCPlug to {address}", 'DEBUG')
                             if plug.SendMessage(recipient, message, address):
                                 return True
@@ -716,7 +740,7 @@ class Agent(Pit):
                 #print(f"Error receiving messages from plug {plug.name}: {str(e)}")
                 self.log(f"Error receiving messages from plug {plug.name}: {str(e)}", 'ERROR')
                 traceback.print_exc()
-        print(f"Received {len(msg_list)} messages")
+        #print(f"Received {len(msg_list)} messages")
         return msg_list
         
 
@@ -1870,7 +1894,7 @@ class Agent(Pit):
         try:
             # Send the request through the plaza
             self.log(f"Sending request to agent {agent_id} on plaza {plaza_name} with practice {practice} and input {practice_input}", 'DEBUG')
-            print(f"Advertising on plaza {plaza_name}")
+            #print(f"Advertising on plaza {plaza_name}")
             self.Advertise(plaza_name)
             msg = UsePracticeRequest(practice,self.agent_id+'@'+plaza_name, [AgentAddress(agent_id, plaza_name)], arguments=practice_input)
             if self.SendMessage(msg, [AgentAddress(agent_id, plaza_name)]):

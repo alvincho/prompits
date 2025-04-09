@@ -47,7 +47,8 @@ def handle_log_event(event, verbose_level='INFO'):
         if event.level in ['WARNING', 'ERROR']:
             print(f"\033[91m{formatted_msg}\033[0m")  # Red text 
         else:
-            print(formatted_msg)
+            pass
+            # print(formatted_msg)
 
 def main():
     # Parse command line arguments

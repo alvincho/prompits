@@ -758,6 +758,7 @@ class Pool(Pit):
         self.AddPractice(Practice("Disconnect", self._Disconnect))
         self.AddPractice(Practice("IsConnected", self._IsConnected))
         self.AddPractice(Practice("CreateTable", self._CreateTable))
+        self.AddPractice(Practice("CreateTableIndex", self._CreateTableIndex))
         self.AddPractice(Practice("DropTable", self._DropTable))
         self.AddPractice(Practice("ListTables", self._ListTables))
         self.AddPractice(Practice("GetTableSchema", self._GetTableSchema))
@@ -778,6 +779,13 @@ class Pool(Pit):
         Create a table in the pool.
         """
         raise NotImplementedError("CreateTable not implemented")
+
+    @abstractmethod
+    def _CreateTableIndex(self, table_name: str, index_name: str, column_names: List[str]):
+        """
+        Create an index on a table in the pool.
+        """
+        raise NotImplementedError("CreateTableIndex not implemented")
 
     @abstractmethod
     def _DropTable(self, table_name: str):

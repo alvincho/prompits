@@ -446,9 +446,9 @@ def use_practice(agent: Agent, practice_name: str, *args, **kwargs):
         Any: The result of the practice
     """
     try:
-        log(f"Using practice {practice_name} with args: {args} and kwargs: {kwargs}","DEBUG")
+        #log(f"Using practice {practice_name} with args: {args} and kwargs: {kwargs}","DEBUG")
         result = agent.UsePractice(practice_name, *args, **kwargs)
-        log(f"Result: {result}")
+        #log(f"Result: {result}")
         return result
     except Exception as e:
         log(f"Error using practice {practice_name}: {str(e)}", level='ERROR')

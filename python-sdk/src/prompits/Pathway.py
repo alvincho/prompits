@@ -350,6 +350,7 @@ class Pathway(Pit):
                  entrance_post: Post,
                  exit_posts: List[str],
                  posts: List[Post],
+                 owner_agent_id: str,
                  description: Optional[str] = None,
                  execution_plan: Optional[Dict[str, Any]] = None):
         """
@@ -361,6 +362,7 @@ class Pathway(Pit):
             entrance_post: The first Post in the Pathway
             exit_posts: List of Post IDs that mark the end of the Pathway
             posts: List of Posts in the Pathway
+            owner_agent_id: The ID of the agent that owns the Pathway
             description: Description of the Pathway's purpose
             execution_plan: Plan for managing concurrency and post groups
         """
@@ -370,6 +372,7 @@ class Pathway(Pit):
         self.entrance_post = entrance_post
         self.exit_posts = exit_posts
         self.posts = posts
+        self.owner_agent_id = owner_agent_id
         self.description = description
         self.execution_plan = execution_plan or {}
         
@@ -385,7 +388,8 @@ class Pathway(Pit):
             "name": self.name,
             "entrance_post": self.entrance_post.ToJson(),
             "exit_posts": self.exit_posts,
-            "posts": [post.ToJson() for post in self.posts]
+            "posts": [post.ToJson() for post in self.posts],
+            "owner_agent_id": self.owner_agent_id
         }
         
         if self.description:
@@ -409,13 +413,17 @@ class Pathway(Pit):
         #print(f"FromJson: {json_data}")
         entrance_post = Post.FromJson(json_data["entrance_post"])
         posts = [Post.FromJson(post_data) for post_data in json_data["posts"]]
-        
+        if "owner_agent_id" in json_data:
+            owner_agent_id = json_data["owner_agent_id"]
+        else:
+            owner_agent_id = None
         return cls(
             pathway_id=json_data["pathway_id"],
             name=json_data["name"],
             entrance_post=entrance_post,
             exit_posts=json_data["exit_posts"],
             posts=posts,
+            owner_agent_id=owner_agent_id,
             description=json_data.get("description"),
             execution_plan=json_data.get("execution_plan")
         )
