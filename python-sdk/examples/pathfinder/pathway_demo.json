@@ -29,11 +29,11 @@
     "posts": [
         {
             "post_id": "post_2",
-            "name": "Translate to Chinese",
+            "name": "Translate to French",
             "practice": "Chat",
             "parameters": {
                 "model": "qwen2.5:32b",
-                "prompt": "Translate the following text to Chinese: {original_text}"
+                "prompt": "Translate the following text to French: {original_text}"
             },
             "inputs": {
                 "original_text": {

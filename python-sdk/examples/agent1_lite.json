@@ -14,21 +14,6 @@
       }
     },
     "services": {
-      "mcp_client": {
-        "type": "MCPClient",
-        "name": "mcp_client",
-        "description": "MCP client for communication",
-        "mcp_server_params": {
-          "filesystem": {
-            "command": "npx",
-            "args": [
-              "-y",
-              "@modelcontextprotocol/server-filesystem",
-              "/Users/alvincho/Downloads/temp"
-            ]
-          }
-        }
-      }
     },
     "pools": {
       "db_pool": {

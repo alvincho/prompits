@@ -108,6 +108,11 @@ class AgentPlaza(Plaza):
         
         # Store reference to the owning agent
         self.agent = agent
+
+        # initialize the Library
+        # library is a data storage with search and retrieval practices
+        # search can be a vector search, graph search, or full text search
+        
         
         self.log(f"AgentPlaza {name} initialized", 'INFO')
     

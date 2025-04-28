@@ -152,7 +152,7 @@ pip install -r requirements.txt
 
 Start a basic agent:
 ```bash
-python create-agent.py --config agent1.json --refresh
+python create-agent.py --config agent1_lite.json --refresh
 ```
 
 You can also configure agents via the `agent.json` file or extend functionality by adding new Practices or Pathways.

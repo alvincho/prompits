@@ -1,6 +1,6 @@
 {
   "agent_id": "MCPClientAgent",
-  "agent_name": "MCP Client Agent",
+  "agent_name": "MCPClientAgent",
   "description": "MCP client agent",
   "components": {
     "plugs": {      "grpc_server": {

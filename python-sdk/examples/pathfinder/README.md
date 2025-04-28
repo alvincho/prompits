@@ -36,17 +36,24 @@ The pathway has two steps (posts):
 - Outputs from one step can be passed as inputs to the next.
 
 ## 🚀 Running the Example
+1. Start at least one agent with the `Chat` practice:
+   ```bash
+   python ../create-agent.py --config ../agent2_lite.json --refresh --verbose-level INFO
+   ```
+
+2. Make sure you have Ollama installed and running with the required models (qwen2.5:32b or similar).
+
+3. Prepare your test environment:
+   ```bash
+   # Clone the repository if you haven't already
+   git clone https://github.com/prompits/python-sdk.git
+   cd python-sdk/examples/pathfinder
+   ```
 
 To run the script:
 
 ```bash
 python test_pathfinder.py
-```
-
-Or using `pytest` if the script is structured accordingly:
-
-```bash
-pytest test_pathfinder.py
 ```
 
 ## ✅ Expected Output
@@ -57,20 +64,56 @@ You should see log messages showing:
 - Post execution by selected agents
 - Final result after both steps
 
-Example:
+Example Output:
 ```
-✔ Post 1 executed by Agent2
-✔ Post 2 executed by Agent1
-✔ Pathway completed: Response successfully translated to Chinese.
+Pathway Result: {'prompt': 'What is the capital of France?', 'original_text': 'The capital of France is Paris.', 'result': 'La capitale de la France est Paris.'}
 ```
 
 ## 📁 Location
 
 `examples/pathfinder/test_pathfinder.py`
 
-## 🤝 Contributing
+## 🔧 Customizing the Pathway
 
-Feel free to expand this test with:
-- More complex Pathways (branching, parallelism)
-- Custom agent logic
-- Performance benchmarking
+The demo Pathway is defined in `pathway_demo.json`. You can customize it by modifying:
+
+- **Model names**: Change the LLM model used in any Post
+- **Prompts**: Adjust the instructions given to the model
+- **Parameters**: Modify any other parameters for the Posts
+
+Example modification:
+### original 1st step
+```json
+   "entrance_post": {
+        "post_id": "post_1",
+        "name": "Preprocess Input",
+        "practice": "Chat",
+        "parameters": {
+            "model": "qwen2.5:32b", 
+            "prompt": "{prompt}"
+        },
+```
+* Change model qwen2.5:32b to qwen2.5:7b
+
+### original 2nd step
+```json
+            "post_id": "post_2",
+            "name": "Translate to French",
+            "practice": "Chat",
+            "parameters": {
+                "model": "qwen2.5:32b",
+                "prompt": "Translate the following text to French: {original_text}"
+            },
+
+```
+- change **model** qwen2.5:32b to qwen2.5:7b
+- change **prompt** to any other prompt you want
+
+### change initial prompt in test_pathfinder.py
+```python
+
+    # Run the pathway
+    input_vars = {"prompt": "What is the capital of France?"}
+    result = pathfinder.Run(pathway, **input_vars)
+```
+- change input_vars to the prompt you want

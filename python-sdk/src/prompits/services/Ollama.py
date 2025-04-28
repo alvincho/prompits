@@ -6,7 +6,7 @@ from typing import Dict, List, Any
 import requests
 import json
 from .LLM import LLM
-from .APIService import Endpoint
+#from .APIService import Endpoint
 import traceback
 from prompits.Practice import Practice
 

@@ -44,7 +44,7 @@
  ```bash
  python ../src/create-agent.py --config agent1_lite.json --refresh --verbose-level INFO 
 
- python ../src/create-agent.py --config agent1_lite.json --refresh --verbose-level INFO 
+ python ../src/create-agent.py --config agent2_lite.json --refresh --verbose-level INFO 
  ```
 
  This will display the agent-level and pit-level practices registered in the system.
@@ -54,6 +54,7 @@
  ## Notes
  
  - The `--refresh` flag will reset the agent's state.
+ - Setting the `--verbose-level INFO` can display more information, including active agents.
  - Make sure `test_lite.db` exists or will be created in the correct location for the agents to interact through the Plaza Pool.
  
  ## Next Steps

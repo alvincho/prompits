@@ -189,7 +189,7 @@ class APIService(Service):
             
         # Add APIService specific fields
         json_data.update({
-            "server": self.server,
+            "servers": self.servers,
             "endpoints": endpoints_json,
             "openapi_spec": openapi_json
         })

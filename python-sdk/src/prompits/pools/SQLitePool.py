@@ -270,8 +270,17 @@ class SQLitePool(DatabasePool):
         except Exception as e:
             self.log(f"Error retrieving data: {e}\n{traceback.format_exc()}", 'ERROR')
             return None
+        
+    def _VectorSearch(self, query: str, top_k: int=10, top_p: float=1.0,
+                      embedding_model: str=None) -> List[Dict[str, Any]]:
+        """Vector search data in the database."""
+        # get the embedding
+        embedding = self.UsePractice("EmbedText", {"text":query, "embedding_model":embedding_model})
+        # search the database
+        self.cursor.execute(f"SELECT * FROM {self.name} WHERE embedding = ?", (embedding,))
+        return self.cursor.fetchall()
 
-    def _Search(self, where: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _Search(self, table_name: str, where: Dict[str, Any], top_k: int=10, top_p: float=1.0) -> List[Dict[str, Any]]:
         """Search data in the database."""
         try:
             conditions = []
@@ -282,7 +291,13 @@ class SQLitePool(DatabasePool):
             
             where_clause = ' AND '.join(conditions) if conditions else '1=1'
             
-            self.cursor.execute(f"SELECT * FROM {self.name} WHERE {where_clause}", values)
+            # get top_k or top_p rows
+            # if top_p is not 1.0, get a random sample of the rows
+            values.append(top_k)
+            if top_p != 1.0:
+                self.cursor.execute(f"SELECT * FROM {table_name} WHERE {where_clause} ORDER BY RANDOM() LIMIT ?", values)
+            else:
+                self.cursor.execute(f"SELECT * FROM {table_name} WHERE {where_clause} LIMIT ?", values)
             rows = self.cursor.fetchall()
             
             results = []

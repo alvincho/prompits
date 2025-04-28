@@ -12,6 +12,13 @@ import json
 from ..Schema import TableSchema, DataType
 from ..Pool import Pool
 from ..Practice import Practice
+from enum import Enum
+
+class SearchType(Enum):
+    FULL_TEXT = "full_text"
+    VECTOR = "vector"
+    GRAPH = "graph"
+
 
 class DatabasePool(Pool, ABC):
     """
@@ -40,6 +47,7 @@ class DatabasePool(Pool, ABC):
         self.AddPractice(Practice("Execute", self._Execute))
         self.AddPractice(Practice("Commit", self._Commit))
         self.AddPractice(Practice("Rollback", self._Rollback))
+        self.AddPractice(Practice("Search", self._Search))
 
     @abstractmethod
     def _Commit(self):
@@ -54,6 +62,20 @@ class DatabasePool(Pool, ABC):
         """
         raise NotImplementedError("Commit method not implemented")
 
+    @abstractmethod
+    def _VectorSearch(self, query: str, embedding_model: str, top_k: int=10, top_p: float=1.0, partition_list: list[str]=["general"]):
+        """
+        Vector search data in the database.
+        """
+        raise NotImplementedError("Vector search method not implemented")
+
+    @abstractmethod
+    def _Search(self, query: str, search_type: SearchType=SearchType.FULL_TEXT,
+                top_k: int=10, top_p: float=1.0, partition_list: list[str]=["general"]):
+        """
+        Search data in the database.
+        """
+        raise NotImplementedError("Search method not implemented")
     @abstractmethod
     def _Select(self, query: str, params: Dict[str, Any]):
         """
